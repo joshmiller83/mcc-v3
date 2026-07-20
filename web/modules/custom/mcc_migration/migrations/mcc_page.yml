@@ -16,6 +16,13 @@ process:
   title: title
   uid: node_uid
   status: status
+  moderation_state:
+    plugin: static_map
+    source: status
+    map:
+      1: published
+      0: draft
+    default_value: draft
   created: created
   changed: changed
   promote: promote

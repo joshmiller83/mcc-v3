@@ -124,4 +124,5 @@ theme:
   easy_email_theme: 0
   mercury: 0
   gin: 0
+  mcc_theme: 0
 profile: drupal_cms_installer
