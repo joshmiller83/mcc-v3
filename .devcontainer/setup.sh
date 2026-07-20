@@ -12,13 +12,18 @@ wait_for_docker() {
 wait_for_docker
 
 # Avoid errors on rebuilds where some containers are kept around.
-ddev poweroff
+ddev poweroff || true
 
+echo "Installing Antigravity CLI (agy)..."
 # Install Antigravity CLI (agy)
 curl -fsSL https://antigravity.google/cli/install.sh | bash
 # Symlink agy to a system-wide PATH location
 sudo ln -sf ~/.local/bin/agy /usr/local/bin/agy
 
+echo "Installing Claude Code CLI..."
 # Install Claude Code CLI
 sudo npm install -g @anthropic-ai/claude-code
+
+echo "Tool setup complete."
+
 

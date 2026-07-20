@@ -5,7 +5,8 @@
     "ghcr.io/devcontainers/features/docker-in-docker:2": {
       "version": "latest"
     },
-    "ghcr.io/ddev/ddev/install-ddev:latest": {}
+    "ghcr.io/ddev/ddev/install-ddev:latest": {},
+    "ghcr.io/devcontainers/features/node:1": {}
   },
   "portsAttributes": {
     "3306": { "label": "database" },
