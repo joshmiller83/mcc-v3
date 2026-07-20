@@ -1,6 +1,6 @@
-# AGENTS.md
+# Agent guidance for this Drupal site
 
-Rules for AI coding assistants (Claude Code, Codex, Copilot, etc.) working in this repo. If you are an AI CLI tool operating here, read this before making changes.
+Rules for AI coding assistants (Claude Code, Codex, Copilot, Antigravity, etc.) working in this repo. If you are an AI CLI tool operating here, read this before making changes.
 
 ## What this project is
 
@@ -13,7 +13,11 @@ A rebuild of the Mechanicsburg Christian Church website (mechanicsburgchristian.
 - **Stay upgradable.** This site should be easy to keep current with future Drupal CMS releases. Avoid patterns that fight core defaults or make future updates harder.
 - **No unnecessary scope.** Don't refactor, redesign, or "improve" things beyond what was asked.
 
-## Environment: GitHub Codespaces only
+## Environment & Local Development
+
+This codebase is a Composer-managed Drupal site. Local development uses `ddev`.
+
+### GitHub Codespaces only
 
 This project is developed in **GitHub Codespaces**, not on a local machine. DDEV runs inside the Codespace.
 
@@ -23,6 +27,31 @@ This project is developed in **GitHub Codespaces**, not on a local machine. DDEV
 `.devcontainer/devcontainer.json` is the source of truth for how the Codespace is provisioned: a base Debian image with the `docker-in-docker` and DDEV's official `install-ddev` devcontainer features layered on. That feature setup was confirmed directly against the `ddev/ddev` source (not just docs) — if you change it, re-check `containers/devcontainers/install-ddev/` in that repo rather than assuming the pattern is still current.
 
 Codespaces prebuilds are **not** configured. That's a repo Settings → Codespaces UI action, not something expressible in `devcontainer.json` or via `gh` — it's a manual, opt-in step (it consumes Codespaces storage quota) left to a human to decide on.
+
+### Local environment (DDEV)
+
+Run commands from the project root:
+
+- Start or restart the local environment with `ddev start`, `ddev restart`, and `ddev stop`.
+- Install PHP dependencies with `ddev composer install`.
+- Open the site with `ddev launch`.
+- Run Drush commands with `ddev drush <command>` such as `status`, `user:login`, `cache:rebuild`, and `update:db`.
+
+DDEV project config lives in `.ddev/config.yaml`. Use `.ddev/config.local.yaml` for machine-specific overrides.
+
+## Common Drupal workflows
+
+- Add a module with `ddev composer require drupal/<project>`, then `ddev drush pm:enable --yes <module_machine_name>`, then `ddev drush cache:rebuild`.
+- Apply database updates after code changes with `ddev drush update:db --yes`.
+- Import repository configuration into the site with `ddev drush config:import --yes`.
+- Export site configuration back to the repo with `ddev drush config:export --yes`.
+
+## Guardrails
+
+- Do not commit secrets or machine-local overrides such as `.env`, `settings.local.php`, or `.ddev/config.local.yaml`.
+- Do not commit `vendor/` or uploaded files under `web/sites/*/files`.
+- Do not edit Drupal core or contributed projects in place.
+- Put custom code in `web/modules/custom` and `web/themes/custom`.
 
 ## Workflow
 
@@ -40,3 +69,8 @@ Codespaces prebuilds are **not** configured. That's a repo Settings → Codespac
 ## Deploys
 
 Pushing to GitHub triggers the Pantheon build process automatically. There's no separate manual deploy step to remember — just make sure what you push is something you'd want built and deployed.
+
+## References
+
+- https://docs.ddev.com/en/stable/
+- https://www.drupal.org/docs/administering-a-drupal-site/configuration-management/workflow-using-drush
