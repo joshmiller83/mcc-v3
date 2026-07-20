@@ -1,0 +1,81 @@
+uuid: 1a40fba9-43c8-4d3a-b689-656d9f870341
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - node.type.bio
+  module:
+    - node
+id: mcc_leadership
+label: 'MCC Leadership'
+module: views
+description: ''
+tag: ''
+base_table: node_field_data
+base_field: nid
+display:
+  default:
+    id: default
+    display_title: Default
+    display_plugin: default
+    position: 0
+    display_options:
+      title: 'Our Leadership'
+      pager:
+        type: none
+        options:
+          offset: 0
+      sorts:
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          admin_label: 'Title sorting'
+          plugin_id: standard
+          order: ASC
+      filters:
+        status:
+          id: status
+          table: node_field_data
+          field: status
+          admin_label: 'Published status'
+          plugin_id: boolean
+          value: '1'
+        type:
+          id: type
+          table: node_field_data
+          field: type
+          admin_label: 'Content type'
+          plugin_id: bundle
+          value:
+            bio: bio
+      style:
+        type: default
+        options:
+          grouping: {  }
+      row:
+        type: 'entity:node'
+        options:
+          view_mode: teaser
+      display_extenders: {  }
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_interface'
+        - 'user.node_grants:view'
+      tags: {  }
+  page_1:
+    id: page_1
+    display_title: Page
+    display_plugin: page
+    position: 1
+    display_options:
+      display_extenders: {  }
+      path: who-we-are/our-leadership
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_interface'
+        - 'user.node_grants:view'
+      tags: {  }
