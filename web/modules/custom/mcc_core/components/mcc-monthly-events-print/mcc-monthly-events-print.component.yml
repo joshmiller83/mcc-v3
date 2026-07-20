@@ -1,0 +1,30 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/modules/sdc/src/metadata.schema.json
+name: 'Monthly Events Print Layout'
+description: 'A beautiful 8.5x11 printable monthly events grid.'
+status: stable
+props:
+  type: object
+  properties:
+    month_label:
+      type: string
+      title: 'Month Label'
+      description: 'The month and year label (e.g. July 2026).'
+    events:
+      type: array
+      title: 'Events'
+      description: 'An array of events to display.'
+      items:
+        type: object
+        properties:
+          date:
+            type: string
+            title: 'Event Date'
+          time:
+            type: string
+            title: 'Event Time'
+          title:
+            type: string
+            title: 'Event Title'
+          description:
+            type: string
+            title: 'Event Description'

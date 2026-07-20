@@ -1,0 +1,182 @@
+/* Screen styling */
+.mcc-monthly-events-print {
+  font-family: 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  max-width: 960px;
+  margin: 2rem auto;
+  padding: 2.5rem;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  color: #1a1a1a;
+}
+
+.mcc-print-header {
+  text-align: center;
+  border-bottom: 2px solid #eaeaea;
+  padding-bottom: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.mcc-print-header h1 {
+  font-size: 2.5rem;
+  color: #1c3d5a;
+  margin: 0 0 0.5rem 0;
+  font-weight: 700;
+}
+
+.mcc-print-tagline {
+  font-size: 1rem;
+  color: #718096;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.mcc-events-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.mcc-event-item {
+  background: #f7fafc;
+  border-left: 4px solid #3182ce;
+  border-radius: 4px;
+  padding: 1.25rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.mcc-event-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.mcc-event-meta {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #3182ce;
+  margin-bottom: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.mcc-event-date {
+  text-transform: uppercase;
+}
+
+.mcc-event-time {
+  color: #4a5568;
+}
+
+.mcc-event-title {
+  font-size: 1.2rem;
+  margin: 0 0 0.75rem 0;
+  color: #2d3748;
+  font-weight: 600;
+}
+
+.mcc-event-desc {
+  font-size: 0.95rem;
+  color: #4a5568;
+  line-height: 1.5;
+}
+
+.mcc-event-desc p {
+  margin: 0 0 0.5rem 0;
+}
+
+.mcc-event-desc p:last-child {
+  margin-bottom: 0;
+}
+
+.mcc-print-footer {
+  margin-top: 3rem;
+  text-align: center;
+  border-top: 1px solid #eaeaea;
+  padding-top: 1.5rem;
+  font-size: 0.9rem;
+  color: #718096;
+}
+
+/* Print optimizations (8.5 x 11 Portrait) */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Hide header/nav/footer of the main site template */
+  header, footer, nav, .navigation, .gin-toolbar, .toolbar, .tabs, .messages, .breadcrumb, #admin-menu {
+    display: none !important;
+  }
+
+  .mcc-monthly-events-print {
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .mcc-print-header h1 {
+    font-size: 2.2rem !important;
+    color: #000000 !important;
+  }
+
+  .mcc-print-tagline {
+    font-size: 0.85rem !important;
+    color: #444444 !important;
+  }
+
+  /* 2-column grid layout for printing */
+  .mcc-events-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 12pt !important;
+  }
+
+  .mcc-event-item {
+    background: #ffffff !important;
+    border: 1px solid #cccccc !important;
+    border-left: 4px solid #000000 !important;
+    padding: 10pt !important;
+    margin-bottom: 0 !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  .mcc-event-title {
+    font-size: 1.05rem !important;
+    color: #000000 !important;
+  }
+
+  .mcc-event-desc {
+    font-size: 0.85rem !important;
+    color: #333333 !important;
+    line-height: 1.4 !important;
+  }
+
+  .mcc-print-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-top: 1px solid #000000 !important;
+    padding-top: 10pt !important;
+    font-size: 0.8rem !important;
+    color: #000000 !important;
+    text-align: center;
+  }
+
+  /* Ensure page break margins */
+  @page {
+    size: letter portrait;
+    margin: 0.5in 0.5in 0.8in 0.5in;
+  }
+}

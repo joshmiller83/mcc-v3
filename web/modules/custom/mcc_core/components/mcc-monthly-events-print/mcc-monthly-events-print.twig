@@ -1,0 +1,29 @@
+<div class="mcc-monthly-events-print">
+  <div class="mcc-print-header">
+    <h1>{{ month_label }} Events</h1>
+    <p class="mcc-print-tagline">Mechanicsburg Christian Church — Serving Families, Strengthening Communities</p>
+  </div>
+
+  <div class="mcc-events-grid">
+    {% for event in events %}
+      <div class="mcc-event-item">
+        <div class="mcc-event-meta">
+          <span class="mcc-event-date">{{ event.date }}</span>
+          {% if event.time %}
+            <span class="mcc-event-time">@ {{ event.time }}</span>
+          {% endif %}
+        </div>
+        <h3 class="mcc-event-title">{{ event.title }}</h3>
+        {% if event.description %}
+          <div class="mcc-event-desc">
+            {{ event.description|raw }}
+          </div>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+  
+  <div class="mcc-print-footer">
+    <p>Please join us! Service starts Sunday at 9:30 AM. More details at mechanicsburgchristian.com</p>
+  </div>
+</div>

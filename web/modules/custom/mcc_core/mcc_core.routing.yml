@@ -1,0 +1,7 @@
+mcc_core.print_monthly:
+  path: '/calendar/print-monthly'
+  defaults:
+    _controller: '\Drupal\mcc_core\Controller\MccCalendarPrintController::printMonthly'
+    _title: 'Print Monthly Events'
+  requirements:
+    _permission: 'access content'

@@ -1,0 +1,5 @@
+name: 'MCC Core'
+type: module
+description: 'Core custom functionality and SDC components for Mechanicsburg Christian Church website.'
+core_version_requirement: ^10 || ^11
+package: Custom
