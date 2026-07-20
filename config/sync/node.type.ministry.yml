@@ -1,0 +1,11 @@
+uuid: e2b76be4-48a9-4bfd-98b4-c457210c593b
+langcode: en
+status: true
+dependencies: {  }
+name: Ministry
+type: ministry
+description: 'Detailed ministry description pages.'
+help: null
+new_revision: true
+preview_mode: 1
+display_submitted: true

@@ -1,0 +1,9 @@
+uuid: 8ffb18be-a402-4a51-8556-9477f429cec7
+langcode: en
+status: true
+dependencies: {  }
+name: 'Leadership Structure'
+vid: mcc_leadership_structure
+description: 'Used to categorize staff and leadership roles.'
+weight: 0
+new_revision: false

@@ -1,0 +1,24 @@
+uuid: d51d8541-1525-4d2f-ad72-6cce2f4e65e8
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_logo_image
+    - media.type.image
+    - node.type.missions
+id: node.missions.field_logo_image
+field_name: field_logo_image
+entity_type: node
+bundle: missions
+label: 'Logo Image'
+description: 'Mission organization logo.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+field_type: entity_reference

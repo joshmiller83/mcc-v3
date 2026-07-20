@@ -1,0 +1,10 @@
+uuid: 22fb944b-1496-4552-9c97-04db15be6b02
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: O4CkWiF7dNNnCPJTHxpvt-RghjxgYipRxcS1e9jE6A0
+id: footer-programs
+label: 'Footer Programs'
+description: ''
+locked: false

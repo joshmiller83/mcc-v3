@@ -1,0 +1,13 @@
+_core:
+  default_config_hash: 43jiKOXk6LARW-8rJN_Lh9Xs_hqyxog-obxD4nzXLJk
+favicon:
+  mimetype: image/png
+  path: themes/contrib/caresphere_theme/favicon.png
+  use_default: false
+features:
+  comment_user_picture: true
+  comment_user_verification: true
+  favicon: true
+  node_user_picture: true
+logo:
+  use_default: true

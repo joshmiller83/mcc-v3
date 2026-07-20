@@ -1,0 +1,156 @@
+uuid: 376860e5-f472-4184-8868-191ff6dfa5b7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.calendar_event.field_attachments
+    - field.field.node.calendar_event.field_bio_reference
+    - field.field.node.calendar_event.field_connect_webform
+    - field.field.node.calendar_event.field_event_date
+    - field.field.node.calendar_event.field_featured_image
+    - field.field.node.calendar_event.field_mission_category
+    - field.field.node.calendar_event.field_related_ministry
+    - node.type.calendar_event
+    - workflows.workflow.basic_editorial
+  module:
+    - content_moderation
+    - media_library
+    - path
+    - smart_date
+    - webform
+id: node.calendar_event.default
+targetEntityType: node
+bundle: calendar_event
+mode: default
+content:
+  created:
+    type: datetime_timestamp
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_attachments:
+    type: media_library_widget
+    weight: 127
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+  field_bio_reference:
+    type: entity_reference_autocomplete
+    weight: 128
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_connect_webform:
+    type: webform_entity_reference_select
+    weight: 129
+    region: content
+    settings:
+      default_data: true
+      webforms: {  }
+    third_party_settings: {  }
+  field_event_date:
+    type: smartdate_default
+    weight: 125
+    region: content
+    settings:
+      modal: false
+      default_duration: 60
+      default_duration_increments: |-
+        30
+        60|1 hour
+        90
+        120|2 hours
+        custom
+      show_extra: false
+      hide_date: true
+      allday: true
+      remove_seconds: false
+      duration_overlay: true
+    third_party_settings: {  }
+  field_featured_image:
+    type: media_library_widget
+    weight: 126
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+  field_mission_category:
+    type: entity_reference_autocomplete
+    weight: 130
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_related_ministry:
+    type: entity_reference_autocomplete
+    weight: 131
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  moderation_state:
+    type: moderation_state_default
+    weight: 100
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  simple_sitemap:
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    weight: 120
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  title:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  uid:
+    type: entity_reference_autocomplete
+    weight: 5
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  url_redirects:
+    weight: 50
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  promote: true
+  publish_on: true
+  publish_state: true
+  sticky: true
+  unpublish_on: true
+  unpublish_state: true

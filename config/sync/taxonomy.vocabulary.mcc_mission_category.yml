@@ -1,0 +1,9 @@
+uuid: 459d9ef4-8e98-4059-9726-65a500fb99d1
+langcode: en
+status: true
+dependencies: {  }
+name: 'Missions Category'
+vid: mcc_mission_category
+description: 'Used to categorize missions and missionaries.'
+weight: 0
+new_revision: false

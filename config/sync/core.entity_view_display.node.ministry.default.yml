@@ -1,0 +1,78 @@
+uuid: 96d922c4-b228-4804-8de5-756a90dd80b5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.ministry.field_bio_reference
+    - field.field.node.ministry.field_ministry_structure
+    - field.field.node.ministry.field_mission_tags
+    - field.field.node.ministry.field_related_events
+    - field.field.node.ministry.field_verse
+    - field.field.node.ministry.field_verse_link
+    - node.type.ministry
+  module:
+    - link
+    - text
+    - user
+id: node.ministry.default
+targetEntityType: node
+bundle: ministry
+mode: default
+content:
+  field_bio_reference:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 107
+    region: content
+  field_ministry_structure:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 108
+    region: content
+  field_mission_tags:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 109
+    region: content
+  field_related_events:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 110
+    region: content
+  field_verse:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 111
+    region: content
+  field_verse_link:
+    type: link
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 112
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden: {  }

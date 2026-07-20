@@ -1,0 +1,97 @@
+uuid: 4bccad69-8311-488a-860e-2741ff594d41
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.calendar_event.field_attachments
+    - field.field.node.calendar_event.field_bio_reference
+    - field.field.node.calendar_event.field_connect_webform
+    - field.field.node.calendar_event.field_event_date
+    - field.field.node.calendar_event.field_featured_image
+    - field.field.node.calendar_event.field_mission_category
+    - field.field.node.calendar_event.field_related_ministry
+    - node.type.calendar_event
+  module:
+    - media
+    - smart_date
+    - user
+id: node.calendar_event.default
+targetEntityType: node
+bundle: calendar_event
+mode: default
+content:
+  field_attachments:
+    type: media_thumbnail
+    label: above
+    settings:
+      image_link: ''
+      image_style: ''
+      image_loading:
+        attribute: lazy
+    third_party_settings: {  }
+    weight: 107
+    region: content
+  field_bio_reference:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 108
+    region: content
+  field_event_date:
+    type: smartdate_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+      format: default
+      force_chronological: false
+      add_classes: false
+      time_wrapper: true
+      localize: false
+      parts:
+        - start
+        - end
+      duration:
+        separator: ' | '
+        unit: ''
+        decimals: 2
+        suffix: h
+    third_party_settings: {  }
+    weight: 105
+    region: content
+  field_featured_image:
+    type: media_thumbnail
+    label: above
+    settings:
+      image_link: ''
+      image_style: ''
+      image_loading:
+        attribute: lazy
+    third_party_settings: {  }
+    weight: 106
+    region: content
+  field_mission_category:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 109
+    region: content
+  field_related_ministry:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 110
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  field_connect_webform: true

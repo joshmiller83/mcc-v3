@@ -1,0 +1,24 @@
+uuid: 61be13de-bf1c-4e60-9aff-5e7d5d448a35
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_related_ministry
+    - node.type.calendar_event
+    - node.type.ministry
+id: node.calendar_event.field_related_ministry
+field_name: field_related_ministry
+entity_type: node
+bundle: calendar_event
+label: 'Related Ministry'
+description: 'Related ministry page.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      ministry: ministry
+field_type: entity_reference

@@ -1,0 +1,22 @@
+uuid: cc758b8a-a607-4f19-99bc-32166f92f831
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_verse
+    - node.type.ministry
+  module:
+    - text
+id: node.ministry.field_verse
+field_name: field_verse
+entity_type: node
+bundle: ministry
+label: 'Theme Scripture'
+description: 'Theme scripture for this ministry.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats: {  }
+field_type: text_long

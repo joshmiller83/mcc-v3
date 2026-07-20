@@ -1,0 +1,13 @@
+uuid: 9ba6162c-1de8-4299-b2c9-7d783a87b0e7
+langcode: en
+status: true
+dependencies:
+  config:
+    - canvas.component.block.events_block
+_core:
+  default_config_hash: Aw8isYlLBt-EaLWtX-XqUh7S-2oHkCuXk14UNblqGEY
+name: Drupical
+configEntityTypeId: component
+weight: 0
+items:
+  - block.events_block

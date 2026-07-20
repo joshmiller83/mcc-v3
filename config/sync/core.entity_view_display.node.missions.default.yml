@@ -1,0 +1,46 @@
+uuid: 075f6e77-46f8-4e2e-95cd-6e58287c2ce4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.missions.field_logo_image
+    - field.field.node.missions.field_missions_website
+    - node.type.missions
+  module:
+    - link
+    - media
+    - user
+id: node.missions.default
+targetEntityType: node
+bundle: missions
+mode: default
+content:
+  field_logo_image:
+    type: media_thumbnail
+    label: above
+    settings:
+      image_link: ''
+      image_style: ''
+      image_loading:
+        attribute: lazy
+    third_party_settings: {  }
+    weight: 103
+    region: content
+  field_missions_website:
+    type: link
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 104
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden: {  }

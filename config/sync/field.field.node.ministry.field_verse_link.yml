@@ -1,0 +1,23 @@
+uuid: cf631531-84cb-4f00-8a00-12f8427ea9cd
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_verse_link
+    - node.type.ministry
+  module:
+    - link
+id: node.ministry.field_verse_link
+field_name: field_verse_link
+entity_type: node
+bundle: ministry
+label: 'Scripture Link'
+description: 'Link to theme scripture online.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  title: 1
+  link_type: 17
+field_type: link

@@ -1,0 +1,10 @@
+uuid: 1a2bad00-34ef-49fb-8d93-8aca23b65651
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: ebab238KR7VoSdIw4_yItgriwwAV8quZ5J5LYoEmOUM
+id: footer-support
+label: 'Footer Support'
+description: ''
+locked: false

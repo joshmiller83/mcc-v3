@@ -52,6 +52,7 @@ DDEV project config lives in `.ddev/config.yaml`. Use `.ddev/config.local.yaml` 
 - Do not commit `vendor/` or uploaded files under `web/sites/*/files`.
 - Do not edit Drupal core or contributed projects in place.
 - Put custom code in `web/modules/custom` and `web/themes/custom`.
+- Prefix custom modules, custom themes, and Single Directory Components (SDC) with `mcc_` (or `mcc-` for component/folder names) where possible.
 
 ## Workflow
 

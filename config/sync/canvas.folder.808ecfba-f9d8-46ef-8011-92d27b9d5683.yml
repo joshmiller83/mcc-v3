@@ -1,0 +1,13 @@
+uuid: 808ecfba-f9d8-46ef-8011-92d27b9d5683
+langcode: en
+status: true
+dependencies:
+  config:
+    - canvas.component.block.announce_block
+_core:
+  default_config_hash: Dy1741wxQULOzg6j0M94UJqs6t9DCcfBxwChR9ASpOE
+name: Announcements
+configEntityTypeId: component
+weight: 0
+items:
+  - block.announce_block

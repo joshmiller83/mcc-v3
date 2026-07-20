@@ -1,0 +1,24 @@
+uuid: 97f0e2dd-94e1-4bb4-956b-3a75a2ce3547
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_mission_category
+    - node.type.calendar_event
+    - taxonomy.vocabulary.mcc_mission_category
+id: node.calendar_event.field_mission_category
+field_name: field_mission_category
+entity_type: node
+bundle: calendar_event
+label: 'Mission Category'
+description: 'Mission categorization tags.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      mcc_mission_category: mcc_mission_category
+field_type: entity_reference

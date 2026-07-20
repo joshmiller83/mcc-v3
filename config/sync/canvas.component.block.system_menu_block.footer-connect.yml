@@ -1,0 +1,41 @@
+uuid: c274d3b7-94f4-435d-8400-4798361ef094
+langcode: en
+status: false
+dependencies:
+  config:
+    - system.menu.footer-connect
+  module:
+    - system
+_core:
+  default_config_hash: QvvLVnFaGoH_9TvlxVBFdnAWwNFOEr9izfWPz1N13K4
+active_version: 2da17c2ad8850866
+versioned_properties:
+  active:
+    settings:
+      default_settings:
+        id: 'system_menu_block:footer-connect'
+        label: 'Footer Connect'
+        label_display: '0'
+        provider: system
+        level: 1
+        depth: null
+        expand_all_items: false
+    fallback_metadata:
+      slot_definitions: null
+  a26ee8d33f0d258e:
+    settings:
+      default_settings:
+        id: 'system_menu_block:footer-connect'
+        label: 'Footer Connect'
+        label_display: '0'
+        provider: system
+        level: 1
+        depth: null
+        expand_all_items: false
+    fallback_metadata:
+      slot_definitions: null
+label: 'Footer Connect'
+id: block.system_menu_block.footer-connect
+provider: system
+source: block
+source_local_id: 'system_menu_block:footer-connect'

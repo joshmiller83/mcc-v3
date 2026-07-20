@@ -1,0 +1,23 @@
+uuid: 12029674-0600-4749-a76d-2c0f27a2103b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_connect_webform
+    - node.type.calendar_event
+  module:
+    - webform
+id: node.calendar_event.field_connect_webform
+field_name: field_connect_webform
+entity_type: node
+bundle: calendar_event
+label: 'Registration Form'
+description: 'Webform for registration.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:webform'
+  handler_settings: {  }
+field_type: webform

@@ -1,0 +1,21 @@
+uuid: 4bee3018-49a3-48ed-88ba-8f92dcd5cb15
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_event_date
+    - node.type.calendar_event
+  module:
+    - smart_date
+id: node.calendar_event.field_event_date
+field_name: field_event_date
+entity_type: node
+bundle: calendar_event
+label: 'Event Date'
+description: 'Event date and time (recurring).'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: smartdate

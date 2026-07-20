@@ -1,0 +1,39 @@
+uuid: 35f161f8-3629-4e45-9d44-53df02c59c68
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+_core:
+  default_config_hash: vPJV2UmmB-x1mwsd0XPugLSxkN7tZadHVCHXnK7ZgS4
+active_version: 7d528e00f56b3abf
+versioned_properties:
+  active:
+    settings:
+      default_settings:
+        id: system_branding_block
+        label: 'Site branding'
+        label_display: '0'
+        provider: system
+        use_site_logo: true
+        use_site_name: true
+        use_site_slogan: true
+    fallback_metadata:
+      slot_definitions: null
+  b168140fdcaebae5:
+    settings:
+      default_settings:
+        id: system_branding_block
+        label: 'Site branding'
+        label_display: '0'
+        provider: system
+        use_site_logo: true
+        use_site_name: true
+        use_site_slogan: true
+    fallback_metadata:
+      slot_definitions: null
+label: 'Site branding'
+id: block.system_branding_block
+provider: system
+source: block
+source_local_id: system_branding_block

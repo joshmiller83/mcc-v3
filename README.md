@@ -52,7 +52,7 @@ Terminus gives access to Pantheon's `dev`, `test`, and `live` environments via `
 ## Ground rules
 
 - Keep it clear and straightforward. This is a small church site, not an enterprise platform — prefer boring, well-supported Drupal patterns over clever ones.
-- Favor core and well-maintained contrib modules over custom code. Custom code should be the exception, and only when there's no reasonable alternative.
+- Favor core and well-maintained contrib modules over custom code. Custom code should be the exception, and only when there's no reasonable alternative. Always prefix custom modules, custom themes, and custom components with `mcc_` (or `mcc-` for component/folder names) to maintain namespaces.
 - Keep the site upgradable. Don't fight Drupal CMS's defaults without a good reason.
 - Document any non-obvious decision in the commit message or a code comment — future maintainers (human or AI) won't have this conversation's context.
 

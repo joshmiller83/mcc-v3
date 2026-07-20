@@ -1,0 +1,33 @@
+uuid: 256d7fd3-1fc8-4e54-846b-d33a59469e5e
+langcode: en
+status: true
+dependencies:
+  module:
+    - drupical
+_core:
+  default_config_hash: 4SvjInRBxF4Yc2HrBHUq0R-_rN1LTYeATI5O-RSz4d8
+active_version: 7f0d7c64a7196c20
+versioned_properties:
+  active:
+    settings:
+      default_settings:
+        id: events_block
+        label: 'Events Feed'
+        label_display: '0'
+        provider: drupical
+    fallback_metadata:
+      slot_definitions: null
+  190c703c16aaf9ac:
+    settings:
+      default_settings:
+        id: events_block
+        label: 'Events Feed'
+        label_display: '0'
+        provider: drupical
+    fallback_metadata:
+      slot_definitions: null
+label: 'Events Feed'
+id: block.events_block
+provider: drupical
+source: block
+source_local_id: events_block

@@ -1,0 +1,10 @@
+uuid: a3d18dc9-33c8-4e65-bb53-3a80102f492d
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: fLZ8Y6ebKDIOQ0zQwyNHxmGP5ViZDPQQUnIG1H9_VSI
+id: footer-organization
+label: 'Footer Organization'
+description: ''
+locked: false

@@ -1,0 +1,24 @@
+uuid: 0072e1b0-90ea-48b2-aaf0-c710bac55dc1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_mission_tags
+    - node.type.ministry
+    - taxonomy.vocabulary.tags
+id: node.ministry.field_mission_tags
+field_name: field_mission_tags
+entity_type: node
+bundle: ministry
+label: 'Mission Tags'
+description: 'Tags for mission/categories.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      tags: tags
+field_type: entity_reference

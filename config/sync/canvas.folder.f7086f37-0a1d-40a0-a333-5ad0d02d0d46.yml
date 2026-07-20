@@ -1,0 +1,13 @@
+uuid: f7086f37-0a1d-40a0-a333-5ad0d02d0d46
+langcode: en
+status: true
+dependencies:
+  config:
+    - canvas.component.block.user_login_block
+_core:
+  default_config_hash: Z2EfQPNQ1ySzFYH7JCazupa3BeB5wg5-lph-bOLPXkI
+name: Forms
+configEntityTypeId: component
+weight: 0
+items:
+  - block.user_login_block

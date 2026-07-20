@@ -1,0 +1,17 @@
+uuid: 297ea06f-3747-495c-bc86-96a327dc4d35
+langcode: en
+status: true
+dependencies:
+  config:
+    - canvas.component.block.local_actions_block
+    - canvas.component.block.local_tasks_block
+    - canvas.component.block.page_title_block
+_core:
+  default_config_hash: Kaa5eSnNrC3-sJ1Lrs8jwDaOz-shAGVhVYOOmfMMwYg
+name: core
+configEntityTypeId: component
+weight: 0
+items:
+  - block.local_actions_block
+  - block.local_tasks_block
+  - block.page_title_block

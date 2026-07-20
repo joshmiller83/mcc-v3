@@ -1,0 +1,41 @@
+uuid: 953cb53c-743d-4b54-bb28-6d7520287be6
+langcode: en
+status: false
+dependencies:
+  config:
+    - system.menu.footer-programs
+  module:
+    - system
+_core:
+  default_config_hash: 3wDrLZnsVuiRhE_Euj16srCXsN1EnTsEAGsFdj9tyaA
+active_version: 673dfdcdfb7cd857
+versioned_properties:
+  active:
+    settings:
+      default_settings:
+        id: 'system_menu_block:footer-programs'
+        label: 'Footer Programs'
+        label_display: '0'
+        provider: system
+        level: 1
+        depth: null
+        expand_all_items: false
+    fallback_metadata:
+      slot_definitions: null
+  7922d0192b367d33:
+    settings:
+      default_settings:
+        id: 'system_menu_block:footer-programs'
+        label: 'Footer Programs'
+        label_display: '0'
+        provider: system
+        level: 1
+        depth: null
+        expand_all_items: false
+    fallback_metadata:
+      slot_definitions: null
+label: 'Footer Programs'
+id: block.system_menu_block.footer-programs
+provider: system
+source: block
+source_local_id: 'system_menu_block:footer-programs'

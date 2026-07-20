@@ -1,0 +1,57 @@
+uuid: c99d78bc-a446-46ea-a35b-61f385300dab
+langcode: en
+status: true
+dependencies:
+  config:
+    - canvas.component.sdc.caresphere_theme.accordion
+    - canvas.component.sdc.caresphere_theme.anchor
+    - canvas.component.sdc.caresphere_theme.badge
+    - canvas.component.sdc.caresphere_theme.blockquote
+    - canvas.component.sdc.caresphere_theme.button
+    - canvas.component.sdc.caresphere_theme.contact-email
+    - canvas.component.sdc.caresphere_theme.form-actions
+    - canvas.component.sdc.caresphere_theme.heading
+    - canvas.component.sdc.caresphere_theme.icon
+    - canvas.component.sdc.caresphere_theme.image
+    - canvas.component.sdc.caresphere_theme.slider
+    - canvas.component.sdc.caresphere_theme.tagline-bold
+    - canvas.component.sdc.caresphere_theme.text
+    - canvas.component.sdc.caresphere_theme.video
+    - canvas.component.sdc.mercury.anchor
+    - canvas.component.sdc.mercury.badge
+    - canvas.component.sdc.mercury.blockquote
+    - canvas.component.sdc.mercury.button
+    - canvas.component.sdc.mercury.heading
+    - canvas.component.sdc.mercury.icon
+    - canvas.component.sdc.mercury.image
+    - canvas.component.sdc.mercury.text
+    - canvas.component.sdc.mercury.video
+_core:
+  default_config_hash: PrdMkyJkgTKe_zHFgQKC0dh3LiMdWx9dPh2idVxOlAg
+name: Base
+configEntityTypeId: component
+weight: 0
+items:
+  - sdc.caresphere_theme.accordion
+  - sdc.caresphere_theme.anchor
+  - sdc.caresphere_theme.badge
+  - sdc.caresphere_theme.blockquote
+  - sdc.caresphere_theme.button
+  - sdc.caresphere_theme.contact-email
+  - sdc.caresphere_theme.form-actions
+  - sdc.caresphere_theme.heading
+  - sdc.caresphere_theme.icon
+  - sdc.caresphere_theme.image
+  - sdc.caresphere_theme.slider
+  - sdc.caresphere_theme.tagline-bold
+  - sdc.caresphere_theme.text
+  - sdc.caresphere_theme.video
+  - sdc.mercury.anchor
+  - sdc.mercury.badge
+  - sdc.mercury.blockquote
+  - sdc.mercury.button
+  - sdc.mercury.heading
+  - sdc.mercury.icon
+  - sdc.mercury.image
+  - sdc.mercury.text
+  - sdc.mercury.video

@@ -1,0 +1,32 @@
+uuid: 344781e2-dd34-4444-91f2-934144f61906
+langcode: en
+status: true
+dependencies:
+  theme:
+    - caresphere_theme
+_core:
+  default_config_hash: sJE13KUBBaxjGhULkp6cSkwPkKtuZaq_ljWQIFM2eiM
+active_version: '5524813695409257'
+versioned_properties:
+  active:
+    settings:
+      prop_field_definitions:
+        id:
+          required: true
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value:
+            -
+              value: anchor-id
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+    fallback_metadata:
+      slot_definitions: {  }
+label: Anchor
+id: sdc.caresphere_theme.anchor
+provider: caresphere_theme
+source: sdc
+source_local_id: 'caresphere_theme:anchor'

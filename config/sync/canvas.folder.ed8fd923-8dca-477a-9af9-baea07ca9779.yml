@@ -1,0 +1,19 @@
+uuid: ed8fd923-8dca-477a-9af9-baea07ca9779
+langcode: en
+status: true
+dependencies:
+  config:
+    - canvas.component.block.navigation_link
+    - canvas.component.block.navigation_shortcuts
+    - canvas.component.block.navigation_user
+    - canvas.component.sdc.caresphere_theme.tabs
+_core:
+  default_config_hash: GQfSTWMbzMZmwlAApB2DX7_FJf1cinWozAvtp6woFVA
+name: Navigation
+configEntityTypeId: component
+weight: 0
+items:
+  - block.navigation_link
+  - block.navigation_shortcuts
+  - block.navigation_user
+  - sdc.caresphere_theme.tabs

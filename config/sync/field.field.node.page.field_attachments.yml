@@ -1,0 +1,24 @@
+uuid: c60e06a3-ce84-4f29-9b04-c8ada8ec5cac
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_attachments
+    - media.type.document
+    - node.type.page
+id: node.page.field_attachments
+field_name: field_attachments
+entity_type: node
+bundle: page
+label: Attachments
+description: 'Attached files.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      document: document
+field_type: entity_reference

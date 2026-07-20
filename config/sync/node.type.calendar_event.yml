@@ -1,0 +1,11 @@
+uuid: 773e4ac9-5ccb-4a7d-98a6-585da89559f6
+langcode: en
+status: true
+dependencies: {  }
+name: 'Calendar Event'
+type: calendar_event
+description: 'Calendar events, supporting recurring occurrences.'
+help: null
+new_revision: true
+preview_mode: 1
+display_submitted: true

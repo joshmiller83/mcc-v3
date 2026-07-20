@@ -1,0 +1,10 @@
+uuid: 5e38aa70-c7ab-47a4-a19e-3c627052a0d9
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: v45Ik6fbk8sqnAnrXHPSMrR3aEUEbsMVBIAVGUfvF6c
+id: footer-resources
+label: 'Footer Resources'
+description: ''
+locked: false

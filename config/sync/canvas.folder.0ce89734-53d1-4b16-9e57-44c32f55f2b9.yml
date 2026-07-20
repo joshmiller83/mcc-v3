@@ -1,0 +1,17 @@
+uuid: 0ce89734-53d1-4b16-9e57-44c32f55f2b9
+langcode: en
+status: true
+dependencies:
+  config:
+    - canvas.component.sdc.caresphere_theme.author-share
+    - canvas.component.sdc.caresphere_theme.avatar
+    - canvas.component.sdc.caresphere_theme.story-share-tags
+_core:
+  default_config_hash: aCFv1PjFxiuMu7sUXw97jCMAnqGAwfgUQaOm_NSP3Rs
+name: Content
+configEntityTypeId: component
+weight: 0
+items:
+  - sdc.caresphere_theme.author-share
+  - sdc.caresphere_theme.avatar
+  - sdc.caresphere_theme.story-share-tags

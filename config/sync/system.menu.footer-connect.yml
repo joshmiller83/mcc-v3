@@ -1,0 +1,10 @@
+uuid: db01d95d-5917-40e3-b497-11bc1eed3253
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: cqOr0WP6jLYmyUgrQM1U-KA707rsiMkP6TBJfw_QDkw
+id: footer-connect
+label: 'Footer Connect'
+description: ''
+locked: false

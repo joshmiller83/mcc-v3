@@ -1,0 +1,13 @@
+uuid: 119d1f57-105c-42f5-bf48-fcfd1aa9bef4
+langcode: en
+status: true
+dependencies:
+  config:
+    - canvas.component.block.views_block.recent_pages-block_recent_pages
+_core:
+  default_config_hash: 1ulsNmW18h8efxKu26MzfsfcFbEwdpFkLCvQ-dNt2Fk
+name: 'Lists (Views)'
+configEntityTypeId: component
+weight: 0
+items:
+  - block.views_block.recent_pages-block_recent_pages

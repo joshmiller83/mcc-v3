@@ -1,0 +1,24 @@
+uuid: f993953a-518d-4760-be70-31123624fcaf
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_bio_pic
+    - media.type.image
+    - node.type.bio
+id: node.bio.field_bio_pic
+field_name: field_bio_pic
+entity_type: node
+bundle: bio
+label: Photo
+description: 'Bio photo.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+field_type: entity_reference

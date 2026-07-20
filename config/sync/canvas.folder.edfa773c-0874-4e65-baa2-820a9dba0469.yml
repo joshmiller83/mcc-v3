@@ -1,0 +1,21 @@
+uuid: edfa773c-0874-4e65-baa2-820a9dba0469
+langcode: en
+status: true
+dependencies:
+  config:
+    - canvas.component.block.system_menu_block.account
+    - canvas.component.block.system_menu_block.admin
+    - canvas.component.block.system_menu_block.footer
+    - canvas.component.block.system_menu_block.main
+    - canvas.component.block.system_menu_block.tools
+_core:
+  default_config_hash: uPx2wv8omX9wrV7_4Xh8bBngOb8TCtBszlrklW7rPEs
+name: Menus
+configEntityTypeId: component
+weight: 0
+items:
+  - block.system_menu_block.account
+  - block.system_menu_block.admin
+  - block.system_menu_block.footer
+  - block.system_menu_block.main
+  - block.system_menu_block.tools

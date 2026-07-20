@@ -1,0 +1,74 @@
+uuid: d2b4394c-a3e4-4773-89fa-8b81fb1974e3
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.full_html
+  module:
+    - ckeditor5
+_core:
+  default_config_hash: DIpX61wHu1ePs4VB1ObmOPBpr29OuP3I-paG5HTI-TA
+format: full_html
+editor: ckeditor5
+settings:
+  toolbar:
+    items:
+      - heading
+      - '|'
+      - bold
+      - italic
+      - underline
+      - strikethrough
+      - '|'
+      - link
+      - drupalMedia
+      - blockQuote
+      - '|'
+      - bulletedList
+      - numberedList
+      - '|'
+      - alignment
+      - '|'
+      - insertTable
+      - horizontalLine
+      - '|'
+      - sourceEditing
+      - '|'
+      - undo
+      - redo
+  plugins:
+    ckeditor5_alignment:
+      enabled_alignments:
+        - center
+        - justify
+        - left
+        - right
+    ckeditor5_heading:
+      enabled_headings:
+        - heading2
+        - heading3
+        - heading4
+        - heading5
+        - heading6
+    ckeditor5_list:
+      properties:
+        reversed: true
+        startIndex: true
+        styles: true
+      multiBlock: true
+    ckeditor5_sourceEditing:
+      allowed_tags:
+        - '<div>'
+        - '<span>'
+        - '<section>'
+        - '<article>'
+        - '<aside>'
+        - '<figure>'
+        - '<figcaption>'
+        - '<img src alt height width>'
+        - '<video src controls>'
+        - '<iframe src width height frameborder>'
+    media_media:
+      allow_view_mode_override: true
+image_upload:
+  status: false

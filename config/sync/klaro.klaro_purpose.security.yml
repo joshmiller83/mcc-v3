@@ -1,0 +1,10 @@
+uuid: 514f4990-194a-478e-bb6a-fd0012deaae6
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: XzLJz-bM_i90nbJjCLisHL9rjpQArg6hC2EDckd4uTM
+id: security
+label: Security
+description: ''
+weight: 4

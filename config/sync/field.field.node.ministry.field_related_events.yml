@@ -1,0 +1,24 @@
+uuid: f08fc9c1-c054-4496-aabf-a992e5ce6461
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_related_events
+    - node.type.calendar_event
+    - node.type.ministry
+id: node.ministry.field_related_events
+field_name: field_related_events
+entity_type: node
+bundle: ministry
+label: 'Related Events'
+description: 'Upcoming events related to this ministry.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      calendar_event: calendar_event
+field_type: entity_reference

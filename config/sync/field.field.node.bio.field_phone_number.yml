@@ -1,0 +1,21 @@
+uuid: e840aed0-cd6f-4c77-aae5-edc842ccddc4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_phone_number
+    - node.type.bio
+  module:
+    - telephone
+id: node.bio.field_phone_number
+field_name: field_phone_number
+entity_type: node
+bundle: bio
+label: 'Phone Number'
+description: 'Contact phone number.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: telephone

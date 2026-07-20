@@ -1,0 +1,27 @@
+uuid: a263530c-af1a-47c1-a3d1-9a330cd2c96d
+langcode: en
+status: true
+dependencies:
+  config:
+    - canvas.component.sdc.caresphere_theme.content-cards
+    - canvas.component.sdc.caresphere_theme.hero-card
+    - canvas.component.sdc.caresphere_theme.newsletter
+    - canvas.component.sdc.caresphere_theme.pillar-cards
+    - canvas.component.sdc.caresphere_theme.section
+    - canvas.component.sdc.caresphere_theme.section-grid
+    - canvas.component.sdc.caresphere_theme.section-intro
+    - canvas.component.sdc.caresphere_theme.section-stories
+_core:
+  default_config_hash: Bcrw2UZybTN1HOvCR8ZqHdG5n6vjBSTFPQVAX_Vi1do
+name: Section
+configEntityTypeId: component
+weight: 0
+items:
+  - sdc.caresphere_theme.content-cards
+  - sdc.caresphere_theme.hero-card
+  - sdc.caresphere_theme.newsletter
+  - sdc.caresphere_theme.pillar-cards
+  - sdc.caresphere_theme.section
+  - sdc.caresphere_theme.section-grid
+  - sdc.caresphere_theme.section-intro
+  - sdc.caresphere_theme.section-stories

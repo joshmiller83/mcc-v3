@@ -1,0 +1,31 @@
+uuid: 93f9cf3a-af53-46c3-9f9b-dedcd6619c37
+langcode: en
+status: false
+dependencies: {  }
+_core:
+  default_config_hash: RUmyclekk7Arw4Nrkw4R7m6mW7D_bDVqxMR2x3SE8a8
+active_version: 9eea215a62e33427
+versioned_properties:
+  active:
+    settings:
+      default_settings:
+        id: page_title_block
+        label: 'Page title'
+        label_display: '0'
+        provider: core
+    fallback_metadata:
+      slot_definitions: null
+  90ce139b2d3e2601:
+    settings:
+      default_settings:
+        id: page_title_block
+        label: 'Page title'
+        label_display: '0'
+        provider: core
+    fallback_metadata:
+      slot_definitions: null
+label: 'Page title'
+id: block.page_title_block
+provider: core
+source: block
+source_local_id: page_title_block

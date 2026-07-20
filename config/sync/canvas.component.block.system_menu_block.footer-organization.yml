@@ -1,0 +1,41 @@
+uuid: 5ee1ee56-9b2e-4f3a-98cc-15f311dc68d7
+langcode: en
+status: false
+dependencies:
+  config:
+    - system.menu.footer-organization
+  module:
+    - system
+_core:
+  default_config_hash: nEQXO4uSOBBLZ5o4ZtrTZrcoSJAr2FsvF_GUUmxcsr0
+active_version: 7cf8212bbcd3a9c0
+versioned_properties:
+  active:
+    settings:
+      default_settings:
+        id: 'system_menu_block:footer-organization'
+        label: 'Footer Organization'
+        label_display: '0'
+        provider: system
+        level: 1
+        depth: null
+        expand_all_items: false
+    fallback_metadata:
+      slot_definitions: null
+  68fb9541f734d522:
+    settings:
+      default_settings:
+        id: 'system_menu_block:footer-organization'
+        label: 'Footer Organization'
+        label_display: '0'
+        provider: system
+        level: 1
+        depth: null
+        expand_all_items: false
+    fallback_metadata:
+      slot_definitions: null
+label: 'Footer Organization'
+id: block.system_menu_block.footer-organization
+provider: system
+source: block
+source_local_id: 'system_menu_block:footer-organization'

@@ -1,0 +1,24 @@
+uuid: af139e84-8cd3-432e-8c67-2ebf38fb6530
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_ministry_structure
+    - node.type.bio
+    - taxonomy.vocabulary.mcc_leadership_structure
+id: node.bio.field_ministry_structure
+field_name: field_ministry_structure
+entity_type: node
+bundle: bio
+label: 'Leadership Structure'
+description: 'Leadership role category.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      mcc_leadership_structure: mcc_leadership_structure
+field_type: entity_reference

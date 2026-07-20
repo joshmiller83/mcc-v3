@@ -1,0 +1,20 @@
+uuid: 6408e5e8-fc24-4906-8878-f4f9a3c82e9b
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - taxonomy
+id: node.field_mission_category
+field_name: field_mission_category
+entity_type: node
+type: entity_reference
+settings:
+  target_type: taxonomy_term
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

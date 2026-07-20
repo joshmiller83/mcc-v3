@@ -1,0 +1,33 @@
+uuid: a99fc00d-2629-4e4b-a5e1-a16dfb521261
+langcode: en
+status: false
+dependencies:
+  module:
+    - navigation
+_core:
+  default_config_hash: GfqNBNgjohvxbgIjRbJPtkFhhy1lO31t5xXo6tk9y1A
+active_version: a359c146ca796d35
+versioned_properties:
+  active:
+    settings:
+      default_settings:
+        id: navigation_user
+        label: User
+        label_display: '0'
+        provider: navigation
+    fallback_metadata:
+      slot_definitions: null
+  b1e17ec4885768e0:
+    settings:
+      default_settings:
+        id: navigation_user
+        label: User
+        label_display: '0'
+        provider: navigation
+    fallback_metadata:
+      slot_definitions: null
+label: User
+id: block.navigation_user
+provider: navigation
+source: block
+source_local_id: navigation_user

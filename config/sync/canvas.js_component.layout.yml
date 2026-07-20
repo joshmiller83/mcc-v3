@@ -1,0 +1,31 @@
+uuid: b69cf2fd-fc39-43c4-9ff7-51196e2916d1
+langcode: en
+status: false
+dependencies: {  }
+_core:
+  default_config_hash: IdvsgQlKr851p-8g40Wf8ZHirEmT_-D3mbPbBxDplvo
+machineName: layout
+name: Layout
+required: {  }
+props: {  }
+slots: {  }
+js:
+  original: |
+    // See https://project.pages.drupalcode.org/canvas/ for documentation on how to build a code component
+
+    const Component = ({
+      text = "Layout",
+    }) => {
+      return (
+        <div className="text-3xl">
+          {text}
+        </div>
+      );
+    };
+
+    export default Component;
+  compiled: ''
+css:
+  original: ''
+  compiled: ''
+dataDependencies: {  }

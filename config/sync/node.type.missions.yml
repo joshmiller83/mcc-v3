@@ -1,0 +1,11 @@
+uuid: 44971547-c5bd-4397-a056-9364b41cd922
+langcode: en
+status: true
+dependencies: {  }
+name: Missions
+type: missions
+description: 'Information about missions and missionaries.'
+help: null
+new_revision: true
+preview_mode: 1
+display_submitted: true

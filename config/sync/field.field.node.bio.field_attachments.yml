@@ -1,0 +1,24 @@
+uuid: aa924196-8081-49b6-87b1-3878c3158528
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_attachments
+    - media.type.document
+    - node.type.bio
+id: node.bio.field_attachments
+field_name: field_attachments
+entity_type: node
+bundle: bio
+label: Attachments
+description: 'Attached documents.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      document: document
+field_type: entity_reference
