@@ -1,0 +1,7 @@
+name: 'MCC Theme'
+type: theme
+description: 'Custom subtheme for Mechanicsburg Christian Church, inheriting from Caresphere.'
+core_version_requirement: ^10 || ^11
+base theme: caresphere_theme
+libraries:
+  - mcc_theme/global-styling

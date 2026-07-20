@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Calistoga&family=Nunito:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  /* Override default primary colors with dark forest green */
+  --primary: #1e4d2b;
+  --primary-foreground: #ffffff;
+  --destructive: #731212;
+
+  /* Overriding typefaces to Calistoga (headings/emphasis) and Nunito (body/everything else) */
+  --font-sans: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-serif: 'Calistoga', Georgia, serif;
+  --font-display: 'Calistoga', serif;
+  --font-logo: 'Calistoga', serif;
+}
