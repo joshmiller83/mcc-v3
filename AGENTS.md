@@ -73,5 +73,6 @@ Pushing to GitHub triggers the Pantheon build process automatically. There's no 
 
 ## References
 
+- [Drupal Best Practices Guide](file:///home/vscode/.gemini/antigravity-cli/brain/620318d3-e3c4-43af-a8a5-c6e27cafe3dc/drupal_best_practices.md)
 - https://docs.ddev.com/en/stable/
 - https://www.drupal.org/docs/administering-a-drupal-site/configuration-management/workflow-using-drush
