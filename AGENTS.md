@@ -20,6 +20,17 @@ This project is developed in **GitHub Codespaces**, not on a local machine. DDEV
 - **If you are running inside the Codespace environment:** you have full access to run `ddev drush`, `ddev composer`, and `ddev terminus` directly to add modules, run updates, configure the site, and manage it hands-on. Go ahead and use these tools to get work done.
 - **If you are NOT running inside the Codespace environment** (e.g. operating on this repo from a local checkout or another context): limit yourself to editing **code and configuration files**. Do not attempt interactive work — no starting `ddev`, no running `drush`/`composer`/`terminus` commands, no assuming a running site or database exists. Make your changes as file edits, commit them, and let Codespaces/CI pick them up.
 
+`.devcontainer/devcontainer.json` is the source of truth for how the Codespace is provisioned: a base Debian image with the `docker-in-docker` and DDEV's official `install-ddev` devcontainer features layered on. That feature setup was confirmed directly against the `ddev/ddev` source (not just docs) — if you change it, re-check `containers/devcontainers/install-ddev/` in that repo rather than assuming the pattern is still current.
+
+Codespaces prebuilds are **not** configured. That's a repo Settings → Codespaces UI action, not something expressible in `devcontainer.json` or via `gh` — it's a manual, opt-in step (it consumes Codespaces storage quota) left to a human to decide on.
+
+## Workflow
+
+- Small, incremental commits — don't batch unrelated changes together.
+- Push after each commit rather than letting work pile up unpushed.
+- Work directly on `main` for now. This is early-stage and low-complexity enough that feature branches would just add overhead; revisit this once multiple people or longer-running changes are involved.
+- Keep this file and `README.md` up to date whenever an architectural decision is made (new tooling, new environment setup, etc.) — update them as part of finishing the work, not as an afterthought.
+
 ## Tooling reference
 
 - `ddev drush <command>` — Drush, for site administration, config import/export, cache rebuilds, etc.
