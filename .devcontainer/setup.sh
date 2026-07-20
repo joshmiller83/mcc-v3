@@ -14,6 +14,11 @@ wait_for_docker
 # Avoid errors on rebuilds where some containers are kept around.
 ddev poweroff
 
-# `ddev start -y` is intentionally not run here yet — no DDEV project is
-# configured in this repo yet (no .ddev/config.yaml). Add it back once the
-# Drupal CMS install exists.
+# Install Antigravity CLI (agy)
+curl -fsSL https://antigravity.google/cli/install.sh | bash
+# Symlink agy to a system-wide PATH location
+sudo ln -sf ~/.local/bin/agy /usr/local/bin/agy
+
+# Install Claude Code CLI
+sudo npm install -g @anthropic-ai/claude-code
+
