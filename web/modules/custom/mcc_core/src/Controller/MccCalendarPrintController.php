@@ -48,8 +48,8 @@ class MccCalendarPrintController extends ControllerBase {
    * Renders the printable monthly events list using SDC.
    */
   public function printMonthly() {
-    // Determine the current month window in the site's default timezone
-    $timezone = date_default_timezone_get();
+    // Determine the current month window in the site's configured default timezone
+    $timezone = \Drupal::config('system.date')->get('timezone.default') ?: 'America/New_York';
     $date = new \DateTime('now', new \DateTimeZone($timezone));
     
     // Check if a specific month/year is requested via query params

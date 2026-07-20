@@ -3,12 +3,12 @@ _core:
 langcode: en
 uuid: 5bfdd56c-d06e-4793-8125-066806b7b536
 name: 'Mechanicsburg Christian Church'
-mail: ''
-slogan: ''
+mail: mechanicsburg.admin@gmail.com
+slogan: 'Supporting Families, Strengthening Communities'
 page:
-  403: ''
-  404: ''
-  front: /user/login
+  403: /user/login
+  404: /page/10
+  front: /page/9
 admin_compact_mode: false
 weight_select_max: 100
 default_langcode: en
