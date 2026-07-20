@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for MCC Migration module.
+ */
+
+/**
+ * Implements hook_migration_plugins_alter().
+ */
+function mcc_migration_migration_plugins_alter(array &$definitions) {
+  if (isset($definitions['pathauto_pattern']) && empty($definitions['pathauto_pattern']['source_module'])) {
+    $definitions['pathauto_pattern']['source_module'] = 'pathauto';
+  }
+}
+
+/**
+ * Implements hook_migrate_source_info_alter().
+ */
+function mcc_migration_migrate_source_info_alter(array &$definitions) {
+  if (isset($definitions['pathauto_pattern']) && empty($definitions['pathauto_pattern']['source_module'])) {
+    $definitions['pathauto_pattern']['source_module'] = 'pathauto';
+  }
+}

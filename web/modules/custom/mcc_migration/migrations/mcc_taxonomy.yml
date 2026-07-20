@@ -1,0 +1,33 @@
+id: mcc_taxonomy
+label: 'MCC Taxonomy Terms'
+migration_group: mcc
+source:
+  plugin: d7_taxonomy_term
+process:
+  tid: tid
+  name: name
+  description: description
+  format: format
+  weight: weight
+  parent_id:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: parent
+    -
+      plugin: migration_lookup
+      migration: mcc_taxonomy
+  parent:
+    plugin: default_value
+    default_value: 0
+    source: '@parent_id'
+  vid:
+    plugin: static_map
+    source: bundle
+    map:
+      leadership_structure: mcc_leadership_structure
+      mission: mcc_mission_category
+      tags: tags
+    default_value: tags
+destination:
+  plugin: 'entity:taxonomy_term'

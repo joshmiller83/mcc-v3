@@ -1,0 +1,38 @@
+id: mcc_bio
+label: 'MCC Bios'
+migration_group: mcc
+migration_dependencies:
+  required:
+    - mcc_user
+    - mcc_media_image
+    - mcc_media_document
+    - mcc_taxonomy
+source:
+  plugin: d7_node
+  node_type: bio
+process:
+  nid: nid
+  vid: vid
+  title: title
+  uid: node_uid
+  status: status
+  created: created
+  changed: changed
+  body: body
+  field_bio_pic:
+    plugin: migration_lookup
+    migration: mcc_media_image
+    source: field_bio_pic/fid
+  field_email: field_email/email
+  field_phone_number: field_phone_number/value
+  field_ministry_structure:
+    plugin: migration_lookup
+    migration: mcc_taxonomy
+    source: field_ministry_structure/tid
+  field_attachments:
+    plugin: migration_lookup
+    migration: mcc_media_document
+    source: field_attachments/fid
+destination:
+  plugin: 'entity:node'
+  default_bundle: bio

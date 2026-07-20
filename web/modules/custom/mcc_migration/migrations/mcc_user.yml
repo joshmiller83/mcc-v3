@@ -1,0 +1,17 @@
+id: mcc_user
+label: 'MCC Legacy Users'
+migration_group: mcc
+source:
+  plugin: d7_user
+process:
+  uid: uid
+  name: name
+  pass: pass
+  mail: mail
+  created: created
+  access: access
+  login: login
+  status: status
+  init: init
+destination:
+  plugin: 'entity:user'

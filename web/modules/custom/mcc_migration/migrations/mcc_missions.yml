@@ -1,0 +1,28 @@
+id: mcc_missions
+label: 'MCC Missions'
+migration_group: mcc
+migration_dependencies:
+  required:
+    - mcc_user
+    - mcc_media_image
+source:
+  plugin: d7_node
+  node_type: missions
+process:
+  nid: nid
+  vid: vid
+  title: title
+  uid: node_uid
+  status: status
+  created: created
+  changed: changed
+  body: body
+  field_logo_image:
+    plugin: migration_lookup
+    migration: mcc_media_image
+    source: field_logo_image/fid
+  field_missions_website/uri: field_missions_website/url
+  field_missions_website/title: field_missions_website/title
+destination:
+  plugin: 'entity:node'
+  default_bundle: missions

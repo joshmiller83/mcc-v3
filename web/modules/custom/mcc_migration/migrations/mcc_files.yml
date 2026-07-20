@@ -1,0 +1,16 @@
+id: mcc_files
+label: 'MCC Legacy Files'
+migration_group: mcc
+source:
+  plugin: d7_file
+process:
+  fid: fid
+  uid: uid
+  filename: filename
+  uri: uri
+  filemime: filemime
+  filesize: filesize
+  status: status
+  timestamp: timestamp
+destination:
+  plugin: 'entity:file'

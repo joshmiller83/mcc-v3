@@ -1,0 +1,26 @@
+id: mcc_media_document
+label: 'MCC Media Documents'
+migration_group: mcc
+migration_dependencies:
+  required:
+    - mcc_files
+source:
+  plugin: d7_file
+process:
+  bundle:
+    plugin: default_value
+    default_value: document
+  name: filename
+  uid: uid
+  status: status
+  created: timestamp
+  field_media_document/target_id:
+    plugin: migration_lookup
+    migration: mcc_files
+    source: fid
+  field_media_document/display:
+    plugin: default_value
+    default_value: 1
+destination:
+  plugin: 'entity:media'
+  default_bundle: document

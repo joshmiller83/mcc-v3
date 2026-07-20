@@ -1,0 +1,24 @@
+id: mcc_media_image
+label: 'MCC Media Images'
+migration_group: mcc
+migration_dependencies:
+  required:
+    - mcc_files
+source:
+  plugin: d7_file
+process:
+  bundle:
+    plugin: default_value
+    default_value: image
+  name: filename
+  uid: uid
+  status: status
+  created: timestamp
+  field_media_image/target_id:
+    plugin: migration_lookup
+    migration: mcc_files
+    source: fid
+  field_media_image/alt: filename
+destination:
+  plugin: 'entity:media'
+  default_bundle: image

@@ -1,0 +1,42 @@
+id: mcc_page
+label: 'MCC Basic Pages'
+migration_group: mcc
+migration_dependencies:
+  required:
+    - mcc_user
+    - mcc_media_image
+    - mcc_media_document
+    - mcc_taxonomy
+source:
+  plugin: d7_node
+  node_type: page
+process:
+  nid: nid
+  vid: vid
+  title: title
+  uid: node_uid
+  status: status
+  created: created
+  changed: changed
+  promote: promote
+  sticky: sticky
+  body: body
+  field_featured_image:
+    plugin: migration_lookup
+    migration: mcc_media_image
+    source: field_featured_image/fid
+  field_attachments:
+    plugin: migration_lookup
+    migration: mcc_media_document
+    source: field_attachments/fid
+  field_bio_reference:
+    plugin: migration_lookup
+    migration: mcc_bio
+    source: field_bio_reference/target_id
+  field_tags:
+    plugin: migration_lookup
+    migration: mcc_taxonomy
+    source: field_tags/tid
+destination:
+  plugin: 'entity:node'
+  default_bundle: page

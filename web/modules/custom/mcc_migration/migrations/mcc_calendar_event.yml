@@ -1,0 +1,64 @@
+id: mcc_calendar_event
+label: 'MCC Calendar Events'
+migration_group: mcc
+migration_dependencies:
+  required:
+    - mcc_user
+    - mcc_media_image
+    - mcc_media_document
+    - mcc_taxonomy
+    - mcc_ministry
+    - mcc_bio
+source:
+  plugin: d7_node
+  node_type: calendar_item
+process:
+  nid: nid
+  vid: vid
+  title: title
+  uid: node_uid
+  status: status
+  created: created
+  changed: changed
+  body: body
+  field_featured_image:
+    plugin: migration_lookup
+    migration: mcc_media_image
+    source: field_featured_image/fid
+  field_attachments:
+    plugin: migration_lookup
+    migration: mcc_media_document
+    source: field_attachments/fid
+  field_bio_reference:
+    plugin: migration_lookup
+    migration: mcc_bio
+    source: field_bio_reference/target_id
+  field_mission_category:
+    plugin: migration_lookup
+    migration: mcc_taxonomy
+    source: field_mission_category/tid
+  field_related_ministry:
+    plugin: migration_lookup
+    migration: mcc_ministry
+    source: field_related_ministry/target_id
+  field_event_date:
+    plugin: sub_process
+    source: field_date
+    process:
+      value:
+        plugin: format_date
+        from_format: 'Y-m-d H:i:s'
+        to_format: 'U'
+        source: value
+      end_value:
+        plugin: format_date
+        from_format: 'Y-m-d H:i:s'
+        to_format: 'U'
+        source: value2
+      rrule:
+        plugin: callback
+        callable: trim
+        source: rrule
+destination:
+  plugin: 'entity:node'
+  default_bundle: calendar_event

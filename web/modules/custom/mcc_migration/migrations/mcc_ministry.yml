@@ -1,0 +1,41 @@
+id: mcc_ministry
+label: 'MCC Ministries'
+migration_group: mcc
+migration_dependencies:
+  required:
+    - mcc_user
+    - mcc_taxonomy
+source:
+  plugin: d7_node
+  node_type: ministry
+process:
+  nid: nid
+  vid: vid
+  title: title
+  uid: node_uid
+  status: status
+  created: created
+  changed: changed
+  body: body
+  field_bio_reference:
+    plugin: migration_lookup
+    migration: mcc_bio
+    source: field_bio_reference/target_id
+  field_ministry_structure:
+    plugin: migration_lookup
+    migration: mcc_taxonomy
+    source: field_ministry_structure/tid
+  field_mission_tags:
+    plugin: migration_lookup
+    migration: mcc_taxonomy
+    source: field_mission_tags/tid
+  field_related_events:
+    plugin: migration_lookup
+    migration: mcc_calendar_event
+    source: field_related_events/target_id
+  field_verse: field_verse
+  field_verse_link/uri: field_verse_link/url
+  field_verse_link/title: field_verse_link/title
+destination:
+  plugin: 'entity:node'
+  default_bundle: ministry
