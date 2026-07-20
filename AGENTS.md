@@ -13,6 +13,16 @@ A rebuild of the Mechanicsburg Christian Church website (mechanicsburgchristian.
 - **Stay upgradable.** This site should be easy to keep current with future Drupal CMS releases. Avoid patterns that fight core defaults or make future updates harder.
 - **No unnecessary scope.** Don't refactor, redesign, or "improve" things beyond what was asked.
 
+## Design Brief
+
+Our site should have a clean, warm, and professional country-church aesthetic:
+- **Primary Color:** Nice dark green (`#1e4d2b`).
+- **Typography:**
+  - **Headings & Emphasis:** `Calistoga` (a warm, friendly display serif with soft terminals).
+  - **Body & default copy:** `Nunito` (a highly readable, rounded sans-serif). Leverage various weights (300 to 900) for visual hierarchy and readability.
+- **Logo:** Custom logo settings (assets to be provided by the user).
+- **Subtheming:** Style customizations are encapsulated in the custom `mcc_theme` subtheme, overriding base theme design tokens.
+
 ## Environment & Local Development
 
 This codebase is a Composer-managed Drupal site. Local development uses `ddev`.
