@@ -1,0 +1,31 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Site Footer
+group: MCC Components
+props:
+  type: object
+  properties:
+    logo_icon_src:
+      type: string
+      title: Footer logo icon path
+    columns:
+      type: array
+      title: Footer columns (Visit / Connect / Contact)
+      items:
+        type: object
+        properties:
+          heading:
+            type: string
+          links:
+            type: array
+            items:
+              type: object
+              properties:
+                label:
+                  type: string
+                url:
+                  type: string
+                is_link:
+                  type: boolean
+    credit_line:
+      type: string
+      title: Bottom credit line

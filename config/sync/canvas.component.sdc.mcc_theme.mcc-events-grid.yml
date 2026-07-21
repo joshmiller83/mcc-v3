@@ -1,0 +1,26 @@
+uuid: 11944c92-0880-4993-9e1f-fdd37b0af1c8
+langcode: en
+status: true
+dependencies:
+  theme:
+    - mcc_theme
+active_version: 48c63e6ce1b88467
+versioned_properties:
+  active:
+    settings:
+      prop_field_definitions: {  }
+    fallback_metadata:
+      slot_definitions:
+        slot_1:
+          title: 'Slot 1'
+        slot_2:
+          title: 'Slot 2'
+        slot_3:
+          title: 'Slot 3'
+        slot_4:
+          title: 'Slot 4'
+label: 'Events Grid'
+id: sdc.mcc_theme.mcc-events-grid
+provider: mcc_theme
+source: sdc
+source_local_id: 'mcc_theme:mcc-events-grid'

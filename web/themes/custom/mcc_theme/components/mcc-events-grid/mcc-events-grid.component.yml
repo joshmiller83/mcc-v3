@@ -1,0 +1,16 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Events Grid
+group: MCC Components
+description: A 4-column responsive grid for event cards (caresphere_theme's section-grid tops out at 3 columns).
+props:
+  type: object
+  properties: {}
+slots:
+  slot_1:
+    title: Slot 1
+  slot_2:
+    title: Slot 2
+  slot_3:
+    title: Slot 3
+  slot_4:
+    title: Slot 4

@@ -7,9 +7,7 @@ dependencies:
     - canvas.component.block.system_menu_block.admin
     - canvas.component.block.system_menu_block.content
     - canvas.component.block.system_menu_block.footer
-    - canvas.component.block.system_menu_block.footer-about
     - canvas.component.block.system_menu_block.footer-connect
-    - canvas.component.block.system_menu_block.footer-ministries
     - canvas.component.block.system_menu_block.footer-organization
     - canvas.component.block.system_menu_block.footer-programs
     - canvas.component.block.system_menu_block.footer-resources
@@ -30,9 +28,7 @@ items:
   - block.system_menu_block.admin
   - block.system_menu_block.content
   - block.system_menu_block.footer
-  - block.system_menu_block.footer-about
   - block.system_menu_block.footer-connect
-  - block.system_menu_block.footer-ministries
   - block.system_menu_block.footer-organization
   - block.system_menu_block.footer-programs
   - block.system_menu_block.footer-resources

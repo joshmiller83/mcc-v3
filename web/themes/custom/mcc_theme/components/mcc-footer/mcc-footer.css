@@ -1,0 +1,73 @@
+footer[role="contentinfo"] {
+  /* Subtle CSS-only wood-grain approximation (layered radial gradients) in
+     place of a rasterized texture asset, over the walnut-900 base color from
+     Footer.jsx. */
+  background-color: var(--walnut-900);
+  background-image:
+    radial-gradient(ellipse 800px 40px at 10% 15%, rgba(0, 0, 0, 0.10), transparent 60%),
+    radial-gradient(ellipse 900px 50px at 80% 45%, rgba(0, 0, 0, 0.08), transparent 60%),
+    radial-gradient(ellipse 700px 35px at 30% 75%, rgba(0, 0, 0, 0.10), transparent 60%),
+    radial-gradient(ellipse 850px 45px at 60% 95%, rgba(255, 255, 255, 0.03), transparent 60%);
+  color: var(--text-on-inverse);
+  padding: 3rem 1.5rem 2rem;
+}
+
+.mcc-footer__inner {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.mcc-footer__col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  min-width: 180px;
+  flex: 1 1 180px;
+}
+
+.mcc-footer__col--logo {
+  flex: 0 0 auto;
+  min-width: 0;
+}
+
+.mcc-footer__logo-icon {
+  height: 48px;
+  width: auto;
+  filter: brightness(0) invert(1);
+}
+
+.mcc-footer__heading {
+  font-family: var(--font-body);
+  font-weight: var(--fw-bold);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  opacity: 0.7;
+  margin-bottom: 0.25rem;
+}
+
+.mcc-footer__link {
+  color: var(--text-on-inverse);
+  opacity: 0.9;
+  font-size: var(--text-body-md);
+  text-decoration: none;
+}
+
+a.mcc-footer__link:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+.mcc-footer__bottom {
+  max-width: var(--container-max);
+  margin: 2rem auto 0;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  font-size: var(--text-caption);
+  opacity: 0.7;
+  font-style: italic;
+  text-align: center;
+}

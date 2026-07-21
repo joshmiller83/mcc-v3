@@ -1,4 +1,8 @@
 global-styling:
   css:
     theme:
+      css/tokens/colors.css: {}
+      css/tokens/typography.css: {}
+      css/tokens/effects.css: {}
+      css/tokens/spacing.css: {}
       css/global-overrides.css: {}

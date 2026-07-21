@@ -1,8 +1,0 @@
-uuid: 7ff71564-ee20-492b-aa18-43eb327f30b1
-langcode: en
-status: true
-dependencies: {  }
-id: footer-ministries
-label: Ministries
-description: 'Footer Ministries Links'
-locked: false

@@ -1,0 +1,9 @@
+{#
+  caresphere_theme's page--front.html.twig hardcodes
+  `{% include '@caresphere_theme/layout/page.html.twig' %}` via an
+  explicit theme-namespaced include, which bypasses Drupal's normal
+  subtheme template-override resolution — mcc_theme's own page.html.twig
+  override was silently never used on the front page without this file
+  pointing the same suggestion at `@mcc_theme` instead.
+#}
+{% include '@mcc_theme/layout/page.html.twig' %}

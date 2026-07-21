@@ -1,0 +1,101 @@
+<?php
+
+/**
+ * @file
+ * Preprocess functions for mcc_theme.
+ *
+ * Header and footer are theme-owned (not Canvas-managed): this file builds
+ * the props for the mcc-header / mcc-footer / mcc-newsletter-band SDCs from
+ * real menu data, and page.html.twig renders them via {% include %} in
+ * place of the old per-block markup.
+ */
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function mcc_theme_preprocess_page(array &$variables): void {
+  $theme_path = \Drupal::theme()->getActiveTheme()->getPath();
+
+  $variables['mcc_header'] = [
+    'logo_src' => '/' . $theme_path . '/images/logo-horizontal.svg',
+    'logo_alt' => \Drupal::config('system.site')->get('name'),
+    'nav_items' => _mcc_theme_menu_links('header-nav'),
+    'cta_buttons' => _mcc_theme_header_cta_links(),
+  ];
+
+  $variables['mcc_footer'] = [
+    'logo_icon_src' => '/' . $theme_path . '/images/logo-icon.svg',
+    'columns' => [
+      ['heading' => 'Visit', 'links' => _mcc_theme_menu_links('footer-organization')],
+      ['heading' => 'Connect', 'links' => _mcc_theme_menu_links('footer-connect')],
+      ['heading' => 'Contact', 'links' => _mcc_theme_menu_links('footer-support')],
+    ],
+    'credit_line' => 'Mechanicsburg Christian Church · Est. 1840 · “We Love People!”',
+  ];
+
+  $variables['mcc_newsletter'] = [
+    'heading' => 'Stay connected',
+    'description' => 'Get updates on events and ministries, straight to your inbox.',
+    'form' => _mcc_theme_newsletter_form(),
+  ];
+}
+
+/**
+ * Loads a single-level menu as a flat array of link render data.
+ *
+ * Reuses core's menu tree access-checking and active-trail computation
+ * instead of hand-rolling either.
+ */
+function _mcc_theme_menu_links(string $menu_name): array {
+  $menu_tree = \Drupal::menuTree();
+  $parameters = $menu_tree->getCurrentRouteMenuTreeParameters($menu_name);
+  $parameters->setMaxDepth(1);
+  $tree = $menu_tree->load($menu_name, $parameters);
+  $tree = $menu_tree->transform($tree, [
+    ['callable' => 'menu.default_tree_manipulators:checkAccess'],
+    ['callable' => 'menu.default_tree_manipulators:generateIndexAndSort'],
+  ]);
+
+  $links = [];
+  foreach ($tree as $element) {
+    if (!$element->access->isAllowed()) {
+      continue;
+    }
+    $link = $element->link;
+    $url = $link->getUrlObject();
+    $is_nolink = $url->isRouted() && $url->getRouteName() === '<nolink>';
+    $links[] = [
+      'label' => $link->getTitle(),
+      'url' => $is_nolink ? '' : $url->toString(),
+      'is_link' => !$is_nolink,
+      'active' => (bool) $element->inActiveTrail,
+    ];
+  }
+  return $links;
+}
+
+/**
+ * Header CTA buttons: "Give" is outline unless it's the active page,
+ * "Plan your visit" is always the primary/filled button — matching the
+ * design system's Header.jsx variant logic.
+ */
+function _mcc_theme_header_cta_links(): array {
+  $links = _mcc_theme_menu_links('header-cta');
+  foreach ($links as &$link) {
+    $link['variant'] = ($link['label'] === 'Give' && !$link['active']) ? 'outline' : 'primary';
+  }
+  return $links;
+}
+
+/**
+ * Renders the real newsletter signup webform as a block.
+ */
+function _mcc_theme_newsletter_form(): array {
+  $plugin_block = \Drupal::service('plugin.manager.block')->createInstance('webform_block', [
+    'webform_id' => 'newsletter_email_signup',
+    'default_data' => '',
+    'redirect' => FALSE,
+    'label_display' => FALSE,
+  ]);
+  return $plugin_block->build();
+}

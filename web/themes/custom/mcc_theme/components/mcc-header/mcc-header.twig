@@ -1,0 +1,26 @@
+{#
+  Site header: logo + primary nav + CTA buttons.
+  Rendered inside caresphere_theme's `.header-inner` wrapper (see mcc_theme's
+  page.html.twig override) so the base theme's mobile-menu JS/CSS
+  (`.region-header.mobile-menu-open .header-inner > nav`) keeps working
+  unchanged — this component only supplies the inner markup.
+#}
+<a href="/" class="branding__link mcc-header-logo" rel="home">
+  <img src="{{ logo_src }}" alt="{{ logo_alt }}" class="mcc-header-logo__img" />
+</a>
+
+<nav aria-label="Primary navigation">
+  <ul class="menu menu--level-1">
+    {% for item in nav_items %}
+      <li class="menu__item{{ item.active ? ' is-active' : '' }}">
+        <a href="{{ item.url }}" class="menu__link{{ item.active ? ' is-active' : '' }}"{{ item.active ? ' aria-current="page"' : '' }}>{{ item.label }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+</nav>
+
+<div class="mcc-header-cta">
+  {% for cta in cta_buttons %}
+    <a href="{{ cta.url }}" class="button button--{{ cta.variant }}">{{ cta.label }}</a>
+  {% endfor %}
+</div>

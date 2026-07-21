@@ -1,0 +1,24 @@
+/**
+ * Vendored from Claude Design project "Mechanicsburg Christian Church Design System"
+ * (tokens/colors.css) — source of truth for all mcc_theme color decisions.
+ */
+:root{
+--green-700:#2f4833;--green-800:color-mix(in oklch,var(--green-700) 88%,black 12%);--green-900:color-mix(in oklch,var(--green-700) 72%,black 28%);--green-950:color-mix(in oklch,var(--green-700) 58%,black 42%);
+--green-600:color-mix(in oklch,var(--green-700) 88%,white 12%);--green-500:color-mix(in oklch,var(--green-700) 72%,white 28%);--green-400:color-mix(in oklch,var(--green-700) 55%,white 45%);--green-300:color-mix(in oklch,var(--green-700) 38%,white 62%);--green-200:color-mix(in oklch,var(--green-700) 24%,white 76%);--green-100:color-mix(in oklch,var(--green-700) 14%,white 86%);--green-50:color-mix(in oklch,var(--green-700) 7%,white 93%);
+--terracotta-500:#ae5b33;--terracotta-600:color-mix(in oklch,var(--terracotta-500) 88%,black 12%);--terracotta-700:color-mix(in oklch,var(--terracotta-500) 74%,black 26%);--terracotta-800:color-mix(in oklch,var(--terracotta-500) 60%,black 40%);--terracotta-900:color-mix(in oklch,var(--terracotta-500) 46%,black 54%);
+--terracotta-400:color-mix(in oklch,var(--terracotta-500) 82%,white 18%);--terracotta-300:color-mix(in oklch,var(--terracotta-500) 62%,white 38%);--terracotta-200:color-mix(in oklch,var(--terracotta-500) 40%,white 60%);--terracotta-100:color-mix(in oklch,var(--terracotta-500) 22%,white 78%);--terracotta-50:color-mix(in oklch,var(--terracotta-500) 10%,white 90%);
+--walnut-700:#4e3426;--walnut-600:color-mix(in oklch,var(--walnut-700) 85%,white 15%);--walnut-500:color-mix(in oklch,var(--walnut-700) 65%,white 35%);--walnut-400:color-mix(in oklch,var(--walnut-700) 45%,white 55%);--walnut-800:color-mix(in oklch,var(--walnut-700) 82%,black 18%);--walnut-900:color-mix(in oklch,var(--walnut-700) 62%,black 38%);
+--brick-500:oklch(52% 0.15 28);--brick-600:oklch(45% 0.14 27);--brick-700:oklch(37% 0.12 27);
+--oatmeal:#e9e3d5;--white-warm:color-mix(in oklch,var(--oatmeal) 35%,white 65%);
+--neutral-0:var(--oatmeal);--neutral-50:var(--white-warm);--neutral-100:color-mix(in oklch,var(--neutral-0) 88%,var(--walnut-700) 12%);--neutral-200:color-mix(in oklch,var(--neutral-0) 74%,var(--walnut-700) 26%);--neutral-300:color-mix(in oklch,var(--neutral-0) 55%,var(--walnut-700) 45%);--neutral-400:color-mix(in oklch,var(--neutral-0) 38%,var(--walnut-700) 62%);--neutral-500:color-mix(in oklch,var(--neutral-0) 24%,var(--walnut-700) 76%);--neutral-600:color-mix(in oklch,var(--neutral-0) 12%,var(--walnut-700) 88%);--neutral-700:var(--walnut-600);--neutral-800:var(--walnut-800);--neutral-900:var(--walnut-900);
+--white:oklch(100% 0 0);
+--color-primary:var(--green-700);--color-primary-hover:var(--green-600);--color-primary-active:var(--green-800);--color-primary-subtle:var(--green-50);
+--color-secondary:var(--terracotta-700);--color-secondary-hover:var(--terracotta-600);--color-secondary-active:var(--terracotta-800);--color-secondary-subtle:var(--terracotta-50);
+--color-success:var(--green-700);--color-success-subtle:var(--green-50);
+--color-warning:var(--terracotta-600);--color-warning-subtle:var(--terracotta-50);
+--color-error:var(--brick-600);--color-error-subtle:oklch(95% 0.03 28);
+--color-info:var(--green-600);--color-info-subtle:var(--green-50);
+--surface-page:var(--neutral-0);--surface-card:var(--white-warm);--surface-sunken:var(--neutral-50);--surface-inverse:var(--green-900);
+--text-body:var(--neutral-900);--text-muted:var(--neutral-600);--text-faint:var(--neutral-400);--text-on-primary:var(--neutral-0);--text-on-inverse:var(--neutral-0);--text-link:var(--terracotta-700);--text-link-hover:var(--terracotta-800);
+--border-subtle:var(--neutral-100);--border-default:var(--neutral-200);--border-strong:var(--neutral-300);--border-primary:var(--green-700);
+}

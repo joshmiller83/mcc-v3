@@ -1,0 +1,23 @@
+/**
+ * Vendored from Claude Design project "Mechanicsburg Christian Church Design System"
+ * (tokens/typography.css).
+ */
+:root{
+--font-display:'Calistoga',Georgia,serif;
+--font-body:'Nunito',system-ui,sans-serif;
+--fw-regular:400;
+--fw-medium:600;
+--fw-bold:700;
+--fw-heavy:800;
+--text-display-xl:4rem;--lh-display-xl:1.05;
+--text-display-lg:3rem;--lh-display-lg:1.1;
+--text-display-md:2.25rem;--lh-display-md:1.15;
+--text-heading-lg:1.75rem;--lh-heading-lg:1.25;
+--text-heading-md:1.375rem;--lh-heading-md:1.3;
+--text-heading-sm:1.125rem;--lh-heading-sm:1.4;
+--text-body-lg:1.125rem;--lh-body-lg:1.6;
+--text-body-md:1rem;--lh-body-md:1.6;
+--text-body-sm:0.875rem;--lh-body-sm:1.55;
+--text-caption:0.75rem;--lh-caption:1.4;
+--tracking-eyebrow:0.08em;
+}

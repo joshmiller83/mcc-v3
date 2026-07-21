@@ -1,0 +1,26 @@
+{#
+  4-column responsive grid for event cards. caresphere_theme's section-grid
+  tops out at 3 columns, which was silently dropping the 4th upcoming event.
+#}
+<div class="mcc-events-grid custom-container">
+  <div class="mcc-events-grid__col">
+    {% block slot_1 %}
+      <div class="section-grid__empty-state"><em>Drag component to Slot 1</em></div>
+    {% endblock %}
+  </div>
+  <div class="mcc-events-grid__col">
+    {% block slot_2 %}
+      <div class="section-grid__empty-state"><em>Drag component to Slot 2</em></div>
+    {% endblock %}
+  </div>
+  <div class="mcc-events-grid__col">
+    {% block slot_3 %}
+      <div class="section-grid__empty-state"><em>Drag component to Slot 3</em></div>
+    {% endblock %}
+  </div>
+  <div class="mcc-events-grid__col">
+    {% block slot_4 %}
+      <div class="section-grid__empty-state"><em>Drag component to Slot 4</em></div>
+    {% endblock %}
+  </div>
+</div>

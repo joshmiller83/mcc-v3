@@ -1,0 +1,14 @@
+/**
+ * Vendored from Claude Design project "Mechanicsburg Christian Church Design System"
+ * (tokens/effects.css).
+ */
+:root{
+--radius-sm:6px;--radius-md:10px;--radius-lg:16px;--radius-pill:999px;
+--shadow-sm:0 1px 2px oklch(20% 0.02 155 / 0.08);
+--shadow-md:0 4px 12px oklch(20% 0.02 155 / 0.10);
+--shadow-lg:0 12px 32px oklch(20% 0.02 155 / 0.14);
+--border-w:1px;
+--ease-standard:cubic-bezier(.4,0,.2,1);
+--duration-fast:120ms;
+--duration-base:180ms;
+}

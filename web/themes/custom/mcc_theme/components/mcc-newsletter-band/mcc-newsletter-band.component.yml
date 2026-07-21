@@ -1,0 +1,14 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Newsletter Band
+group: MCC Components
+props:
+  type: object
+  properties:
+    heading:
+      type: string
+    description:
+      type: string
+slots:
+  form:
+    title: Signup form
+    description: The real newsletter webform block, rendered by the caller.

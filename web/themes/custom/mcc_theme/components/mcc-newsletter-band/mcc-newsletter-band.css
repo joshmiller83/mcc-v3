@@ -1,0 +1,72 @@
+.mcc-newsletter-band {
+  background-color: var(--green-900);
+  color: var(--text-on-inverse);
+  padding: 2.5rem 1.5rem;
+}
+
+.mcc-newsletter-band__inner {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.mcc-newsletter-band__copy h2 {
+  font-family: var(--font-body);
+  font-weight: var(--fw-bold);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  opacity: 0.75;
+  margin: 0 0 0.375rem;
+}
+
+.mcc-newsletter-band__copy p {
+  margin: 0;
+  font-size: var(--text-body-md);
+  opacity: 0.9;
+}
+
+.mcc-newsletter-band__form form {
+  display: flex;
+  gap: 0.625rem;
+  flex-wrap: wrap;
+}
+
+.mcc-newsletter-band__form input[type="email"] {
+  padding: 0.625rem 0.875rem;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.14);
+  color: var(--text-on-inverse);
+  font-family: var(--font-body);
+  min-width: 220px;
+}
+
+.mcc-newsletter-band__form input[type="email"]::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.mcc-newsletter-band__form input[type="submit"],
+.mcc-newsletter-band__form button {
+  padding: 0.625rem 1.25rem;
+  border-radius: var(--radius-md);
+  border: none;
+  background: var(--color-secondary);
+  color: var(--text-on-primary);
+  font-family: var(--font-body);
+  font-weight: var(--fw-bold);
+  cursor: pointer;
+}
+
+.mcc-newsletter-band__form input[type="submit"]:hover,
+.mcc-newsletter-band__form button:hover {
+  background: var(--color-secondary-hover);
+}
+
+.mcc-newsletter-band__form .form-item {
+  margin: 0;
+}

@@ -1,0 +1,25 @@
+{#
+  Site footer: logo mark + Visit / Connect / Contact columns + credit line.
+  A literal port of the Claude Design system's Footer.jsx, fed real menu
+  data by mcc_theme_preprocess_page().
+#}
+<div class="mcc-footer__inner">
+  <div class="mcc-footer__col mcc-footer__col--logo">
+    <img src="{{ logo_icon_src }}" alt="" class="mcc-footer__logo-icon" />
+  </div>
+
+  {% for column in columns %}
+    <div class="mcc-footer__col">
+      <span class="mcc-footer__heading">{{ column.heading }}</span>
+      {% for link in column.links %}
+        {% if link.is_link %}
+          <a class="mcc-footer__link" href="{{ link.url }}">{{ link.label }}</a>
+        {% else %}
+          <span class="mcc-footer__link mcc-footer__link--text">{{ link.label }}</span>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endfor %}
+</div>
+
+<div class="mcc-footer__bottom">{{ credit_line }}</div>

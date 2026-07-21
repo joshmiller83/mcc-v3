@@ -1,0 +1,59 @@
+{#
+  mcc_theme override of caresphere_theme's layout/page.html.twig.
+
+  Header and footer are theme-owned here (mcc-header / mcc-footer SDCs, fed
+  by mcc_theme_preprocess_page()) rather than Canvas-managed or built from
+  raw block markup — see mcc_theme.theme. The `.header-inner` / mobile-menu
+  wrapper markup is left identical to the base theme's so caresphere's
+  existing mobile-nav JS/CSS (`.region-header.mobile-menu-open .header-inner
+  > nav`) keeps working unchanged.
+#}
+<div class="layout-container">
+
+  <header class="region-header" role="banner">
+    <div class="header-inner custom-container">
+      {% include 'mcc_theme:mcc-header' with mcc_header only %}
+      <button class="mobile-menu-toggle" aria-label="Toggle navigation" aria-expanded="false">
+        <span class="hamburger-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="w-6 h-6"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg></span>
+        <span class="close-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="w-6 h-6"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></span>
+      </button>
+    </div>
+  </header>
+
+  {{ page.primary_menu }}
+  {{ page.secondary_menu }}
+  {{ page.breadcrumb }}
+  {{ page.highlighted }}
+  {{ page.help }}
+
+  <main role="main">
+    <a id="main-content" tabindex="-1"></a>
+
+    {% if not rendered_by_canvas %}
+      <div class="layout-content">
+        {{ page.content }}
+      </div>
+    {% else %}
+      {{ page.content }}
+    {% endif %}
+
+    {% if page.sidebar_first %}
+      <aside class="layout-sidebar-first" role="complementary">
+        {{ page.sidebar_first }}
+      </aside>
+    {% endif %}
+
+    {% if page.sidebar_second %}
+      <aside class="layout-sidebar-second" role="complementary">
+        {{ page.sidebar_second }}
+      </aside>
+    {% endif %}
+  </main>
+
+  {% include 'mcc_theme:mcc-newsletter-band' with mcc_newsletter only %}
+
+  <footer role="contentinfo">
+    {% include 'mcc_theme:mcc-footer' with mcc_footer only %}
+  </footer>
+
+</div>

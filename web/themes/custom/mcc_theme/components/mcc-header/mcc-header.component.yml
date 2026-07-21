@@ -1,0 +1,36 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Site Header
+group: MCC Components
+props:
+  type: object
+  properties:
+    logo_src:
+      type: string
+      title: Logo image path
+    logo_alt:
+      type: string
+      title: Logo alt text
+    nav_items:
+      type: array
+      title: Primary nav links
+      items:
+        type: object
+        properties:
+          label:
+            type: string
+          url:
+            type: string
+          active:
+            type: boolean
+    cta_buttons:
+      type: array
+      title: Header CTA buttons
+      items:
+        type: object
+        properties:
+          label:
+            type: string
+          url:
+            type: string
+          variant:
+            type: string

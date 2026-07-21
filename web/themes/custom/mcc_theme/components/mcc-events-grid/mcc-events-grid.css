@@ -1,0 +1,25 @@
+.mcc-events-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 40rem) {
+  .mcc-events-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 64rem) {
+  .mcc-events-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.mcc-events-grid__col {
+  display: flex;
+}
+
+.mcc-events-grid__col > * {
+  width: 100%;
+}
