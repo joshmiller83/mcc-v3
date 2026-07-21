@@ -39,3 +39,7 @@ $RECYCLE.BIN/
 /auth.json
 /.editorconfig
 /.gitattributes
+
+# Database dumps
+*.sql
+*.sql.gz

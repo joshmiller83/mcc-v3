@@ -1,0 +1,35 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Event Card
+group: MCC Components
+props:
+  type: object
+  required:
+    - title
+    - date_day
+    - date_month
+  properties:
+    date_month:
+      type: string
+      title: Month (e.g. JUL)
+      examples:
+        - "JUL"
+    date_day:
+      type: string
+      title: Day of Month (e.g. 22)
+      examples:
+        - "22"
+    title:
+      type: string
+      title: Event Title
+      examples:
+        - "Young Adults Bible Study"
+    time_info:
+      type: string
+      title: Day & Time Info (e.g. Wednesday · 7:00pm)
+      examples:
+        - "Wednesday · 7:00pm"
+    url:
+      type: string
+      title: Event URL (optional)
+      examples:
+        - "/events"

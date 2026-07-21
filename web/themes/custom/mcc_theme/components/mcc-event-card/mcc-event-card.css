@@ -1,0 +1,74 @@
+.mcc-event-card {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1.25rem;
+  background: var(--card, #ffffff);
+  border-radius: var(--radius-md, 10px);
+  border: 1px solid var(--border, #e9e3d5);
+  box-shadow: var(--shadow-sm, 0 1px 2px rgba(0,0,0,0.05));
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.mcc-event-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md, 0 4px 12px rgba(0,0,0,0.1));
+}
+
+.mcc-event-card__date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.75rem;
+  background-color: var(--green-700, #2f4833);
+  color: var(--text-on-primary, #ffffff);
+  border-radius: var(--radius-sm, 6px);
+  flex-shrink: 0;
+}
+
+.mcc-event-card__month {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  line-height: 1;
+}
+
+.mcc-event-card__day {
+  font-size: 1.35rem;
+  font-weight: 800;
+  font-family: var(--font-display, 'Calistoga', serif);
+  line-height: 1.1;
+  margin-top: 2px;
+}
+
+.mcc-event-card__details {
+  flex: 1;
+  min-width: 0;
+}
+
+.mcc-event-card__title {
+  font-family: var(--font-display, 'Calistoga', serif);
+  font-size: 1.125rem;
+  color: var(--foreground, #1e4d2b);
+  margin: 0 0 0.25rem;
+  line-height: 1.3;
+}
+
+.mcc-event-card__title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.mcc-event-card__title a:hover {
+  text-decoration: underline;
+}
+
+.mcc-event-card__time {
+  font-family: var(--font-sans, 'Nunito', sans-serif);
+  font-size: 0.875rem;
+  color: var(--text-muted, #52514e);
+  margin: 0;
+}
