@@ -1,0 +1,11 @@
+uuid: 7f3a69a8-52a5-4896-9757-1931d979074e
+langcode: en
+status: true
+dependencies:
+  config:
+    - canvas.component.sdc.mcc_theme.mcc-event-card
+name: 'MCC Components'
+configEntityTypeId: component
+weight: 0
+items:
+  - sdc.mcc_theme.mcc-event-card

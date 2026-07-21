@@ -1,0 +1,25 @@
+uuid: ce143ef7-5135-42c0-b1ba-98a37f37ba4a
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.header-cta
+  module:
+    - system
+  theme:
+    - mcc_theme
+id: mcctheme_headercta
+theme: mcc_theme
+region: header_links
+weight: 0
+provider: null
+plugin: 'system_menu_block:header-cta'
+settings:
+  id: 'system_menu_block:header-cta'
+  label: 'Header CTA'
+  label_display: '0'
+  provider: system
+  level: 1
+  depth: 0
+  expand_all_items: false
+visibility: {  }

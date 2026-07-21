@@ -5,6 +5,6 @@ dependencies: {  }
 _core:
   default_config_hash: fLZ8Y6ebKDIOQ0zQwyNHxmGP5ViZDPQQUnIG1H9_VSI
 id: footer-organization
-label: 'Footer Organization'
+label: 'Footer Visit'
 description: ''
 locked: false

@@ -1,0 +1,27 @@
+uuid: eb3b9153-547b-48b0-bf3a-4934bf0f507d
+langcode: en
+status: false
+dependencies:
+  config:
+    - system.menu.footer-ministries
+  module:
+    - system
+active_version: 3bbe068c809e6900
+versioned_properties:
+  active:
+    settings:
+      default_settings:
+        id: 'system_menu_block:footer-ministries'
+        label: Ministries
+        label_display: '0'
+        provider: system
+        level: 1
+        depth: null
+        expand_all_items: false
+    fallback_metadata:
+      slot_definitions: null
+label: Ministries
+id: block.system_menu_block.footer-ministries
+provider: system
+source: block
+source_local_id: 'system_menu_block:footer-ministries'

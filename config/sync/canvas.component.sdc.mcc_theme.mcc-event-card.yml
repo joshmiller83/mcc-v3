@@ -1,0 +1,78 @@
+uuid: 38490692-8caf-4869-86e4-a184bbaa5363
+langcode: en
+status: true
+dependencies:
+  theme:
+    - mcc_theme
+active_version: 543babff8a85e69c
+versioned_properties:
+  active:
+    settings:
+      prop_field_definitions:
+        date_month:
+          required: true
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value:
+            -
+              value: JUL
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+        date_day:
+          required: true
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value:
+            -
+              value: '22'
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+        title:
+          required: true
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value:
+            -
+              value: 'Young Adults Bible Study'
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+        time_info:
+          required: false
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value:
+            -
+              value: 'Wednesday · 7:00pm'
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+        url:
+          required: false
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value:
+            -
+              value: /events
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+    fallback_metadata:
+      slot_definitions: {  }
+label: 'Event Card'
+id: sdc.mcc_theme.mcc-event-card
+provider: mcc_theme
+source: sdc
+source_local_id: 'mcc_theme:mcc-event-card'

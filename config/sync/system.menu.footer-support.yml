@@ -5,6 +5,6 @@ dependencies: {  }
 _core:
   default_config_hash: ebab238KR7VoSdIw4_yItgriwwAV8quZ5J5LYoEmOUM
 id: footer-support
-label: 'Footer Support'
+label: 'Footer Contact'
 description: ''
 locked: false

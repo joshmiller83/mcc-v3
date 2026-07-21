@@ -1,0 +1,23 @@
+uuid: 23149c9e-02be-4957-bc20-eb29d1a8d925
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:2795c196-1845-40da-a1b9-160fac4726d7'
+  module:
+    - block_content
+  theme:
+    - mcc_theme
+id: mcctheme_footerchurchinfo
+theme: mcc_theme
+region: footer
+weight: 1
+provider: null
+plugin: 'block_content:2795c196-1845-40da-a1b9-160fac4726d7'
+settings:
+  id: 'block_content:2795c196-1845-40da-a1b9-160fac4726d7'
+  label: 'Church Info'
+  label_display: '0'
+  provider: block_content
+  view_mode: full
+visibility: {  }

@@ -3,5 +3,18 @@ type: theme
 description: 'Custom subtheme for Mechanicsburg Christian Church, inheriting from Caresphere.'
 core_version_requirement: ^10 || ^11
 base theme: caresphere_theme
+logo: images/logo-horizontal.svg
 libraries:
   - mcc_theme/global-styling
+regions:
+  header: Header
+  header_links: 'Header CTA links'
+  primary_menu: 'Primary menu'
+  secondary_menu: 'Secondary menu'
+  breadcrumb: Breadcrumb
+  highlighted: Highlighted
+  help: 'Help text'
+  content: Content
+  sidebar_first: 'Sidebar first'
+  sidebar_second: 'Sidebar second'
+  footer: Footer

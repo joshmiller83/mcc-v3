@@ -1,0 +1,27 @@
+uuid: 3db96feb-a3e8-428a-8e57-e445704b890a
+langcode: en
+status: false
+dependencies:
+  config:
+    - system.menu.header-nav
+  module:
+    - system
+active_version: c4c08e6214e24d79
+versioned_properties:
+  active:
+    settings:
+      default_settings:
+        id: 'system_menu_block:header-nav'
+        label: 'Header navigation'
+        label_display: '0'
+        provider: system
+        level: 1
+        depth: null
+        expand_all_items: false
+    fallback_metadata:
+      slot_definitions: null
+label: 'Header navigation'
+id: block.system_menu_block.header-nav
+provider: system
+source: block
+source_local_id: 'system_menu_block:header-nav'

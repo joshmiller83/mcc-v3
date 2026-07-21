@@ -1,0 +1,25 @@
+uuid: ce26aaf9-b2c4-4ebe-9b12-476a1e2cbbe0
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.footer-connect
+  module:
+    - system
+  theme:
+    - mcc_theme
+id: mcctheme_footerconnect
+theme: mcc_theme
+region: footer
+weight: 3
+provider: null
+plugin: 'system_menu_block:footer-connect'
+settings:
+  id: 'system_menu_block:footer-connect'
+  label: Connect
+  label_display: visible
+  provider: system
+  level: 1
+  depth: 0
+  expand_all_items: false
+visibility: {  }

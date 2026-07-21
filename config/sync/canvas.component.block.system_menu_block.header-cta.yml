@@ -1,0 +1,27 @@
+uuid: 55af7af7-9ab0-457a-8b2d-4ff6d4035710
+langcode: en
+status: false
+dependencies:
+  config:
+    - system.menu.header-cta
+  module:
+    - system
+active_version: 01f0989d19ab6fc1
+versioned_properties:
+  active:
+    settings:
+      default_settings:
+        id: 'system_menu_block:header-cta'
+        label: 'Header CTA'
+        label_display: '0'
+        provider: system
+        level: 1
+        depth: null
+        expand_all_items: false
+    fallback_metadata:
+      slot_definitions: null
+label: 'Header CTA'
+id: block.system_menu_block.header-cta
+provider: system
+source: block
+source_local_id: 'system_menu_block:header-cta'

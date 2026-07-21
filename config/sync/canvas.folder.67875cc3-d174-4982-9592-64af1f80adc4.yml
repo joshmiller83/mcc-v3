@@ -7,11 +7,15 @@ dependencies:
     - canvas.component.block.system_menu_block.admin
     - canvas.component.block.system_menu_block.content
     - canvas.component.block.system_menu_block.footer
+    - canvas.component.block.system_menu_block.footer-about
     - canvas.component.block.system_menu_block.footer-connect
+    - canvas.component.block.system_menu_block.footer-ministries
     - canvas.component.block.system_menu_block.footer-organization
     - canvas.component.block.system_menu_block.footer-programs
     - canvas.component.block.system_menu_block.footer-resources
     - canvas.component.block.system_menu_block.footer-support
+    - canvas.component.block.system_menu_block.header-cta
+    - canvas.component.block.system_menu_block.header-nav
     - canvas.component.block.system_menu_block.main
     - canvas.component.block.system_menu_block.navigation-user-links
     - canvas.component.block.system_menu_block.tools
@@ -26,11 +30,15 @@ items:
   - block.system_menu_block.admin
   - block.system_menu_block.content
   - block.system_menu_block.footer
+  - block.system_menu_block.footer-about
   - block.system_menu_block.footer-connect
+  - block.system_menu_block.footer-ministries
   - block.system_menu_block.footer-organization
   - block.system_menu_block.footer-programs
   - block.system_menu_block.footer-resources
   - block.system_menu_block.footer-support
+  - block.system_menu_block.header-cta
+  - block.system_menu_block.header-nav
   - block.system_menu_block.main
   - block.system_menu_block.navigation-user-links
   - block.system_menu_block.tools

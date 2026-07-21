@@ -1,0 +1,25 @@
+uuid: 8e4a21b0-3bc5-4bc7-b77a-b2986d132fee
+langcode: en
+status: false
+dependencies:
+  content:
+    - 'block_content:basic:3c6be7f2-9bfe-40b3-a4d6-2da37eab2a58'
+  module:
+    - block_content
+active_version: 6eb80523d8fb7e2d
+versioned_properties:
+  active:
+    settings:
+      default_settings:
+        id: 'block_content:3c6be7f2-9bfe-40b3-a4d6-2da37eab2a58'
+        label: 'Footer Newsletter'
+        label_display: '0'
+        provider: block_content
+        view_mode: full
+    fallback_metadata:
+      slot_definitions: null
+label: 'Footer Newsletter'
+id: block.block_content.3c6be7f2-9bfe-40b3-a4d6-2da37eab2a58
+provider: block_content
+source: block
+source_local_id: 'block_content:3c6be7f2-9bfe-40b3-a4d6-2da37eab2a58'

@@ -1,0 +1,23 @@
+uuid: 531fcfd1-e460-4037-b069-c202b87d0d55
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:ca9b6d96-4c7a-4061-984d-bb937e40c428'
+  module:
+    - block_content
+  theme:
+    - mcc_theme
+id: mcctheme_footercopyright
+theme: mcc_theme
+region: footer
+weight: 5
+provider: null
+plugin: 'block_content:ca9b6d96-4c7a-4061-984d-bb937e40c428'
+settings:
+  id: 'block_content:ca9b6d96-4c7a-4061-984d-bb937e40c428'
+  label: Copyright
+  label_display: '0'
+  provider: block_content
+  view_mode: full
+visibility: {  }

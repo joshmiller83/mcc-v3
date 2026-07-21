@@ -1,10 +1,127 @@
 @import url('https://fonts.googleapis.com/css2?family=Calistoga&family=Nunito:wght@300;400;500;600;700;800;900&display=swap');
 
+/**
+ * Design tokens sourced from the "Mechanicsburg Christian Church Design
+ * System" Claude Design project. Raw scale first, then mapped onto
+ * caresphere_theme's shadcn-style variable names (css/theme.css).
+ */
 :root {
-  /* Override default primary colors with dark forest green */
-  --primary: #1e4d2b;
-  --primary-foreground: #ffffff;
-  --destructive: #731212;
+  /* --- Raw color scale (design system tokens/colors.css) --- */
+  --green-700: #2f4833;
+  --green-800: color-mix(in oklch, var(--green-700) 88%, black 12%);
+  --green-900: color-mix(in oklch, var(--green-700) 72%, black 28%);
+  --green-950: color-mix(in oklch, var(--green-700) 58%, black 42%);
+  --green-600: color-mix(in oklch, var(--green-700) 88%, white 12%);
+  --green-500: color-mix(in oklch, var(--green-700) 72%, white 28%);
+  --green-400: color-mix(in oklch, var(--green-700) 55%, white 45%);
+  --green-300: color-mix(in oklch, var(--green-700) 38%, white 62%);
+  --green-200: color-mix(in oklch, var(--green-700) 24%, white 76%);
+  --green-100: color-mix(in oklch, var(--green-700) 14%, white 86%);
+  --green-50: color-mix(in oklch, var(--green-700) 7%, white 93%);
+
+  --terracotta-500: #ae5b33;
+  --terracotta-600: color-mix(in oklch, var(--terracotta-500) 88%, black 12%);
+  --terracotta-700: color-mix(in oklch, var(--terracotta-500) 74%, black 26%);
+  --terracotta-800: color-mix(in oklch, var(--terracotta-500) 60%, black 40%);
+  --terracotta-900: color-mix(in oklch, var(--terracotta-500) 46%, black 54%);
+  --terracotta-400: color-mix(in oklch, var(--terracotta-500) 82%, white 18%);
+  --terracotta-300: color-mix(in oklch, var(--terracotta-500) 62%, white 38%);
+  --terracotta-200: color-mix(in oklch, var(--terracotta-500) 40%, white 60%);
+  --terracotta-100: color-mix(in oklch, var(--terracotta-500) 22%, white 78%);
+  --terracotta-50: color-mix(in oklch, var(--terracotta-500) 10%, white 90%);
+
+  --walnut-700: #4e3426;
+  --walnut-600: color-mix(in oklch, var(--walnut-700) 85%, white 15%);
+  --walnut-500: color-mix(in oklch, var(--walnut-700) 65%, white 35%);
+  --walnut-400: color-mix(in oklch, var(--walnut-700) 45%, white 55%);
+  --walnut-800: color-mix(in oklch, var(--walnut-700) 82%, black 18%);
+  --walnut-900: color-mix(in oklch, var(--walnut-700) 62%, black 38%);
+
+  --brick-500: oklch(52% 0.15 28);
+  --brick-600: oklch(45% 0.14 27);
+  --brick-700: oklch(37% 0.12 27);
+
+  --oatmeal: #e9e3d5;
+  --white-warm: color-mix(in oklch, var(--oatmeal) 35%, white 65%);
+  --neutral-0: var(--oatmeal);
+  --neutral-50: var(--white-warm);
+  --neutral-100: color-mix(in oklch, var(--neutral-0) 88%, var(--walnut-700) 12%);
+  --neutral-200: color-mix(in oklch, var(--neutral-0) 74%, var(--walnut-700) 26%);
+  --neutral-300: color-mix(in oklch, var(--neutral-0) 55%, var(--walnut-700) 45%);
+  --neutral-400: color-mix(in oklch, var(--neutral-0) 38%, var(--walnut-700) 62%);
+  --neutral-500: color-mix(in oklch, var(--neutral-0) 24%, var(--walnut-700) 76%);
+  --neutral-600: color-mix(in oklch, var(--neutral-0) 12%, var(--walnut-700) 88%);
+  --neutral-700: var(--walnut-600);
+  --neutral-800: var(--walnut-800);
+  --neutral-900: var(--walnut-900);
+
+  --color-primary: var(--green-700);
+  --color-primary-hover: var(--green-600);
+  --color-primary-active: var(--green-800);
+  --color-primary-subtle: var(--green-50);
+  --color-secondary: var(--terracotta-700);
+  --color-secondary-hover: var(--terracotta-600);
+  --text-on-primary: var(--neutral-0);
+  --text-body: var(--neutral-900);
+  --text-muted: var(--neutral-600);
+
+  /* --- Raw effects scale (design system tokens/effects.css) --- */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+  --shadow-sm: 0 1px 2px oklch(20% 0.02 155 / 0.08);
+  --shadow-md: 0 4px 12px oklch(20% 0.02 155 / 0.10);
+  --shadow-lg: 0 12px 32px oklch(20% 0.02 155 / 0.14);
+
+  /* --- Raw typography scale (design system tokens/typography.css) --- */
+  --fw-regular: 400;
+  --fw-medium: 600;
+  --fw-bold: 700;
+  --fw-heavy: 800;
+  --text-caption: 0.75rem;
+  --lh-caption: 1.4;
+  --text-body-sm: 0.875rem;
+  --lh-body-sm: 1.55;
+  --text-body-md: 1rem;
+  --lh-body-md: 1.6;
+  --text-body-lg: 1.125rem;
+  --lh-body-lg: 1.6;
+
+  /* --- caresphere_theme semantic tokens, mapped onto the above --- */
+  --background: var(--neutral-0);
+  --foreground: var(--neutral-900);
+  --card: var(--white-warm);
+  --card-foreground: var(--neutral-900);
+  --primary: var(--color-primary);
+  --primary-foreground: var(--text-on-primary);
+  --destructive: var(--brick-600);
+  --border: var(--neutral-200);
+  --border-secondary: rgba(255, 255, 255, 0.15);
+  --input: rgba(255, 255, 255, 0.6);
+  --muted: var(--neutral-50);
+  --muted-foreground: var(--text-muted);
+
+  --radius: var(--radius-md);
+  --radius-large: var(--radius-lg);
+
+  --button-font-family: var(--font-sans);
+  --button-font-weight: var(--fw-bold);
+  --button-letter-spacing: normal;
+
+  --font-weight-normal: var(--fw-regular);
+  --font-weight-medium: var(--fw-medium);
+  --font-weight-semibold: var(--fw-bold);
+  --font-weight-bold: var(--fw-heavy);
+
+  --text-xs: var(--text-caption);
+  --text-xs--line-height: var(--lh-caption);
+  --text-sm: var(--text-body-sm);
+  --text-sm--line-height: var(--lh-body-sm);
+  --text-base: var(--text-body-md);
+  --text-base--line-height: var(--lh-body-md);
+  --text-lg: var(--text-body-lg);
+  --text-lg--line-height: var(--lh-body-lg);
 
   /* Overriding typefaces to Calistoga (headings/emphasis) and Nunito (body/everything else) */
   --font-sans: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -12,3 +129,256 @@
   --font-display: 'Calistoga', serif;
   --font-logo: 'Calistoga', serif;
 }
+
+/**
+ * Header CTA menu ("Header CTA" block in the header_links region) rendered
+ * as buttons, matching Header.jsx's Give / Plan your visit pair. caresphere's
+ * button SDC has no bordered "outline" variant (primary/secondary-white/
+ * secondary-dark/link only) — secondary-dark is the closest match on our
+ * light header background.
+ */
+#block-mcctheme-headercta .menu {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#block-mcctheme-headercta .menu__link {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1.25rem;
+  border-radius: var(--radius);
+  font-family: var(--font-sans);
+  font-weight: var(--button-font-weight);
+  text-decoration: none;
+}
+
+/* First link = Give (outline style), second = Plan your visit (filled) */
+#block-mcctheme-headercta .menu__item:nth-child(1) .menu__link {
+  color: var(--primary);
+  background: transparent;
+  border: 1.5px solid var(--primary);
+}
+
+#block-mcctheme-headercta .menu__item:nth-child(1) .menu__link:hover {
+  background: var(--color-primary-subtle);
+}
+
+#block-mcctheme-headercta .menu__item:nth-child(2) .menu__link {
+  color: var(--primary-foreground);
+  background: var(--primary);
+}
+
+#block-mcctheme-headercta .menu__item:nth-child(2) .menu__link:hover {
+  background: var(--color-primary-hover);
+}
+
+/* Header nav active-link treatment, matching Header.jsx */
+.region-header .menu__link.is-active {
+  color: var(--primary);
+  font-weight: var(--font-weight-bold);
+  border-bottom: 2px solid var(--primary);
+}
+
+/**
+ * Footer: flat walnut background (the wood-texture image from the design
+ * isn't in use here), 3 nav blocks (Visit/Connect/Contact) laid out as
+ * columns. caresphere's footer.css assumes a Canvas-built .footer-region /
+ * .footer__links wrapper that plain block placement doesn't produce, so
+ * this styles the actual <footer role="contentinfo"> > nav structure.
+ */
+footer[role="contentinfo"] {
+  background-color: var(--green-900, #142819);
+  color: var(--text-on-primary, #ffffff);
+  padding: 4rem 1.5rem 2rem;
+}
+
+footer[role="contentinfo"] .custom-container,
+footer[role="contentinfo"] {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Newsletter block styling */
+#block-mcctheme-footernewsletter {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-lg, 16px);
+  padding: 2.5rem 2rem;
+  margin-bottom: 3.5rem;
+}
+
+.mcc-footer-newsletter {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+@media (min-width: 48rem) {
+  .mcc-footer-newsletter {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.mcc-footer-newsletter h3 {
+  font-family: var(--font-display, 'Calistoga', serif);
+  font-size: 1.5rem;
+  color: #ffffff;
+  margin: 0 0 0.5rem;
+}
+
+.mcc-footer-newsletter p {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 1rem;
+  margin: 0;
+}
+
+.mcc-newsletter-form {
+  display: flex;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 420px;
+}
+
+.mcc-newsletter-form input[type="email"] {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md, 10px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  font-size: 0.95rem;
+}
+
+.mcc-newsletter-form input[type="email"]::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.mcc-newsletter-form button {
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-md, 10px);
+  background-color: var(--terracotta-500, #ae5b33);
+  color: #ffffff;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s ease;
+}
+
+.mcc-newsletter-form button:hover {
+  background-color: var(--terracotta-600, #964e2b);
+}
+
+/* Footer Main Grid (Info + 3 Menus) */
+.region-footer {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+}
+
+@media (min-width: 48rem) {
+  .region-footer {
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 3rem;
+  }
+}
+
+.mcc-footer-info h3 {
+  font-family: var(--font-display, 'Calistoga', serif);
+  font-size: 1.35rem;
+  color: #ffffff;
+  margin: 0 0 0.25rem;
+}
+
+.mcc-footer-info .mcc-tagline {
+  font-family: var(--font-sans, 'Nunito', sans-serif);
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.75);
+  margin-bottom: 1.25rem;
+}
+
+.mcc-contact-details p {
+  margin: 0 0 0.5rem;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.95rem;
+}
+
+.mcc-contact-details a {
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+}
+
+.mcc-contact-details a.button--secondary {
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: var(--radius-sm, 6px);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.mcc-contact-details a.button--secondary:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Footer Navigation Menus */
+footer[role="contentinfo"] h2 {
+  font-family: var(--font-sans, 'Nunito', sans-serif);
+  font-weight: 700;
+  font-size: 0.875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.65);
+  margin: 0 0 1rem;
+}
+
+footer[role="contentinfo"] .menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+footer[role="contentinfo"] .menu__item {
+  margin-bottom: 0.6rem;
+}
+
+footer[role="contentinfo"] .menu__link {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+footer[role="contentinfo"] .menu__link:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+/* Footer Copyright Block */
+#block-mcctheme-footercopyright {
+  grid-column: 1 / -1;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  padding-top: 2rem;
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.mcc-footer-copyright p {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.875rem;
+  margin: 0 0 0.25rem;
+}
+
+.mcc-footer-copyright .subtext {
+  font-size: 0.8rem;
+}
+

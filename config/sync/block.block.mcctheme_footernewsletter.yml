@@ -1,0 +1,23 @@
+uuid: c3771374-409b-44df-b819-5834026ce859
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:3c6be7f2-9bfe-40b3-a4d6-2da37eab2a58'
+  module:
+    - block_content
+  theme:
+    - mcc_theme
+id: mcctheme_footernewsletter
+theme: mcc_theme
+region: footer
+weight: 0
+provider: null
+plugin: 'block_content:3c6be7f2-9bfe-40b3-a4d6-2da37eab2a58'
+settings:
+  id: 'block_content:3c6be7f2-9bfe-40b3-a4d6-2da37eab2a58'
+  label: Newsletter
+  label_display: '0'
+  provider: block_content
+  view_mode: full
+visibility: {  }

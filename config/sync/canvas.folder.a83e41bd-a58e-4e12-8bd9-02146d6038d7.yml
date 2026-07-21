@@ -1,10 +1,17 @@
 uuid: a83e41bd-a58e-4e12-8bd9-02146d6038d7
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  config:
+    - canvas.component.block.block_content.2795c196-1845-40da-a1b9-160fac4726d7
+    - canvas.component.block.block_content.3c6be7f2-9bfe-40b3-a4d6-2da37eab2a58
+    - canvas.component.block.block_content.ca9b6d96-4c7a-4061-984d-bb937e40c428
 _core:
   default_config_hash: NqbUbfMOENKk25j6S1liYSSEHkZmevpLUkvDEZlhEEw
 name: 'Content block'
 configEntityTypeId: component
 weight: 0
-items: {  }
+items:
+  - block.block_content.2795c196-1845-40da-a1b9-160fac4726d7
+  - block.block_content.3c6be7f2-9bfe-40b3-a4d6-2da37eab2a58
+  - block.block_content.ca9b6d96-4c7a-4061-984d-bb937e40c428

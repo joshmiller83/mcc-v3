@@ -1,0 +1,25 @@
+uuid: 1f383922-b330-40d9-aff7-005249431ad0
+langcode: en
+status: false
+dependencies:
+  content:
+    - 'block_content:basic:2795c196-1845-40da-a1b9-160fac4726d7'
+  module:
+    - block_content
+active_version: 2a08b2107c88cd02
+versioned_properties:
+  active:
+    settings:
+      default_settings:
+        id: 'block_content:2795c196-1845-40da-a1b9-160fac4726d7'
+        label: 'Footer Church Info'
+        label_display: '0'
+        provider: block_content
+        view_mode: full
+    fallback_metadata:
+      slot_definitions: null
+label: 'Footer Church Info'
+id: block.block_content.2795c196-1845-40da-a1b9-160fac4726d7
+provider: block_content
+source: block
+source_local_id: 'block_content:2795c196-1845-40da-a1b9-160fac4726d7'

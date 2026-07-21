@@ -8,9 +8,21 @@ dependencies:
     - system
 _core:
   default_config_hash: NqunpCU61U8TTQGFoCH6YRABgQCxpEGlGI4d-6bkDlM
-active_version: e02007c3030dbf58
+active_version: 19c048969a85eed0
 versioned_properties:
   active:
+    settings:
+      default_settings:
+        id: 'system_menu_block:footer-support'
+        label: 'Footer Contact'
+        label_display: '0'
+        provider: system
+        level: 1
+        depth: null
+        expand_all_items: false
+    fallback_metadata:
+      slot_definitions: null
+  e02007c3030dbf58:
     settings:
       default_settings:
         id: 'system_menu_block:footer-support'
@@ -34,7 +46,7 @@ versioned_properties:
         expand_all_items: false
     fallback_metadata:
       slot_definitions: null
-label: 'Footer Support'
+label: 'Footer Contact'
 id: block.system_menu_block.footer-support
 provider: system
 source: block
