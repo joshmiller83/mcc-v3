@@ -93,9 +93,23 @@ div[data-component-id="caresphere_theme:section-grid"] {
   box-sizing: border-box;
 }
 
+/* caresphere_theme's generic .custom-container utility (base.css) caps this
+   element at max-width 1312px and forces its own side padding with !important —
+   both defeat the full-bleed .hero-card rules above (100vw + negative margins),
+   leaving the hero boxed and flush-left. Neutralize it on the hero only so the
+   section bleeds edge-to-edge; .hero-card owns the side gutter (1.5rem). */
+.hero-card.custom-container {
+  max-width: none;
+  padding-inline: 1.5rem !important;
+}
+
 .hero-card__card {
   max-width: var(--container-max);
   margin: 0 auto;
+  /* Drop caresphere_theme's inner card padding (32px mobile / 64px desktop):
+     superfluous now that the full-bleed .hero-card frames the section and the
+     card is already max-width capped and centered. */
+  padding: 0 !important;
 }
 
 .hero-card__card {
