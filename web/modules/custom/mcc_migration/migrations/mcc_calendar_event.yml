@@ -42,23 +42,10 @@ process:
     migration: mcc_ministry
     source: field_related_ministry/target_id
   field_event_date:
-    plugin: sub_process
+    plugin: parse_dates
     source: field_date
-    process:
-      value:
-        plugin: format_date
-        from_format: 'Y-m-d H:i:s'
-        to_format: 'U'
-        source: value
-      end_value:
-        plugin: format_date
-        from_format: 'Y-m-d H:i:s'
-        to_format: 'U'
-        source: value2
-      rrule:
-        plugin: callback
-        callable: trim
-        source: rrule
+    entity_type: node
+    bundle: calendar_event
 destination:
   plugin: 'entity:node'
   default_bundle: calendar_event
