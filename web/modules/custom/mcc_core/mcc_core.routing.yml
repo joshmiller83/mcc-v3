@@ -1,3 +1,11 @@
+mcc_core.calendar:
+  path: '/calendar'
+  defaults:
+    _controller: '\Drupal\mcc_core\Controller\MccCalendarController::view'
+    _title: 'Calendar'
+  requirements:
+    _permission: 'access content'
+
 mcc_core.print_monthly:
   path: '/calendar/print-monthly'
   defaults:

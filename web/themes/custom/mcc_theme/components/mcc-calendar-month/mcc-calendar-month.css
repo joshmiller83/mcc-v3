@@ -1,0 +1,398 @@
+/**
+ * MCC Calendar Month
+ * Brand-styled monthly calendar. Colors, spacing and type all reference the
+ * mcc_theme design tokens (css/tokens/*). Category accents are defined once
+ * here and applied per element with [data-accent].
+ */
+
+.mcc-calendar {
+  --cal-radius: 14px;
+  --cal-gap: 4px;
+  --cal-border: var(--border-default, #d9d0bd);
+  --cal-cell-min: 8.5rem;
+
+  max-width: 1200px;
+  margin: 2.5rem auto;
+  padding: 0 1rem;
+  font-family: 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: var(--text-body, #2a1f18);
+}
+
+/* Per-category accent palette, harmonized with the earthy brand tokens.
+   Default first, then each known category overrides --evt. */
+.mcc-calendar [data-accent]              { --evt: var(--neutral-400, #9a8b74); }
+.mcc-calendar [data-accent="worship"]    { --evt: var(--green-700, #2f4833); }
+.mcc-calendar [data-accent="serve"]      { --evt: var(--terracotta-500, #ae5b33); }
+.mcc-calendar [data-accent="fellowship"] { --evt: var(--walnut-600, #6a4a37); }
+.mcc-calendar [data-accent="youth"]      { --evt: var(--brick-500, oklch(52% 0.15 28)); }
+.mcc-calendar [data-accent="equip"]      { --evt: var(--green-500, #6f8a6f); }
+.mcc-calendar [data-accent="lead"]       { --evt: oklch(64% 0.10 72); }
+
+/* -- Header bar -------------------------------------------------------- */
+.mcc-calendar__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.mcc-calendar__title {
+  margin: 0;
+  font-size: clamp(1.75rem, 1.2rem + 2vw, 2.6rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--green-800, #26382a);
+}
+
+.mcc-calendar__nav {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.mcc-calendar__navbtn,
+.mcc-calendar__today {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--cal-border);
+  background: var(--surface-card, #f4efe4);
+  color: var(--green-800, #26382a);
+  text-decoration: none;
+  border-radius: 999px;
+  transition: background-color .15s ease, color .15s ease, border-color .15s ease, transform .1s ease;
+}
+
+.mcc-calendar__navbtn {
+  width: 2.75rem;
+  height: 2.75rem;
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.mcc-calendar__today {
+  height: 2.75rem;
+  padding: 0 1.15rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.mcc-calendar__navbtn:hover,
+.mcc-calendar__today:hover {
+  background: var(--green-700, #2f4833);
+  border-color: var(--green-700, #2f4833);
+  color: var(--white, #fff);
+}
+
+.mcc-calendar__navbtn:active { transform: translateY(1px); }
+
+.mcc-calendar__today.is-disabled {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+/* -- Legend ------------------------------------------------------------ */
+.mcc-calendar__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.1rem;
+  list-style: none;
+  margin: 0 0 1.25rem;
+  padding: 0;
+}
+
+.mcc-calendar__legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted, #6d5c48);
+}
+
+.mcc-calendar__legend-dot {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  background: var(--evt);
+}
+
+/* -- Grid -------------------------------------------------------------- */
+.mcc-calendar__grid {
+  background: var(--cal-border);
+  border: 1px solid var(--cal-border);
+  border-radius: var(--cal-radius);
+  overflow: hidden;
+  box-shadow: 0 12px 34px rgba(45, 31, 24, 0.08);
+}
+
+.mcc-calendar__weekdays,
+.mcc-calendar__week {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 1px;
+}
+
+.mcc-calendar__weekdays { gap: 0; background: var(--green-800, #26382a); }
+
+.mcc-calendar__weekday {
+  padding: 0.7rem 0.5rem;
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in oklch, var(--oatmeal, #e9e3d5) 82%, white);
+}
+
+.mcc-calendar__weekday abbr { text-decoration: none; border: 0; }
+
+.mcc-calendar__week { background: var(--cal-border); }
+.mcc-calendar__week + .mcc-calendar__week { margin-top: 1px; }
+
+/* -- Day cell ---------------------------------------------------------- */
+.mcc-calendar__day {
+  display: flex;
+  flex-direction: column;
+  min-height: var(--cal-cell-min);
+  padding: 0.5rem 0.5rem 0.6rem;
+  background: var(--surface-card, #f4efe4);
+  color: inherit;
+  text-decoration: none;
+  transition: background-color .15s ease, box-shadow .15s ease;
+}
+
+.mcc-calendar__day.is-weekend { background: color-mix(in oklch, var(--surface-card, #f4efe4) 88%, var(--oatmeal, #e9e3d5)); }
+
+.mcc-calendar__day.is-muted {
+  background: color-mix(in oklch, var(--surface-card, #f4efe4) 55%, var(--neutral-100, #ddd4c2));
+  color: var(--text-faint, #a99a83);
+}
+.mcc-calendar__day.is-muted .mcc-calendar__daynum { opacity: 0.55; }
+
+a.mcc-calendar__day:hover {
+  background: var(--green-50, #eef1ec);
+  box-shadow: inset 0 0 0 2px var(--green-300, #b9c4b8);
+  cursor: pointer;
+}
+
+a.mcc-calendar__day:focus-visible {
+  outline: 3px solid var(--terracotta-500, #ae5b33);
+  outline-offset: -3px;
+}
+
+.mcc-calendar__daynum {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-start;
+  min-width: 1.85rem;
+  height: 1.85rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 999px;
+}
+
+.mcc-calendar__day.is-today .mcc-calendar__daynum {
+  background: var(--terracotta-600, #93441f);
+  color: var(--white, #fff);
+  box-shadow: 0 2px 8px rgba(174, 91, 51, 0.4);
+}
+
+/* -- Event chips ------------------------------------------------------- */
+.mcc-calendar__events {
+  list-style: none;
+  margin: 0.35rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.mcc-calendar__event {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.15rem 0.4rem 0.15rem 0.35rem;
+  border-radius: 5px;
+  background: color-mix(in oklch, var(--evt) 12%, var(--surface-card, #f4efe4));
+  border-left: 3px solid var(--evt);
+  font-size: 0.78rem;
+  line-height: 1.25;
+  min-width: 0;
+}
+
+.mcc-calendar__event-dot { display: none; }
+
+.mcc-calendar__event-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+  color: var(--text-body, #2a1f18);
+}
+
+.mcc-calendar__event-time {
+  flex: 0 0 auto;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: color-mix(in oklch, var(--evt) 70%, var(--text-muted, #6d5c48));
+}
+
+.mcc-calendar__more {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--terracotta-700, #6f3218);
+  padding-left: 0.35rem;
+}
+
+/* -- Detail panels ----------------------------------------------------- */
+.mcc-calendar__details { margin-top: 1.25rem; }
+
+.mcc-calendar__detail {
+  display: none;
+  scroll-margin-top: 1.5rem;
+  background: var(--surface-card, #f4efe4);
+  border: 1px solid var(--cal-border);
+  border-radius: var(--cal-radius);
+  padding: 1.25rem 1.5rem 1.5rem;
+  box-shadow: 0 12px 34px rgba(45, 31, 24, 0.1);
+}
+.mcc-calendar__detail:target,
+.mcc-calendar__detail.is-open { display: block; }
+.mcc-calendar__detail:focus { outline: none; }
+
+.mcc-calendar__detail-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.85rem;
+  border-bottom: 2px solid var(--green-100, #dfe4dd);
+}
+
+.mcc-calendar__detail-title {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--green-800, #26382a);
+}
+
+.mcc-calendar__detail-close {
+  flex: 0 0 auto;
+  width: 2.1rem;
+  height: 2.1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  line-height: 1;
+  border-radius: 50%;
+  text-decoration: none;
+  color: var(--text-muted, #6d5c48);
+  background: var(--surface-sunken, #efe8da);
+}
+.mcc-calendar__detail-close:hover { background: var(--brick-500, oklch(52% 0.15 28)); color: #fff; }
+
+.mcc-calendar__detail-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.mcc-calendar__detail-item {
+  display: grid;
+  grid-template-columns: 9.5rem 1fr;
+  gap: 0.25rem 1.1rem;
+  padding-left: 0.9rem;
+  border-left: 4px solid var(--evt);
+}
+
+.mcc-calendar__detail-time {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: color-mix(in oklch, var(--evt) 72%, var(--text-body, #2a1f18));
+  padding-top: 0.1rem;
+}
+
+.mcc-calendar__detail-body { display: flex; flex-direction: column; gap: 0.2rem; }
+
+.mcc-calendar__detail-event {
+  font-size: 1.02rem;
+  font-weight: 600;
+  color: var(--text-body, #2a1f18);
+  text-decoration: none;
+}
+.mcc-calendar__detail-event:hover { color: var(--text-link, #6f3218); text-decoration: underline; }
+
+.mcc-calendar__detail-desc {
+  font-size: 0.9rem;
+  color: var(--text-muted, #6d5c48);
+  line-height: 1.5;
+}
+
+/* -- Footer / print link ----------------------------------------------- */
+.mcc-calendar__foot { margin-top: 1.5rem; text-align: center; }
+
+.mcc-calendar__print {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-link, #6f3218);
+  text-decoration: none;
+}
+.mcc-calendar__print:hover { text-decoration: underline; }
+
+/* -- Responsive -------------------------------------------------------- */
+@media (max-width: 800px) {
+  .mcc-calendar { --cal-cell-min: 6.25rem; }
+  .mcc-calendar__event-time { display: none; }
+  .mcc-calendar__event-title { font-size: 0.72rem; }
+  .mcc-calendar__detail-item { grid-template-columns: 1fr; gap: 0.15rem; }
+}
+
+@media (max-width: 560px) {
+  .mcc-calendar { --cal-cell-min: 4.5rem; padding: 0 0.5rem; }
+  .mcc-calendar__day { padding: 0.35rem 0.3rem; }
+  .mcc-calendar__weekday { font-size: 0.6rem; padding: 0.55rem 0.15rem; }
+  .mcc-calendar__daynum { min-width: 1.5rem; height: 1.5rem; font-size: 0.85rem; }
+  /* Collapse chips to dots to keep small cells legible. */
+  .mcc-calendar__events { flex-direction: row; flex-wrap: wrap; gap: 3px; margin-top: 0.3rem; }
+  .mcc-calendar__event {
+    padding: 0;
+    border: 0;
+    background: none;
+  }
+  .mcc-calendar__event-dot {
+    display: block;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--evt);
+  }
+  .mcc-calendar__event-title { display: none; }
+  .mcc-calendar__more { padding-left: 0; font-size: 0.65rem; }
+}
+
+/* -- Motion & print ---------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .mcc-calendar * { transition: none !important; scroll-behavior: auto !important; }
+}
+
+@media print {
+  .mcc-calendar__nav,
+  .mcc-calendar__foot { display: none; }
+  .mcc-calendar__grid { box-shadow: none; }
+  .mcc-calendar__detail { display: block; break-inside: avoid; }
+}

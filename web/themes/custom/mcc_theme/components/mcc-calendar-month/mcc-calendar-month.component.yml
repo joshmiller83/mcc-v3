@@ -1,0 +1,44 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Calendar Month
+group: MCC Components
+description: 'An accessible, brand-styled monthly calendar grid with per-category color coding, month navigation, and expandable day detail panels.'
+props:
+  type: object
+  properties:
+    month_label:
+      type: string
+      title: Month Label
+      examples:
+        - 'July 2026'
+    weekdays:
+      type: array
+      title: Weekday headings
+      items:
+        type: string
+    weeks:
+      type: array
+      title: Weeks
+      description: 'A list of weeks, each a list of seven day cells.'
+      items:
+        type: array
+        items:
+          type: object
+    day_details:
+      type: array
+      title: Day detail panels
+      items:
+        type: object
+    legend:
+      type: array
+      title: Category legend
+      items:
+        type: object
+    nav:
+      type: object
+      title: Navigation targets
+    is_current_month:
+      type: boolean
+      title: Is the current month
+    print_url:
+      type: string
+      title: Print URL
