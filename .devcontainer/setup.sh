@@ -21,8 +21,10 @@ curl -fsSL https://antigravity.google/cli/install.sh | bash
 sudo ln -sf ~/.local/bin/agy /usr/local/bin/agy
 
 echo "Installing Claude Code CLI..."
-# Install Claude Code CLI
-sudo npm install -g @anthropic-ai/claude-code
+# Install Claude Code CLI via the official native installer (npm method is deprecated)
+curl -fsSL https://claude.ai/install.sh | bash
+# Symlink claude to a system-wide PATH location
+sudo ln -sf ~/.local/bin/claude /usr/local/bin/claude
 
 echo "Tool setup complete."
 
