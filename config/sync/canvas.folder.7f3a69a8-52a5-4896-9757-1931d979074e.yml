@@ -4,8 +4,10 @@ status: true
 dependencies:
   config:
     - canvas.component.sdc.mcc_theme.mcc-event-card
+    - canvas.component.sdc.mcc_theme.mcc-photo-placeholder
 name: 'MCC Components'
 configEntityTypeId: component
 weight: 0
 items:
   - sdc.mcc_theme.mcc-event-card
+  - sdc.mcc_theme.mcc-photo-placeholder

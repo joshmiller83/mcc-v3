@@ -1,13 +1,12 @@
 {#
-  MCC Event Card Component
-  Displays an upcoming event with date badge, title, and day/time details.
+  MCC Event Card Component - Top Badge Card Design
 #}
 <div{{ attributes.addClass('mcc-event-card') }}>
-  <div class="mcc-event-card__date">
+  <div class="mcc-event-card__header">
     <span class="mcc-event-card__month">{{ date_month }}</span>
     <span class="mcc-event-card__day">{{ date_day }}</span>
   </div>
-  <div class="mcc-event-card__details">
+  <div class="mcc-event-card__body">
     <h3 class="mcc-event-card__title">
       {% if url %}
         <a href="{{ url }}">{{ title }}</a>

@@ -1,0 +1,30 @@
+uuid: 40c5663d-e83f-42c5-8741-9040a74beaaf
+langcode: en
+status: true
+dependencies:
+  theme:
+    - mcc_theme
+active_version: ed92a4fd772a6c07
+versioned_properties:
+  active:
+    settings:
+      prop_field_definitions:
+        label:
+          required: false
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value:
+            -
+              value: 'Drop a photo of the sanctuary'
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+    fallback_metadata:
+      slot_definitions: {  }
+label: 'Photo Placeholder'
+id: sdc.mcc_theme.mcc-photo-placeholder
+provider: mcc_theme
+source: sdc
+source_local_id: 'mcc_theme:mcc-photo-placeholder'
