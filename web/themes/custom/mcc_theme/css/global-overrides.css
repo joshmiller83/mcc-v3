@@ -1,142 +1,45 @@
 @import url('https://fonts.googleapis.com/css2?family=Calistoga&family=Nunito:wght@300;400;500;600;700;800;900&display=swap');
 
 /**
- * Design tokens sourced from the "Mechanicsburg Christian Church Design
- * System" Claude Design project. Raw scale first, then mapped onto
- * caresphere_theme's shadcn-style variable names (css/theme.css).
+ * Design tokens sourced from the "Mechanicsburg Christian Church Design System".
  */
 :root {
-  /* --- Raw color scale (design system tokens/colors.css) --- */
   --green-700: #2f4833;
-  --green-800: color-mix(in oklch, var(--green-700) 88%, black 12%);
-  --green-900: color-mix(in oklch, var(--green-700) 72%, black 28%);
-  --green-950: color-mix(in oklch, var(--green-700) 58%, black 42%);
-  --green-600: color-mix(in oklch, var(--green-700) 88%, white 12%);
-  --green-500: color-mix(in oklch, var(--green-700) 72%, white 28%);
-  --green-400: color-mix(in oklch, var(--green-700) 55%, white 45%);
-  --green-300: color-mix(in oklch, var(--green-700) 38%, white 62%);
-  --green-200: color-mix(in oklch, var(--green-700) 24%, white 76%);
-  --green-100: color-mix(in oklch, var(--green-700) 14%, white 86%);
-  --green-50: color-mix(in oklch, var(--green-700) 7%, white 93%);
+  --green-800: #1e3c23;
+  --green-900: #142819;
+  --green-100: #e6eee8;
 
   --terracotta-500: #ae5b33;
-  --terracotta-600: color-mix(in oklch, var(--terracotta-500) 88%, black 12%);
-  --terracotta-700: color-mix(in oklch, var(--terracotta-500) 74%, black 26%);
-  --terracotta-800: color-mix(in oklch, var(--terracotta-500) 60%, black 40%);
-  --terracotta-900: color-mix(in oklch, var(--terracotta-500) 46%, black 54%);
-  --terracotta-400: color-mix(in oklch, var(--terracotta-500) 82%, white 18%);
-  --terracotta-300: color-mix(in oklch, var(--terracotta-500) 62%, white 38%);
-  --terracotta-200: color-mix(in oklch, var(--terracotta-500) 40%, white 60%);
-  --terracotta-100: color-mix(in oklch, var(--terracotta-500) 22%, white 78%);
-  --terracotta-50: color-mix(in oklch, var(--terracotta-500) 10%, white 90%);
+  --terracotta-600: #964e2b;
 
   --walnut-700: #4e3426;
-  --walnut-600: color-mix(in oklch, var(--walnut-700) 85%, white 15%);
-  --walnut-500: color-mix(in oklch, var(--walnut-700) 65%, white 35%);
-  --walnut-400: color-mix(in oklch, var(--walnut-700) 45%, white 55%);
-  --walnut-800: color-mix(in oklch, var(--walnut-700) 82%, black 18%);
-  --walnut-900: color-mix(in oklch, var(--walnut-700) 62%, black 38%);
-
-  --brick-500: oklch(52% 0.15 28);
-  --brick-600: oklch(45% 0.14 27);
-  --brick-700: oklch(37% 0.12 27);
+  --walnut-800: #312219;
 
   --oatmeal: #e9e3d5;
-  --white-warm: color-mix(in oklch, var(--oatmeal) 35%, white 65%);
-  --neutral-0: var(--oatmeal);
-  --neutral-50: var(--white-warm);
-  --neutral-100: color-mix(in oklch, var(--neutral-0) 88%, var(--walnut-700) 12%);
-  --neutral-200: color-mix(in oklch, var(--neutral-0) 74%, var(--walnut-700) 26%);
-  --neutral-300: color-mix(in oklch, var(--neutral-0) 55%, var(--walnut-700) 45%);
-  --neutral-400: color-mix(in oklch, var(--neutral-0) 38%, var(--walnut-700) 62%);
-  --neutral-500: color-mix(in oklch, var(--neutral-0) 24%, var(--walnut-700) 76%);
-  --neutral-600: color-mix(in oklch, var(--neutral-0) 12%, var(--walnut-700) 88%);
-  --neutral-700: var(--walnut-600);
-  --neutral-800: var(--walnut-800);
-  --neutral-900: var(--walnut-900);
+  --white-warm: #fcfbfa;
 
-  --color-primary: var(--green-700);
-  --color-primary-hover: var(--green-600);
-  --color-primary-active: var(--green-800);
-  --color-primary-subtle: var(--green-50);
-  --color-secondary: var(--terracotta-700);
-  --color-secondary-hover: var(--terracotta-600);
-  --text-on-primary: var(--neutral-0);
-  --text-body: var(--neutral-900);
-  --text-muted: var(--neutral-600);
+  --color-primary: #1e4d2b;
+  --color-secondary: var(--terracotta-500);
+  --text-on-primary: #ffffff;
+  --text-body: #2f342d;
+  --text-muted: #52514e;
 
-  /* --- Raw effects scale (design system tokens/effects.css) --- */
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 16px;
-  --radius-pill: 999px;
-  --shadow-sm: 0 1px 2px oklch(20% 0.02 155 / 0.08);
-  --shadow-md: 0 4px 12px oklch(20% 0.02 155 / 0.10);
-  --shadow-lg: 0 12px 32px oklch(20% 0.02 155 / 0.14);
 
-  /* --- Raw typography scale (design system tokens/typography.css) --- */
-  --fw-regular: 400;
-  --fw-medium: 600;
-  --fw-bold: 700;
-  --fw-heavy: 800;
-  --text-caption: 0.75rem;
-  --lh-caption: 1.4;
-  --text-body-sm: 0.875rem;
-  --lh-body-sm: 1.55;
-  --text-body-md: 1rem;
-  --lh-body-md: 1.6;
-  --text-body-lg: 1.125rem;
-  --lh-body-lg: 1.6;
-
-  /* --- caresphere_theme semantic tokens, mapped onto the above --- */
-  --background: var(--neutral-0);
-  --foreground: var(--neutral-900);
-  --card: var(--white-warm);
-  --card-foreground: var(--neutral-900);
-  --primary: var(--color-primary);
-  --primary-foreground: var(--text-on-primary);
-  --destructive: var(--brick-600);
-  --border: var(--neutral-200);
-  --border-secondary: rgba(255, 255, 255, 0.15);
-  --input: rgba(255, 255, 255, 0.6);
-  --muted: var(--neutral-50);
-  --muted-foreground: var(--text-muted);
-
-  --radius: var(--radius-md);
-  --radius-large: var(--radius-lg);
-
-  --button-font-family: var(--font-sans);
-  --button-font-weight: var(--fw-bold);
-  --button-letter-spacing: normal;
-
-  --font-weight-normal: var(--fw-regular);
-  --font-weight-medium: var(--fw-medium);
-  --font-weight-semibold: var(--fw-bold);
-  --font-weight-bold: var(--fw-heavy);
-
-  --text-xs: var(--text-caption);
-  --text-xs--line-height: var(--lh-caption);
-  --text-sm: var(--text-body-sm);
-  --text-sm--line-height: var(--lh-body-sm);
-  --text-base: var(--text-body-md);
-  --text-base--line-height: var(--lh-body-md);
-  --text-lg: var(--text-body-lg);
-  --text-lg--line-height: var(--lh-body-lg);
-
-  /* Overriding typefaces to Calistoga (headings/emphasis) and Nunito (body/everything else) */
   --font-sans: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-serif: 'Calistoga', Georgia, serif;
   --font-display: 'Calistoga', serif;
-  --font-logo: 'Calistoga', serif;
 }
 
-/**
- * Header CTA menu ("Header CTA" block in the header_links region) rendered
- * as buttons, matching Header.jsx's Give / Plan your visit pair. caresphere's
- * button SDC has no bordered "outline" variant (primary/secondary-white/
- * secondary-dark/link only) — secondary-dark is the closest match on our
- * light header background.
- */
+/* Base Body Font */
+body {
+  font-family: var(--font-sans);
+  color: var(--text-body);
+}
+
+/* Header Navigation Links & Buttons */
 #block-mcctheme-headercta .menu {
   display: flex;
   align-items: center;
@@ -150,248 +53,41 @@
   display: inline-flex;
   align-items: center;
   padding: 0.5rem 1.25rem;
-  border-radius: var(--radius);
+  border-radius: var(--radius-md);
   font-family: var(--font-sans);
-  font-weight: var(--button-font-weight);
+  font-weight: 700;
   text-decoration: none;
 }
 
-/* First link = Give (outline style), second = Plan your visit (filled) */
 #block-mcctheme-headercta .menu__item:nth-child(1) .menu__link {
-  color: var(--primary);
+  color: #1e4d2b;
   background: transparent;
-  border: 1.5px solid var(--primary);
-}
-
-#block-mcctheme-headercta .menu__item:nth-child(1) .menu__link:hover {
-  background: var(--color-primary-subtle);
+  border: 1.5px solid #1e4d2b;
 }
 
 #block-mcctheme-headercta .menu__item:nth-child(2) .menu__link {
-  color: var(--primary-foreground);
-  background: var(--primary);
+  color: #ffffff;
+  background: #1e4d2b;
 }
 
-#block-mcctheme-headercta .menu__item:nth-child(2) .menu__link:hover {
-  background: var(--color-primary-hover);
-}
-
-/* Header nav active-link treatment, matching Header.jsx */
 .region-header .menu__link.is-active {
-  color: var(--primary);
-  font-weight: var(--font-weight-bold);
-  border-bottom: 2px solid var(--primary);
-}
-
-/**
- * Footer: flat walnut background (the wood-texture image from the design
- * isn't in use here), 3 nav blocks (Visit/Connect/Contact) laid out as
- * columns. caresphere's footer.css assumes a Canvas-built .footer-region /
- * .footer__links wrapper that plain block placement doesn't produce, so
- * this styles the actual <footer role="contentinfo"> > nav structure.
- */
-footer[role="contentinfo"] {
-  background-color: var(--green-900, #142819);
-  color: var(--text-on-primary, #ffffff);
-  padding: 4rem 1.5rem 2rem;
-}
-
-footer[role="contentinfo"] .custom-container,
-footer[role="contentinfo"] {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-/* Newsletter block styling */
-#block-mcctheme-footernewsletter {
-  background-color: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: var(--radius-lg, 16px);
-  padding: 2.5rem 2rem;
-  margin-bottom: 3.5rem;
-}
-
-.mcc-footer-newsletter {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-@media (min-width: 48rem) {
-  .mcc-footer-newsletter {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-  }
-}
-
-.mcc-footer-newsletter h3 {
-  font-family: var(--font-display, 'Calistoga', serif);
-  font-size: 1.5rem;
-  color: #ffffff;
-  margin: 0 0 0.5rem;
-}
-
-.mcc-footer-newsletter p {
-  color: rgba(255, 255, 255, 0.85);
-  font-size: 1rem;
-  margin: 0;
-}
-
-.mcc-newsletter-form {
-  display: flex;
-  gap: 0.75rem;
-  width: 100%;
-  max-width: 420px;
-}
-
-.mcc-newsletter-form input[type="email"] {
-  flex: 1;
-  padding: 0.75rem 1rem;
-  border-radius: var(--radius-md, 10px);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  background: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
-  font-size: 0.95rem;
-}
-
-.mcc-newsletter-form input[type="email"]::placeholder {
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.mcc-newsletter-form button {
-  padding: 0.75rem 1.5rem;
-  border-radius: var(--radius-md, 10px);
-  background-color: var(--terracotta-500, #ae5b33);
-  color: #ffffff;
+  color: #1e4d2b;
   font-weight: 700;
-  border: none;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background-color 0.2s ease;
+  border-bottom: 2px solid #1e4d2b;
 }
 
-.mcc-newsletter-form button:hover {
-  background-color: var(--terracotta-600, #964e2b);
-}
-
-/* Footer Main Grid (Info + 3 Menus) */
-.region-footer {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 2.5rem;
-}
-
-@media (min-width: 48rem) {
-  .region-footer {
-    grid-template-columns: 2fr 1fr 1fr 1fr;
-    gap: 3rem;
-  }
-}
-
-.mcc-footer-info h3 {
-  font-family: var(--font-display, 'Calistoga', serif);
-  font-size: 1.35rem;
-  color: #ffffff;
-  margin: 0 0 0.25rem;
-}
-
-.mcc-footer-info .mcc-tagline {
-  font-family: var(--font-sans, 'Nunito', sans-serif);
-  font-style: italic;
-  color: rgba(255, 255, 255, 0.75);
-  margin-bottom: 1.25rem;
-}
-
-.mcc-contact-details p {
-  margin: 0 0 0.5rem;
-  color: rgba(255, 255, 255, 0.85);
-  font-size: 0.95rem;
-}
-
-.mcc-contact-details a {
-  color: rgba(255, 255, 255, 0.9);
-  text-decoration: none;
-}
-
-.mcc-contact-details a.button--secondary {
-  display: inline-block;
-  margin-top: 0.5rem;
-  padding: 0.5rem 1rem;
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: var(--radius-sm, 6px);
-  color: #ffffff;
-  font-weight: 600;
-  font-size: 0.875rem;
-}
-
-.mcc-contact-details a.button--secondary:hover {
-  background: rgba(255, 255, 255, 0.25);
-}
-
-/* Footer Navigation Menus */
-footer[role="contentinfo"] h2 {
-  font-family: var(--font-sans, 'Nunito', sans-serif);
-  font-weight: 700;
-  font-size: 0.875rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.65);
-  margin: 0 0 1rem;
-}
-
-footer[role="contentinfo"] .menu {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-footer[role="contentinfo"] .menu__item {
-  margin-bottom: 0.6rem;
-}
-
-footer[role="contentinfo"] .menu__link {
-  color: rgba(255, 255, 255, 0.85);
-  font-size: 0.95rem;
-  text-decoration: none;
-  transition: color 0.2s ease;
-}
-
-footer[role="contentinfo"] .menu__link:hover {
-  color: #ffffff;
-  text-decoration: underline;
-}
-
-/* Footer Copyright Block */
-#block-mcctheme-footercopyright {
-  grid-column: 1 / -1;
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
-  padding-top: 2rem;
-  margin-top: 1rem;
-  text-align: center;
-}
-
-.mcc-footer-copyright p {
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 0.875rem;
-  margin: 0 0 0.25rem;
-}
-
-.mcc-footer-copyright .subtext {
-  font-size: 0.8rem;
-}
-
-/* ==========================================================================
-   HOMEPAGE SECTION STYLING OVERRIDES (mockup-reference.png Alignment)
-   ========================================================================== */
-
-/* --- Header Branding Logo --- */
+/* --- MCC Header Branding Logo --- */
 .mcc-header-logo {
   display: flex;
   align-items: center;
   gap: 0.85rem;
   text-decoration: none;
+}
+
+.mcc-header-logo__img {
+  height: 42px;
+  width: auto;
+  display: block;
 }
 
 .mcc-header-logo__text {
@@ -403,8 +99,8 @@ footer[role="contentinfo"] .menu__link:hover {
   font-family: var(--font-display, 'Calistoga', serif);
   font-size: 1.25rem;
   font-weight: 700;
-  color: var(--green-800, #1e3c23);
-  line-height: 1.25;
+  color: #1e4d2b;
+  line-height: 1.2;
 }
 
 .mcc-header-logo__tagline {
@@ -414,13 +110,27 @@ footer[role="contentinfo"] .menu__link:hover {
   color: var(--text-muted, #52514e);
 }
 
+/* --- GENEROUS COMPONENT VERTICAL SPACING --- */
+div[data-component-id="caresphere_theme:hero-card"] {
+  margin-bottom: 5.5rem !important;
+}
+
+div[data-component-id="caresphere_theme:section-intro"] {
+  margin-top: 5rem !important;
+  margin-bottom: 2.25rem !important;
+}
+
+div[data-component-id="caresphere_theme:section-grid"] {
+  margin-bottom: 5.5rem !important;
+}
+
 /* --- 1. HERO SECTION SPLIT LAYOUT --- */
 .hero-card {
   background: linear-gradient(135deg, #3f4e41 0%, #2f3c31 100%);
   color: #ffffff;
-  padding: 4rem 2.5rem;
+  padding: 4.5rem 3rem;
   border-radius: var(--radius-lg, 16px);
-  margin-bottom: 2.5rem;
+  margin-bottom: 5.5rem;
   position: relative;
   overflow: hidden;
 }
@@ -434,7 +144,7 @@ footer[role="contentinfo"] .menu__link:hover {
 
 @media (min-width: 48rem) {
   .hero-card__card {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1.1fr 0.9fr;
   }
 }
 
@@ -497,158 +207,85 @@ footer[role="contentinfo"] .menu__link:hover {
 /* --- 2. DEEP ROOTS & STATS SECTION --- */
 .mcc-section--stats {
   background-color: #f3ede2;
-  padding: 4rem 2.5rem;
+  padding: 5rem 2.5rem;
   border-radius: var(--radius-lg, 16px);
-  margin-bottom: 3rem;
-}
-
-.mcc-stats-grid {
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  gap: 1.5rem;
-  margin-top: 2rem;
-}
-
-@media (min-width: 48rem) {
-  .mcc-stats-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
+  margin-bottom: 5.5rem;
 }
 
 .stat-card {
-  background: #ffffff;
-  padding: 2rem 1.5rem;
-  border-radius: var(--radius-lg, 16px);
-  border: 1px solid var(--border, #e9e3d5);
-  box-shadow: var(--shadow-sm);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  background: #ffffff !important;
+  padding: 2rem 1.5rem !important;
+  border-radius: var(--radius-lg, 16px) !important;
+  border: 1px solid var(--border, #e9e3d5) !important;
+  box-shadow: var(--shadow-sm) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
 }
 
 .stat-card__value {
-  font-family: var(--font-display, 'Calistoga', serif);
-  font-size: 3rem;
-  font-weight: 700;
-  color: var(--green-700, #2f4833);
-  line-height: 1;
-  margin-bottom: 0.5rem;
+  font-family: var(--font-display, 'Calistoga', serif) !important;
+  font-size: 3rem !important;
+  font-weight: 700 !important;
+  color: #2f4833 !important;
+  line-height: 1 !important;
+  margin-bottom: 0.5rem !important;
 }
 
 .stat-card__label {
-  font-family: var(--font-sans, 'Nunito', sans-serif);
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--foreground, #1e4d2b);
-  margin-bottom: 0.5rem;
+  font-family: var(--font-sans, 'Nunito', sans-serif) !important;
+  font-size: 1.1rem !important;
+  font-weight: 700 !important;
+  color: #1e4d2b !important;
+  margin-bottom: 0.5rem !important;
 }
 
 .stat-card__description {
-  font-family: var(--font-sans, 'Nunito', sans-serif);
-  font-size: 0.925rem;
-  color: var(--text-muted, #52514e);
-  margin: 0;
-  line-height: 1.5;
+  font-family: var(--font-sans, 'Nunito', sans-serif) !important;
+  font-size: 0.925rem !important;
+  color: #52514e !important;
+  margin: 0 !important;
+  line-height: 1.5 !important;
 }
 
 /* --- 3. MINISTRIES ("WAYS WE SERVE TOGETHER") SECTION --- */
-.mcc-section--ministries {
-  background-color: #ffffff;
-  padding: 4rem 2rem;
-  margin-bottom: 3rem;
-}
-
 .card-icon {
   background: #ffffff !important;
-  color: var(--foreground, #1e4d2b) !important;
-  border: 1px solid var(--border, #e9e3d5);
-  border-radius: var(--radius-lg, 16px);
-  padding: 2.25rem 1.75rem;
-  text-align: center;
-  box-shadow: var(--shadow-sm);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  border: 1px solid var(--border, #e9e3d5) !important;
+  border-radius: var(--radius-lg, 16px) !important;
+  padding: 2.25rem 1.75rem !important;
+  text-align: center !important;
+  box-shadow: var(--shadow-sm) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
 }
 
 .card-icon__badge-icon {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background-color: var(--green-100, #e6eee8);
-  color: var(--green-700, #2f4833);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 1.25rem;
+  width: 56px !important;
+  height: 56px !important;
+  border-radius: 50% !important;
+  background-color: #e6eee8 !important;
+  color: #2f4833 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 auto 1.25rem !important;
 }
 
 .card-icon__heading,
 .card-icon h3 {
-  font-family: var(--font-display, 'Calistoga', serif);
-  font-size: 1.35rem;
-  color: var(--foreground, #1e4d2b) !important;
-  margin: 0.5rem 0 0.5rem;
+  font-family: var(--font-display, 'Calistoga', serif) !important;
+  font-size: 1.35rem !important;
+  color: #1e4d2b !important;
+  margin: 0.5rem 0 0.5rem !important;
 }
 
 .card-icon__description,
 .card-icon p {
-  color: var(--text-body, #2f342d) !important;
-  font-size: 0.95rem;
-  line-height: 1.55;
-}
-
-/* --- 4. UPCOMING AT MCC SECTION --- */
-.mcc-section--events {
-  background-color: #f9f7f2;
-  padding: 4rem 2rem;
-  border-radius: var(--radius-lg, 16px);
-  margin-bottom: 3rem;
-}
-
-/* --- 5. MISSION STATEMENT QUOTE BANNER --- */
-.blockquote-wrapper,
-blockquote,
-.mcc-section--mission {
-  background-color: #312219 !important;
-  color: #e9e3d5 !important;
-  padding: 4.5rem 2rem !important;
-  text-align: center !important;
-  border-radius: var(--radius-lg, 16px) !important;
-  margin-bottom: 3rem !important;
-  box-sizing: border-box;
-}
-
-.blockquote-wrapper blockquote,
-blockquote p {
-  font-family: var(--font-display, 'Calistoga', serif);
-  font-size: 1.85rem !important;
-  font-style: italic;
-  color: #e9e3d5 !important;
-  max-width: 800px;
-  margin: 0 auto 1.25rem !important;
-  line-height: 1.45;
-}
-
-.blockquote-wrapper cite,
-blockquote cite {
-  font-family: var(--font-sans, 'Nunito', sans-serif);
-  font-size: 0.85rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: rgba(233, 227, 213, 0.7) !important;
-  font-style: normal;
-}
-
-/* --- 6. WE'D LOVE TO MEET YOU (VISIT CTA) --- */
-.mcc-section--visit {
-  background-color: #1e4d2b;
-  color: #ffffff;
-  padding: 5rem 2rem;
-  text-align: center;
-  border-radius: var(--radius-lg, 16px);
-  margin-bottom: 3rem;
+  color: #2f342d !important;
+  font-size: 0.95rem !important;
+  line-height: 1.55 !important;
 }
 
 /* Center section buttons */
@@ -663,14 +300,59 @@ div[data-component-id="caresphere_theme:button"] a {
   margin: 1.5rem auto;
 }
 
-/* Target Visit CTA section-intro (penultimate section-intro) */
+/* --- 4. UPCOMING AT MCC SECTION --- */
+.mcc-section--events {
+  background-color: #f9f7f2;
+  padding: 5rem 2.5rem;
+  border-radius: var(--radius-lg, 16px);
+  margin-bottom: 5.5rem;
+}
+
+/* --- 5. MISSION STATEMENT QUOTE BANNER --- */
+.blockquote-wrapper,
+blockquote,
+.mcc-section--mission {
+  background-color: #312219 !important;
+  color: #e9e3d5 !important;
+  padding: 5.5rem 2.5rem !important;
+  text-align: center !important;
+  border-radius: var(--radius-lg, 16px) !important;
+  margin-top: 5.5rem !important;
+  margin-bottom: 5.5rem !important;
+  box-sizing: border-box;
+}
+
+.blockquote-wrapper blockquote,
+blockquote p {
+  font-family: var(--font-display, 'Calistoga', serif) !important;
+  font-size: 1.85rem !important;
+  font-style: italic !important;
+  color: #e9e3d5 !important;
+  max-width: 800px !important;
+  margin: 0 auto 1.25rem !important;
+  line-height: 1.45 !important;
+}
+
+.blockquote-wrapper cite,
+blockquote cite {
+  font-family: var(--font-sans, 'Nunito', sans-serif) !important;
+  font-size: 0.85rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  color: rgba(233, 227, 213, 0.75) !important;
+  font-style: normal !important;
+}
+
+/* --- 6. WE'D LOVE TO MEET YOU (VISIT CTA BANNER) --- */
 div[data-component-id="caresphere_theme:section-intro"]:nth-last-of-type(1) {
   background-color: #1e4d2b !important;
   color: #ffffff !important;
-  padding: 4rem 2rem 2rem !important;
+  padding: 4.5rem 2.5rem 2rem !important;
   border-radius: var(--radius-lg, 16px) var(--radius-lg, 16px) 0 0 !important;
   text-align: center !important;
   margin-bottom: 0 !important;
+  margin-top: 5.5rem !important;
 }
 
 div[data-component-id="caresphere_theme:section-intro"]:nth-last-of-type(1) h2,
@@ -686,47 +368,124 @@ div[data-component-id="caresphere_theme:section-intro"]:nth-last-of-type(1) .sec
   font-size: 1.15rem !important;
 }
 
-
-.mcc-section--visit h2 {
-  font-family: var(--font-display, 'Calistoga', serif);
-  font-size: 2.75rem;
-  color: #ffffff;
-  margin: 0 0 1rem;
+/* --- 7. FOOTER: DARK GREEN EDGE-TO-EDGE BREAKOUT & 5-COLUMN GRID --- */
+footer[role="contentinfo"] {
+  background-color: #142819 !important;
+  color: #ffffff !important;
+  padding: 4.5rem 0 2.5rem !important;
+  width: 100vw !important;
+  position: relative !important;
+  left: 50% !important;
+  right: 50% !important;
+  margin-left: -50vw !important;
+  margin-right: -50vw !important;
+  box-sizing: border-box !important;
 }
 
-.mcc-section--visit p {
-  font-family: var(--font-sans, 'Nunito', sans-serif);
-  font-size: 1.15rem;
-  color: rgba(255, 255, 255, 0.9);
-  max-width: 600px;
-  margin: 0 auto 2rem;
+footer[role="contentinfo"] .custom-container,
+.region-footer {
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+  padding: 0 1.5rem !important;
+  background: transparent !important;
 }
 
-.mcc-section--visit .mcc-actions {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
+/* Ensure ALL text in footer defaults to crisp white */
+footer[role="contentinfo"],
+footer[role="contentinfo"] p,
+footer[role="contentinfo"] li,
+footer[role="contentinfo"] div,
+footer[role="contentinfo"] span,
+.region-footer,
+.region-footer p,
+.region-footer li,
+.region-footer div,
+.region-footer span {
+  color: #ffffff !important;
 }
 
-.mcc-section--visit .mcc-actions a,
-.mcc-section--visit .mcc-actions button {
-  padding: 0.85rem 2rem;
-  border-radius: var(--radius-md, 10px);
-  font-weight: 700;
-  font-size: 1rem;
-  text-decoration: none;
+footer[role="contentinfo"] h2,
+footer[role="contentinfo"] h3,
+.region-footer h2,
+.region-footer h3 {
+  font-family: var(--font-sans, 'Nunito', sans-serif) !important;
+  font-weight: 800 !important;
+  font-size: 0.875rem !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  color: rgba(255, 255, 255, 0.75) !important;
+  margin-bottom: 1.25rem !important;
 }
 
-.mcc-section--visit .mcc-actions a.button--primary {
-  background-color: var(--terracotta-500, #ae5b33);
-  color: #ffffff;
+footer[role="contentinfo"] .mcc-footer-info h3 {
+  font-family: var(--font-display, 'Calistoga', serif) !important;
+  font-size: 1.35rem !important;
+  text-transform: none !important;
+  color: #ffffff !important;
+  margin-bottom: 0.25rem !important;
 }
 
-.mcc-section--visit .mcc-actions a.button--secondary {
-  background: transparent;
-  color: #ffffff;
-  border: 1.5px solid rgba(255, 255, 255, 0.4);
+footer[role="contentinfo"] a,
+.region-footer a {
+  color: rgba(255, 255, 255, 0.85) !important;
+  text-decoration: none !important;
 }
 
+footer[role="contentinfo"] a:hover,
+.region-footer a:hover {
+  color: #ffffff !important;
+  text-decoration: underline !important;
+}
 
+footer[role="contentinfo"] .menu {
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
 
+footer[role="contentinfo"] .menu__item {
+  margin-bottom: 0.65rem !important;
+}
+
+/* Newsletter block spans top full row */
+#block-mcctheme-footernewsletter {
+  grid-column: 1 / -1 !important;
+  background-color: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: var(--radius-lg, 16px) !important;
+  padding: 2.5rem 2rem !important;
+  margin-bottom: 2.5rem !important;
+}
+
+/* Main Footer grid layout: 4 content columns */
+.region-footer {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 2.5rem !important;
+}
+
+@media (min-width: 48rem) {
+  .region-footer {
+    grid-template-columns: 2.2fr 1fr 1fr 1fr !important;
+    gap: 2.5rem !important;
+  }
+}
+
+/* Copyright block spans bottom full row */
+#block-mcctheme-footercopyright {
+  grid-column: 1 / -1 !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
+  padding-top: 2rem !important;
+  margin-top: 2rem !important;
+  text-align: center !important;
+}
+
+.mcc-footer-copyright p {
+  color: rgba(255, 255, 255, 0.6) !important;
+  font-size: 0.875rem !important;
+  margin: 0 0 0.25rem !important;
+}
+
+.mcc-footer-copyright .subtext {
+  font-size: 0.8rem !important;
+}
