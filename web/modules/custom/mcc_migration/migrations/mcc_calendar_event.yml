@@ -21,31 +21,57 @@ process:
   created: created
   changed: changed
   body: body
+  # Drupal 7 stores each field value as a delta-indexed array of columns, so
+  # the "field/column" shorthand can't reach the column. sub_process iterates
+  # every delta and looks up its migrated destination id.
   field_featured_image:
-    plugin: migration_lookup
-    migration: mcc_media_image
-    source: field_featured_image/fid
+    plugin: sub_process
+    source: field_featured_image
+    process:
+      target_id:
+        plugin: migration_lookup
+        migration: mcc_media_image
+        source: fid
   field_attachments:
-    plugin: migration_lookup
-    migration: mcc_media_document
-    source: field_attachments/fid
+    plugin: sub_process
+    source: field_attachments
+    process:
+      target_id:
+        plugin: migration_lookup
+        migration: mcc_media_document
+        source: fid
   field_bio_reference:
-    plugin: migration_lookup
-    migration: mcc_bio
-    source: field_bio_reference/target_id
+    plugin: sub_process
+    source: field_bio_reference
+    process:
+      target_id:
+        plugin: migration_lookup
+        migration: mcc_bio
+        source: target_id
   field_mission_category:
-    plugin: migration_lookup
-    migration: mcc_taxonomy
-    source: field_mission_category/tid
+    plugin: sub_process
+    source: field_mission_category
+    process:
+      target_id:
+        plugin: migration_lookup
+        migration: mcc_taxonomy
+        source: tid
   field_related_ministry:
-    plugin: migration_lookup
-    migration: mcc_ministry
-    source: field_related_ministry/target_id
+    plugin: sub_process
+    source: field_related_ministry
+    process:
+      target_id:
+        plugin: migration_lookup
+        migration: mcc_ministry
+        source: target_id
   field_event_date:
-    plugin: parse_dates
-    source: field_date
-    entity_type: node
-    bundle: calendar_event
+    -
+      plugin: d7_dates_to_utc
+      source: field_date
+    -
+      plugin: parse_dates
+      entity_type: node
+      bundle: calendar_event
 destination:
   plugin: 'entity:node'
   default_bundle: calendar_event

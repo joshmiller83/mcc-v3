@@ -23,7 +23,7 @@ process:
     source: '@parent_id'
   vid:
     plugin: static_map
-    source: bundle
+    source: machine_name
     map:
       leadership_structure: mcc_leadership_structure
       mission: mcc_mission_category
