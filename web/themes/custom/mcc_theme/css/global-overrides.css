@@ -386,33 +386,56 @@ footer[role="contentinfo"] .menu__link:hover {
    HOMEPAGE SECTION STYLING OVERRIDES (mockup-reference.png Alignment)
    ========================================================================== */
 
-/* --- 1. HERO SECTION --- */
+/* --- Header Branding Logo --- */
+.mcc-header-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  text-decoration: none;
+}
+
+.mcc-header-logo__text {
+  display: flex;
+  flex-direction: column;
+}
+
+.mcc-header-logo__title {
+  font-family: var(--font-display, 'Calistoga', serif);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--green-800, #1e3c23);
+  line-height: 1.25;
+}
+
+.mcc-header-logo__tagline {
+  font-family: var(--font-sans, 'Nunito', sans-serif);
+  font-size: 0.775rem;
+  font-style: italic;
+  color: var(--text-muted, #52514e);
+}
+
+/* --- 1. HERO SECTION SPLIT LAYOUT --- */
 .hero-card {
   background: linear-gradient(135deg, #3f4e41 0%, #2f3c31 100%);
   color: #ffffff;
-  padding: 4rem 2rem;
+  padding: 4rem 2.5rem;
   border-radius: var(--radius-lg, 16px);
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
   position: relative;
   overflow: hidden;
 }
 
-.hero-card__heading {
-  font-family: var(--font-display, 'Calistoga', serif);
-  font-size: 3.25rem;
-  font-weight: 700;
-  color: #ffffff;
-  line-height: 1.15;
-  margin: 0.75rem 0 1.25rem;
+.hero-card__card {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  align-items: center;
 }
 
-.hero-card__description {
-  font-family: var(--font-sans, 'Nunito', sans-serif);
-  font-size: 1.2rem;
-  color: rgba(255, 255, 255, 0.9);
-  max-width: 600px;
-  line-height: 1.6;
-  margin-bottom: 2rem;
+@media (min-width: 48rem) {
+  .hero-card__card {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 .hero-card__subtitle-badge {
@@ -422,6 +445,24 @@ footer[role="contentinfo"] .menu__link:hover {
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.75);
+  margin-bottom: 0.75rem;
+}
+
+.hero-card__heading {
+  font-family: var(--font-display, 'Calistoga', serif);
+  font-size: 3rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.15;
+  margin: 0 0 1.25rem;
+}
+
+.hero-card__description {
+  font-family: var(--font-sans, 'Nunito', sans-serif);
+  font-size: 1.15rem;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.6;
+  margin-bottom: 2rem;
 }
 
 .hero-card__actions {
@@ -456,7 +497,7 @@ footer[role="contentinfo"] .menu__link:hover {
 /* --- 2. DEEP ROOTS & STATS SECTION --- */
 .mcc-section--stats {
   background-color: #f3ede2;
-  padding: 4rem 2rem;
+  padding: 4rem 2.5rem;
   border-radius: var(--radius-lg, 16px);
   margin-bottom: 3rem;
 }
@@ -517,25 +558,12 @@ footer[role="contentinfo"] .menu__link:hover {
   margin-bottom: 3rem;
 }
 
-.mcc-ministries-grid {
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  gap: 2rem;
-  margin-top: 2.5rem;
-}
-
-@media (min-width: 48rem) {
-  .mcc-ministries-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
 .card-icon {
   background: #ffffff !important;
   color: var(--foreground, #1e4d2b) !important;
   border: 1px solid var(--border, #e9e3d5);
   border-radius: var(--radius-lg, 16px);
-  padding: 2rem 1.5rem;
+  padding: 2.25rem 1.75rem;
   text-align: center;
   box-shadow: var(--shadow-sm);
   display: flex;
@@ -543,12 +571,24 @@ footer[role="contentinfo"] .menu__link:hover {
   align-items: center;
 }
 
+.card-icon__badge-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: var(--green-100, #e6eee8);
+  color: var(--green-700, #2f4833);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.25rem;
+}
+
 .card-icon__heading,
 .card-icon h3 {
   font-family: var(--font-display, 'Calistoga', serif);
   font-size: 1.35rem;
   color: var(--foreground, #1e4d2b) !important;
-  margin: 1rem 0 0.5rem;
+  margin: 0.5rem 0 0.5rem;
 }
 
 .card-icon__description,
@@ -556,7 +596,6 @@ footer[role="contentinfo"] .menu__link:hover {
   color: var(--text-body, #2f342d) !important;
   font-size: 0.95rem;
   line-height: 1.55;
-
 }
 
 /* --- 4. UPCOMING AT MCC SECTION --- */
@@ -567,49 +606,38 @@ footer[role="contentinfo"] .menu__link:hover {
   margin-bottom: 3rem;
 }
 
-.mcc-events-grid {
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  gap: 1.25rem;
-  margin-top: 2rem;
-}
-
-@media (min-width: 48rem) {
-  .mcc-events-grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-/* --- 5. MISSION STATEMENT QUOTE BLOCK --- */
+/* --- 5. MISSION STATEMENT QUOTE BANNER --- */
 .blockquote-wrapper,
+blockquote,
 .mcc-section--mission {
-  background-color: #312219;
-  color: #e9e3d5;
-  padding: 4.5rem 2rem;
-  text-align: center;
-  border-radius: var(--radius-lg, 16px);
-  margin-bottom: 3rem;
+  background-color: #312219 !important;
+  color: #e9e3d5 !important;
+  padding: 4.5rem 2rem !important;
+  text-align: center !important;
+  border-radius: var(--radius-lg, 16px) !important;
+  margin-bottom: 3rem !important;
+  box-sizing: border-box;
 }
 
 .blockquote-wrapper blockquote,
-.mcc-section--mission blockquote {
+blockquote p {
   font-family: var(--font-display, 'Calistoga', serif);
-  font-size: 1.85rem;
+  font-size: 1.85rem !important;
   font-style: italic;
-  color: #e9e3d5;
+  color: #e9e3d5 !important;
   max-width: 800px;
-  margin: 0 auto 1.5rem;
+  margin: 0 auto 1.25rem !important;
   line-height: 1.45;
 }
 
 .blockquote-wrapper cite,
-.mcc-section--mission cite {
+blockquote cite {
   font-family: var(--font-sans, 'Nunito', sans-serif);
   font-size: 0.85rem;
   font-weight: 800;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(233, 227, 213, 0.7);
+  color: rgba(233, 227, 213, 0.7) !important;
   font-style: normal;
 }
 
@@ -622,6 +650,42 @@ footer[role="contentinfo"] .menu__link:hover {
   border-radius: var(--radius-lg, 16px);
   margin-bottom: 3rem;
 }
+
+/* Center section buttons */
+div[data-component-id="caresphere_theme:button"] {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+div[data-component-id="caresphere_theme:button"] a {
+  display: inline-flex;
+  margin: 1.5rem auto;
+}
+
+/* Target Visit CTA section-intro (penultimate section-intro) */
+div[data-component-id="caresphere_theme:section-intro"]:nth-last-of-type(1) {
+  background-color: #1e4d2b !important;
+  color: #ffffff !important;
+  padding: 4rem 2rem 2rem !important;
+  border-radius: var(--radius-lg, 16px) var(--radius-lg, 16px) 0 0 !important;
+  text-align: center !important;
+  margin-bottom: 0 !important;
+}
+
+div[data-component-id="caresphere_theme:section-intro"]:nth-last-of-type(1) h2,
+div[data-component-id="caresphere_theme:section-intro"]:nth-last-of-type(1) .section-intro__heading {
+  font-family: var(--font-display, 'Calistoga', serif) !important;
+  font-size: 2.75rem !important;
+  color: #ffffff !important;
+}
+
+div[data-component-id="caresphere_theme:section-intro"]:nth-last-of-type(1) p,
+div[data-component-id="caresphere_theme:section-intro"]:nth-last-of-type(1) .section-intro__description {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-size: 1.15rem !important;
+}
+
 
 .mcc-section--visit h2 {
   font-family: var(--font-display, 'Calistoga', serif);
@@ -663,5 +727,6 @@ footer[role="contentinfo"] .menu__link:hover {
   color: #ffffff;
   border: 1.5px solid rgba(255, 255, 255, 0.4);
 }
+
 
 

@@ -17,9 +17,81 @@ dependencies:
     - caresphere_theme
 _core:
   default_config_hash: gvpwmRHWsbW4utf1HO1AUZn_QVZHKxbctmUr0v5Lo9Y
-active_version: af6fcb9c1ce7c661
+active_version: 911988993861ca66
 versioned_properties:
   active:
+    settings:
+      prop_field_definitions:
+        subtitle:
+          required: false
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value:
+            -
+              value: 'EST. 1840 · KIRKLIN, INDIANA'
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+        heading:
+          required: true
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value:
+            -
+              value: "You're welcome here."
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+        description:
+          required: false
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value:
+            -
+              value: "We're a small country church that loves people, plain and simple. Join us this Sunday — everyone belongs."
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+        media:
+          required: false
+          field_type: entity_reference
+          field_storage_settings:
+            target_type: media
+          field_instance_settings:
+            handler: 'default:media'
+            handler_settings:
+              target_bundles:
+                image: image
+                svg_image: svg_image
+          field_widget: media_library_widget
+          default_value: {  }
+          expression: 'ℹ︎entity_reference␟entity␜[␜entity:media:image␝field_media_image␞␟{src↠src_with_alternate_widths,alt↠alt,width↠width,height↠height}][␜entity:media:svg_image␝field_media_svg_image␞␟{src↠src_with_alternate_widths,alt↠alt,width↠width,height↠height}]'
+          derived_schema_metadata: {  }
+        heading_level:
+          required: false
+          field_type: list_float
+          field_storage_settings:
+            allowed_values_function: canvas_load_allowed_values_for_component_prop
+          field_instance_settings: {  }
+          field_widget: options_select
+          default_value: null
+          expression: ℹ︎list_float␟value
+          derived_schema_metadata: {  }
+    fallback_metadata:
+      slot_definitions:
+        ctas:
+          title: CTAs
+          description: 'Call-to-action buttons displayed below the hero content.'
+        side_media:
+          title: 'Side Media Slot'
+          description: 'Optional right-column photo placeholder or media component.'
+  af6fcb9c1ce7c661:
     settings:
       prop_field_definitions:
         heading:
