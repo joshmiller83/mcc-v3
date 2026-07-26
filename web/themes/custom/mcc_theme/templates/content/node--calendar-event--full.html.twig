@@ -1,0 +1,162 @@
+{#
+/**
+ * @file
+ * Event detail page.
+ *
+ * Layout is a two-column split: the event itself on the left, supporting
+ * context ("what else is on", quick facts) in the aside. Every optional
+ * section is wrapped in its own emptiness check so a sparse event — no image,
+ * no speaker, no attachments — still renders as a clean page rather than a
+ * run of empty headings.
+ *
+ * `mcc_event` is built by _mcc_theme_event_context() in mcc_theme.theme.
+ * Category colour comes from the taxonomy term via [data-accent]; see
+ * css/tokens/accents.css.
+ */
+#}
+{% set event = mcc_event %}
+{% set accent = event.category.accent|default('default') %}
+
+<article{{ attributes.addClass('mcc-event').addClass(event.is_past ? 'is-past' : '') }} data-accent="{{ accent }}">
+
+  <header class="mcc-event__hero">
+    <div class="mcc-event__hero-media">
+      {% if content.field_featured_image|render|trim is not empty %}
+        {{ content.field_featured_image }}
+      {% else %}
+        {% include 'mcc_theme:mcc-photo-placeholder' with { label: 'Photo coming soon' } only %}
+      {% endif %}
+    </div>
+
+    <div class="mcc-event__hero-body">
+      {% if event.date_badge %}
+        <p class="mcc-event__datechip">
+          <span class="mcc-event__datechip-month">{{ event.date_badge.month }}</span>
+          <span class="mcc-event__datechip-day">{{ event.date_badge.day }}</span>
+        </p>
+      {% endif %}
+
+      <div class="mcc-event__headings">
+        {% if event.category %}
+          <a href="{{ event.category.url }}" class="mcc-event__category"
+             {% if event.category.icon_url %}style="--icon-url: url('{{ event.category.icon_url }}')"{% endif %}>
+            {% if event.category.icon_url %}
+              <span class="mcc-event__category-icon" aria-hidden="true"></span>
+            {% endif %}
+            {{ event.category.label }}
+          </a>
+        {% endif %}
+
+        <h1 class="mcc-event__title">{{ label }}</h1>
+
+        {% if event.is_past %}
+          <p class="mcc-event__past-note">This event has already taken place.</p>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+
+  <div class="mcc-event__layout">
+
+    <div class="mcc-event__main">
+      {% if content.field_content|render|trim is not empty %}
+        <div class="mcc-event__body">
+          {{ content.field_content }}
+        </div>
+      {% endif %}
+
+      {% if event.speakers is not empty %}
+        <section class="mcc-event__section">
+          <h2 class="mcc-event__section-title">
+            {{ event.speakers|length > 1 ? 'Speakers & hosts' : 'Speaker / host' }}
+          </h2>
+          <ul class="mcc-event__speakers">
+            {% for speaker in event.speakers %}
+              <li class="mcc-event__speaker">
+                <a href="{{ speaker.url }}" class="mcc-event__speaker-link">
+                  {{ speaker.rendered }}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </section>
+      {% endif %}
+
+      {% if event.attachments is not empty %}
+        <section class="mcc-event__section">
+          <h2 class="mcc-event__section-title">Files &amp; flyers</h2>
+          <ul class="mcc-event__files">
+            {% for file in event.attachments %}
+              <li>
+                <a href="{{ file.url }}" class="mcc-event__file" download>
+                  <span class="mcc-event__file-ext">{{ file.extension }}</span>
+                  <span class="mcc-event__file-name">{{ file.label }}</span>
+                  <span class="mcc-event__file-size">{{ file.size }}</span>
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </section>
+      {% endif %}
+
+      {% if content.field_connect_webform|render|trim is not empty %}
+        <section class="mcc-event__section mcc-event__register">
+          <h2 class="mcc-event__section-title">Register for this event</h2>
+          {{ content.field_connect_webform }}
+        </section>
+      {% endif %}
+    </div>
+
+    <aside class="mcc-event__aside" role="complementary">
+
+      <div class="mcc-event__card mcc-event__facts">
+        <h2 class="mcc-event__card-title">Event details</h2>
+        <dl class="mcc-event__factlist">
+          {% if content.field_event_date|render|trim is not empty %}
+            <dt>When</dt>
+            <dd>
+              {{ content.field_event_date }}
+              {% if event.extra_occurrences > 0 %}
+                <span class="mcc-event__repeat">
+                  Repeats — {{ event.extra_occurrences }} more
+                  {{ event.extra_occurrences == 1 ? 'date' : 'dates' }}
+                </span>
+              {% endif %}
+            </dd>
+          {% endif %}
+
+          {% if event.category %}
+            <dt>Category</dt>
+            <dd><a href="{{ event.category.url }}">{{ event.category.label }}</a></dd>
+          {% endif %}
+
+          {% if event.ministries is not empty %}
+            <dt>{{ event.ministries|length > 1 ? 'Ministries' : 'Ministry' }}</dt>
+            <dd>
+              {% for ministry in event.ministries %}
+                <a href="{{ ministry.url }}">{{ ministry.label }}</a>{{ not loop.last ? ', ' }}
+              {% endfor %}
+            </dd>
+          {% endif %}
+        </dl>
+        <a href="{{ event.calendar_url }}" class="mcc-event__calendar-link">View full calendar</a>
+      </div>
+
+      {% if event.same_day is not empty %}
+        <div class="mcc-event__card">
+          <h2 class="mcc-event__card-title">Also happening that day</h2>
+          {% include 'mcc_theme:mcc-event-list' with { events: event.same_day, show_date: false } only %}
+        </div>
+      {% endif %}
+
+      {% if event.this_week is not empty %}
+        <div class="mcc-event__card">
+          <h2 class="mcc-event__card-title">Rest of that week</h2>
+          {% include 'mcc_theme:mcc-event-list' with { events: event.this_week, show_date: true } only %}
+        </div>
+      {% endif %}
+
+    </aside>
+  </div>
+
+</article>

@@ -10,7 +10,6 @@ source:
   node_type: missions
 process:
   nid: nid
-  vid: vid
   title: title
   uid: node_uid
   status: status

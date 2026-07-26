@@ -1,0 +1,69 @@
+uuid: 66e250fe-589a-4cec-9fff-eca446fffc39
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.mcc_mission_category.field_accent_color
+    - field.field.taxonomy_term.mcc_mission_category.field_icon
+    - taxonomy.vocabulary.mcc_mission_category
+  module:
+    - media_library
+    - path
+    - text
+id: taxonomy_term.mcc_mission_category.default
+targetEntityType: taxonomy_term
+bundle: mcc_mission_category
+mode: default
+content:
+  description:
+    type: text_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_accent_color:
+    type: options_select
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_icon:
+    type: media_library_widget
+    weight: 11
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+  name:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  simple_sitemap:
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    weight: 100
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+hidden:
+  publish_on: true
+  publish_state: true
+  unpublish_on: true
+  unpublish_state: true

@@ -1,0 +1,61 @@
+/**
+ * MCC Event List
+ * Compact colour-coded event rows for sidebar context panels.
+ * `--evt` is supplied by the shared accent palette (css/tokens/accents.css)
+ * via the [data-accent] attribute on each row.
+ */
+
+.mcc-event-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.mcc-event-list__item + .mcc-event-list__item {
+  border-top: 1px solid var(--border-subtle, #ddd4c2);
+}
+
+.mcc-event-list__link {
+  display: block;
+  padding: 0.6rem 0.5rem 0.6rem 0.75rem;
+  border-left: 3px solid var(--evt);
+  border-radius: 0 6px 6px 0;
+  text-decoration: none;
+  color: inherit;
+  transition: background-color .15s ease;
+}
+
+.mcc-event-list__link:hover,
+.mcc-event-list__link:focus-visible {
+  background: color-mix(in oklch, var(--evt) 10%, transparent);
+}
+
+.mcc-event-list__link:focus-visible {
+  outline: 2px solid var(--evt);
+  outline-offset: -2px;
+}
+
+.mcc-event-list__title {
+  display: block;
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text-body, #2a1f18);
+}
+
+.mcc-event-list__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 0.5rem;
+  margin-top: 0.15rem;
+  font-size: 0.78rem;
+  color: var(--text-muted, #6d5c48);
+}
+
+.mcc-event-list__date {
+  font-weight: 700;
+  color: color-mix(in oklch, var(--evt) 70%, var(--text-muted, #6d5c48));
+}

@@ -18,15 +18,9 @@
   color: var(--text-body, #2a1f18);
 }
 
-/* Per-category accent palette, harmonized with the earthy brand tokens.
-   Default first, then each known category overrides --evt. */
-.mcc-calendar [data-accent]              { --evt: var(--neutral-400, #9a8b74); }
-.mcc-calendar [data-accent="worship"]    { --evt: var(--green-700, #2f4833); }
-.mcc-calendar [data-accent="serve"]      { --evt: var(--terracotta-500, #ae5b33); }
-.mcc-calendar [data-accent="fellowship"] { --evt: var(--walnut-600, #6a4a37); }
-.mcc-calendar [data-accent="youth"]      { --evt: var(--brick-500, oklch(52% 0.15 28)); }
-.mcc-calendar [data-accent="equip"]      { --evt: var(--green-500, #6f8a6f); }
-.mcc-calendar [data-accent="lead"]       { --evt: oklch(64% 0.10 72); }
+/* Category accent colours (--evt, keyed off [data-accent]) come from the
+   shared palette in css/tokens/accents.css — see that file before adding
+   colours here. */
 
 /* -- Header bar -------------------------------------------------------- */
 .mcc-calendar__bar {

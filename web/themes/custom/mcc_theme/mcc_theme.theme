@@ -10,6 +10,11 @@
  * place of the old per-block markup.
  */
 
+use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\StringTranslation\ByteSizeMarkup;
+use Drupal\Core\Url;
+use Drupal\node\NodeInterface;
+
 /**
  * Implements hook_preprocess_page().
  */
@@ -37,6 +42,271 @@ function mcc_theme_preprocess_page(array &$variables): void {
     'heading' => 'Stay connected',
     'description' => 'Get updates on events and ministries, straight to your inbox.',
     'form' => _mcc_theme_newsletter_form(),
+  ];
+}
+
+/**
+ * Implements hook_preprocess_node().
+ */
+function mcc_theme_preprocess_node(array &$variables): void {
+  $node = $variables['node'];
+  if (!$node instanceof NodeInterface || $node->bundle() !== 'calendar_event') {
+    return;
+  }
+  if (($variables['view_mode'] ?? '') !== 'full') {
+    return;
+  }
+
+  $variables['mcc_event'] = _mcc_theme_event_context($node, $variables);
+}
+
+/**
+ * Assembles the supporting context shown around a single event.
+ *
+ * Everything here is derived from fields, never hardcoded: the category's
+ * colour and icon come off the taxonomy term, and the "what else is on"
+ * panels reuse mcc_core's shared event lookups so the event page and the
+ * monthly calendar can never disagree about a category or a time.
+ */
+function _mcc_theme_event_context(NodeInterface $node, array &$variables): array {
+  /** @var \Drupal\mcc_core\EventContext $context */
+  $context = \Drupal::service('mcc_core.event_context');
+  $tz = $context->timezone();
+
+  $category = $context->category($node);
+  if ($category) {
+    // The page's colour depends on the term, so term edits must invalidate it.
+    $variables['#cache']['tags'][] = 'taxonomy_term:' . $category['tid'];
+  }
+
+  $occurrences = _mcc_theme_event_occurrences($node, $context, $tz);
+  $anchor = $occurrences['anchor'];
+
+  $event = [
+    'category' => $category,
+    'occurrences' => $occurrences['all'],
+    'extra_occurrences' => max(0, count($occurrences['all']) - 1),
+    'is_past' => $occurrences['is_past'],
+    'date_badge' => $anchor ? [
+      'month' => strtoupper($anchor['start']->format('M')),
+      'day' => $anchor['start']->format('j'),
+      'weekday' => $anchor['start']->format('l'),
+    ] : NULL,
+    'speakers' => _mcc_theme_event_speakers($node, $variables),
+    'ministries' => _mcc_theme_event_ministries($node, $variables),
+    'attachments' => _mcc_theme_event_attachments($node, $variables),
+    'same_day' => [],
+    'this_week' => [],
+    'calendar_url' => Url::fromRoute('mcc_core.calendar')->toString(),
+  ];
+
+  // "What else is on" only makes sense once we know which date to anchor to.
+  if ($anchor) {
+    $event['calendar_url'] = Url::fromRoute('mcc_core.calendar', [], [
+      'query' => [
+        'year' => $anchor['start']->format('Y'),
+        'month' => $anchor['start']->format('m'),
+      ],
+    ])->toString();
+
+    [$event['same_day'], $event['this_week']] =
+      _mcc_theme_event_neighbours($node, $anchor['start'], $context, $tz);
+
+    // Any other event moving in or out of that week changes this panel.
+    $variables['#cache']['tags'][] = 'node_list:calendar_event';
+  }
+
+  return $event;
+}
+
+/**
+ * Lists an event's occurrences, picking the most relevant one to lead with.
+ *
+ * Recurring events have many occurrences; the page anchors to the next one
+ * still to come, falling back to the most recent past one so archived events
+ * still read sensibly.
+ */
+function _mcc_theme_event_occurrences(NodeInterface $node, $context, \DateTimeZone $tz): array {
+  $now = \Drupal::time()->getRequestTime();
+  $all = [];
+
+  foreach ($node->get('field_event_date') as $item) {
+    $start_ts = (int) $item->value;
+    $end_ts = (int) $item->end_value;
+    $described = $context->describeOccurrence($start_ts, $end_ts, $tz);
+    $start = DrupalDateTime::createFromTimestamp($start_ts, $tz);
+
+    $all[] = [
+      'start' => $start,
+      'start_ts' => $start_ts,
+      'date_label' => $start->format('l, F j, Y'),
+      'time_label' => $described['label'],
+      'all_day' => $described['all_day'],
+      'is_upcoming' => $end_ts >= $now,
+    ];
+  }
+
+  usort($all, fn($a, $b) => $a['start_ts'] <=> $b['start_ts']);
+
+  $anchor = NULL;
+  foreach ($all as $occurrence) {
+    if ($occurrence['is_upcoming']) {
+      $anchor = $occurrence;
+      break;
+    }
+  }
+  $is_past = $anchor === NULL && $all !== [];
+  if ($is_past) {
+    $anchor = end($all);
+  }
+
+  return ['all' => $all, 'anchor' => $anchor, 'is_past' => $is_past];
+}
+
+/**
+ * Renders referenced speaker/host bios as teasers.
+ *
+ * Uses the bio bundle's own teaser display so what a speaker card shows stays
+ * editable in the UI rather than baked into this theme.
+ */
+function _mcc_theme_event_speakers(NodeInterface $node, array &$variables): array {
+  $builder = \Drupal::entityTypeManager()->getViewBuilder('node');
+  $speakers = [];
+
+  foreach ($node->get('field_bio_reference')->referencedEntities() as $bio) {
+    if (!$bio->access('view')) {
+      continue;
+    }
+    $speakers[] = [
+      'label' => $bio->label(),
+      'url' => $bio->toUrl()->toString(),
+      'rendered' => $builder->view($bio, 'teaser'),
+    ];
+    \Drupal::service('renderer')->addCacheableDependency($variables, $bio);
+  }
+
+  return $speakers;
+}
+
+/**
+ * Related ministries, as plain label + link callouts.
+ */
+function _mcc_theme_event_ministries(NodeInterface $node, array &$variables): array {
+  $ministries = [];
+
+  foreach ($node->get('field_related_ministry')->referencedEntities() as $ministry) {
+    if (!$ministry->access('view')) {
+      continue;
+    }
+    $ministries[] = [
+      'label' => $ministry->label(),
+      'url' => $ministry->toUrl()->toString(),
+    ];
+    \Drupal::service('renderer')->addCacheableDependency($variables, $ministry);
+  }
+
+  return $ministries;
+}
+
+/**
+ * Attached documents as download links.
+ *
+ * Documents want a filename, type and size — not the image thumbnail the
+ * default media formatter would give them.
+ */
+function _mcc_theme_event_attachments(NodeInterface $node, array &$variables): array {
+  $file_url_generator = \Drupal::service('file_url_generator');
+  $attachments = [];
+
+  foreach ($node->get('field_attachments')->referencedEntities() as $media) {
+    if (!$media->access('view') || !$media->hasField('field_media_document')) {
+      continue;
+    }
+    $file = $media->get('field_media_document')->entity;
+    if (!$file) {
+      continue;
+    }
+    $attachments[] = [
+      'label' => $media->label(),
+      'url' => $file_url_generator->generateString($file->getFileUri()),
+      'extension' => strtoupper(pathinfo($file->getFilename(), PATHINFO_EXTENSION)),
+      'size' => ByteSizeMarkup::create((int) $file->getSize()),
+    ];
+    \Drupal::service('renderer')->addCacheableDependency($variables, $media);
+  }
+
+  return $attachments;
+}
+
+/**
+ * Other events sharing this event's day and its Sunday–Saturday week.
+ *
+ * Anchored to the event being viewed rather than to "today", so a past event
+ * still shows the context it originally sat in.
+ *
+ * @return array
+ *   [same_day_chips, this_week_chips].
+ */
+function _mcc_theme_event_neighbours(NodeInterface $node, DrupalDateTime $anchor, $context, \DateTimeZone $tz): array {
+  $day_start = (clone $anchor)->setTime(0, 0, 0);
+  $day_end = (clone $anchor)->setTime(23, 59, 59);
+  $week_start = (clone $day_start)->modify('-' . (int) $anchor->format('w') . ' days');
+  $week_end = (clone $week_start)->modify('+6 days')->setTime(23, 59, 59);
+
+  $day_key = $anchor->format('Y-m-d');
+  $same_day = [];
+  $this_week = [];
+
+  $neighbours = $context->findEventsInRange(
+    $week_start->getTimestamp(),
+    $week_end->getTimestamp(),
+    (int) $node->id()
+  );
+
+  foreach ($neighbours as $other) {
+    $accent = $context->category($other)['accent'] ?? 'default';
+    $url = $other->toUrl()->toString();
+
+    foreach ($other->get('field_event_date') as $item) {
+      $start_ts = (int) $item->value;
+      $end_ts = (int) $item->end_value;
+      if ($start_ts > $week_end->getTimestamp() || $end_ts < $week_start->getTimestamp()) {
+        continue;
+      }
+
+      $described = $context->describeOccurrence($start_ts, $end_ts, $tz);
+      $start = DrupalDateTime::createFromTimestamp($start_ts, $tz);
+      $chip = [
+        'title' => $other->label(),
+        'url' => $url,
+        'accent' => $accent,
+        'date_label' => $start->format('D, M j'),
+        'time_label' => $described['label'],
+        'sort' => $described['all_day'] ? 0 : $start_ts,
+      ];
+
+      // An occurrence can straddle the anchor day without starting on it.
+      $touches_day = $start_ts <= $day_end->getTimestamp() && $end_ts >= $day_start->getTimestamp();
+      if ($touches_day) {
+        $same_day[$other->id() . ':' . $start_ts] = $chip;
+      }
+      else {
+        $this_week[$other->id() . ':' . $start_ts] = $chip;
+      }
+    }
+  }
+
+  $sort = function (array &$chips): void {
+    uasort($chips, fn($a, $b) => [$a['sort'], $a['title']] <=> [$b['sort'], $b['title']]);
+  };
+  $sort($same_day);
+  $sort($this_week);
+
+  // Keep the panels glanceable rather than exhaustive; the calendar link
+  // covers the full picture.
+  return [
+    array_slice(array_values($same_day), 0, 5),
+    array_slice(array_values($this_week), 0, 6),
   ];
 }
 

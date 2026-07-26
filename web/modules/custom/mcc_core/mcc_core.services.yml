@@ -1,0 +1,7 @@
+services:
+  mcc_core.event_context:
+    class: Drupal\mcc_core\EventContext
+    arguments:
+      - '@entity_type.manager'
+      - '@config.factory'
+      - '@file_url_generator'

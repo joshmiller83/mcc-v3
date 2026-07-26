@@ -1,0 +1,20 @@
+{#
+  Compact, colour-coded list of events. Used for both "also happening that day"
+  and "rest of that week" on the event detail page — the only difference is
+  whether each row leads with its date.
+#}
+<ul{{ attributes.addClass('mcc-event-list') }}>
+  {% for event in events %}
+    <li class="mcc-event-list__item" data-accent="{{ event.accent|default('default') }}">
+      <a href="{{ event.url }}" class="mcc-event-list__link">
+        <span class="mcc-event-list__title">{{ event.title }}</span>
+        <span class="mcc-event-list__meta">
+          {% if show_date and event.date_label %}
+            <span class="mcc-event-list__date">{{ event.date_label }}</span>
+          {% endif %}
+          <span class="mcc-event-list__time">{{ event.time_label }}</span>
+        </span>
+      </a>
+    </li>
+  {% endfor %}
+</ul>

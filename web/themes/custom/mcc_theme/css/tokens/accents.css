@@ -1,0 +1,20 @@
+/**
+ * Mission Category accent palette — single source of truth.
+ *
+ * Each Mission Category taxonomy term carries a `field_accent_color` whose
+ * allowed values are exactly the keys below. Anything that renders a category
+ * (the monthly calendar, event cards, the event detail page) sets
+ * `data-accent="<key>"` on a wrapper and then reads `--evt`, so a category's
+ * colour is defined once here and in one place in the database.
+ *
+ * Adding a new category is an editorial action; adding a new *colour* means
+ * adding one line here plus one allowed value on the field.
+ */
+
+[data-accent]              { --evt: var(--neutral-400, #9a8b74); }
+[data-accent="forest"]     { --evt: var(--green-700, #2f4833); }
+[data-accent="terracotta"] { --evt: var(--terracotta-500, #ae5b33); }
+[data-accent="walnut"]     { --evt: var(--walnut-600, #6a4a37); }
+[data-accent="brick"]      { --evt: var(--brick-500, oklch(52% 0.15 28)); }
+[data-accent="sage"]       { --evt: var(--green-500, #6f8a6f); }
+[data-accent="sand"]       { --evt: oklch(64% 0.10 72); }

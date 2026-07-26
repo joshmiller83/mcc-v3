@@ -1,0 +1,41 @@
+uuid: 40cd3542-d799-48ab-9ea2-bee485c44ac8
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.bio.field_attachments
+    - field.field.node.bio.field_bio_pic
+    - field.field.node.bio.field_email
+    - field.field.node.bio.field_ministry_structure
+    - field.field.node.bio.field_phone_number
+    - node.type.bio
+  module:
+    - user
+id: node.bio.teaser
+targetEntityType: node
+bundle: bio
+mode: teaser
+content:
+  field_bio_pic:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: 1_1_square_small
+      link: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_ministry_structure:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  field_attachments: true
+  field_email: true
+  field_phone_number: true
+  links: true

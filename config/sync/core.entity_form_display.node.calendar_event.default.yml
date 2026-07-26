@@ -6,6 +6,7 @@ dependencies:
     - field.field.node.calendar_event.field_attachments
     - field.field.node.calendar_event.field_bio_reference
     - field.field.node.calendar_event.field_connect_webform
+    - field.field.node.calendar_event.field_content
     - field.field.node.calendar_event.field_event_date
     - field.field.node.calendar_event.field_featured_image
     - field.field.node.calendar_event.field_mission_category
@@ -17,6 +18,7 @@ dependencies:
     - media_library
     - path
     - smart_date
+    - text
     - webform
 id: node.calendar_event.default
 targetEntityType: node
@@ -53,6 +55,14 @@ content:
     settings:
       default_data: true
       webforms: {  }
+    third_party_settings: {  }
+  field_content:
+    type: text_textarea
+    weight: 124
+    region: content
+    settings:
+      rows: 9
+      placeholder: ''
     third_party_settings: {  }
   field_event_date:
     type: smartdate_default

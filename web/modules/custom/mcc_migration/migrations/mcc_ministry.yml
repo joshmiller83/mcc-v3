@@ -10,7 +10,6 @@ source:
   node_type: ministry
 process:
   nid: nid
-  vid: vid
   title: title
   uid: node_uid
   status: status

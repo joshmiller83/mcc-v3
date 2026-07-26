@@ -1,0 +1,363 @@
+/**
+ * Event detail page (node--calendar-event--full.html.twig).
+ *
+ * Category colour arrives as `--evt` from the shared accent palette
+ * (css/tokens/accents.css) via [data-accent] on the article, so this file
+ * never names a category colour directly.
+ */
+
+.mcc-event {
+  --event-max: 1200px;
+  --event-radius: 14px;
+
+  max-width: var(--event-max);
+  margin: 2rem auto 3.5rem;
+  padding: 0 1rem;
+  color: var(--text-body, #2a1f18);
+}
+
+/* -- Hero --------------------------------------------------------------- */
+.mcc-event__hero {
+  border-radius: var(--event-radius);
+  overflow: hidden;
+  background: var(--surface-card, #f4efe4);
+  border: 1px solid var(--border-default, #d9d0bd);
+  box-shadow: 0 12px 34px rgba(45, 31, 24, 0.08);
+}
+
+.mcc-event__hero-media {
+  position: relative;
+  aspect-ratio: 16 / 6;
+  background: var(--surface-sunken, #efe8da);
+}
+
+.mcc-event__hero-media :is(img, svg, canvas) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* The placeholder component brings its own box; make it fill the hero. */
+.mcc-event__hero-media > * {
+  height: 100%;
+}
+
+.mcc-event__hero-body {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+  padding: 1.35rem 1.5rem 1.5rem;
+}
+
+/* Date chip mirrors the calendar's event-card badge so the two read as a set. */
+.mcc-event__datechip {
+  flex: 0 0 auto;
+  margin: -3.75rem 0 0;
+  width: 4.5rem;
+  padding: 0.5rem 0 0.6rem;
+  text-align: center;
+  border-radius: 12px;
+  background: var(--evt);
+  color: var(--white, #fff);
+  box-shadow: 0 6px 18px rgba(45, 31, 24, 0.28);
+}
+
+.mcc-event__datechip-month {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.9;
+}
+
+.mcc-event__datechip-day {
+  display: block;
+  font-size: 1.85rem;
+  font-weight: 800;
+  line-height: 1.05;
+}
+
+.mcc-event__headings {
+  min-width: 0;
+}
+
+.mcc-event__category {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.7rem 0.25rem 0.55rem;
+  border-radius: 999px;
+  background: color-mix(in oklch, var(--evt) 14%, var(--surface-card, #f4efe4));
+  color: color-mix(in oklch, var(--evt) 78%, black);
+  border: 1px solid color-mix(in oklch, var(--evt) 35%, transparent);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.mcc-event__category:hover {
+  background: color-mix(in oklch, var(--evt) 24%, var(--surface-card, #f4efe4));
+}
+
+/* Icons are masked rather than inlined: one SVG tints to any category colour,
+   and editor-uploaded markup never reaches the page. */
+.mcc-event__category-icon {
+  width: 1.05em;
+  height: 1.05em;
+  background-color: currentColor;
+  -webkit-mask: var(--icon-url) center / contain no-repeat;
+  mask: var(--icon-url) center / contain no-repeat;
+}
+
+.mcc-event__title {
+  margin: 0.45rem 0 0;
+  font-size: clamp(1.7rem, 1.1rem + 2.4vw, 2.7rem);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  color: var(--green-800, #26382a);
+}
+
+.mcc-event__past-note {
+  margin: 0.5rem 0 0;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--text-muted, #6d5c48);
+}
+
+.mcc-event.is-past .mcc-event__hero-media {
+  filter: saturate(0.65);
+}
+
+/* -- Two-column layout --------------------------------------------------- */
+.mcc-event__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 20rem;
+  gap: 2rem;
+  margin-top: 2rem;
+  align-items: start;
+}
+
+.mcc-event__main {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.mcc-event__body {
+  font-size: 1.02rem;
+  line-height: 1.7;
+}
+
+.mcc-event__body > :first-child { margin-top: 0; }
+.mcc-event__body > :last-child { margin-bottom: 0; }
+
+.mcc-event__section-title {
+  margin: 0 0 0.9rem;
+  padding-bottom: 0.45rem;
+  border-bottom: 2px solid var(--green-100, #dfe4dd);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--green-800, #26382a);
+}
+
+/* -- Speakers ------------------------------------------------------------ */
+.mcc-event__speakers {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+  gap: 0.85rem;
+}
+
+.mcc-event__speaker-link {
+  display: block;
+  height: 100%;
+  padding: 0.85rem;
+  border: 1px solid var(--border-default, #d9d0bd);
+  border-radius: 10px;
+  background: var(--surface-card, #f4efe4);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+.mcc-event__speaker-link:hover {
+  border-color: var(--evt);
+  box-shadow: 0 6px 18px rgba(45, 31, 24, 0.1);
+}
+
+.mcc-event__speaker-link img {
+  border-radius: 8px;
+  max-width: 100%;
+  height: auto;
+}
+
+/* -- Attachments --------------------------------------------------------- */
+.mcc-event__files {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.mcc-event__file {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid var(--border-default, #d9d0bd);
+  border-radius: 10px;
+  background: var(--surface-card, #f4efe4);
+  text-decoration: none;
+  color: inherit;
+}
+
+.mcc-event__file:hover {
+  border-color: var(--evt);
+  background: color-mix(in oklch, var(--evt) 7%, var(--surface-card, #f4efe4));
+}
+
+.mcc-event__file-ext {
+  flex: 0 0 auto;
+  min-width: 3rem;
+  padding: 0.2rem 0.4rem;
+  border-radius: 5px;
+  background: var(--evt);
+  color: var(--white, #fff);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-align: center;
+}
+
+.mcc-event__file-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.mcc-event__file-size {
+  flex: 0 0 auto;
+  font-size: 0.8rem;
+  color: var(--text-muted, #6d5c48);
+}
+
+/* -- Registration -------------------------------------------------------- */
+.mcc-event__register {
+  padding: 1.35rem 1.5rem 1.5rem;
+  border-radius: var(--event-radius);
+  border: 1px solid color-mix(in oklch, var(--evt) 30%, transparent);
+  background: color-mix(in oklch, var(--evt) 7%, var(--surface-card, #f4efe4));
+}
+
+.mcc-event__register .mcc-event__section-title {
+  border-bottom-color: color-mix(in oklch, var(--evt) 30%, transparent);
+}
+
+/* -- Aside --------------------------------------------------------------- */
+.mcc-event__aside {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  position: sticky;
+  top: 1.5rem;
+}
+
+.mcc-event__card {
+  padding: 1.1rem 1.15rem 1.25rem;
+  border: 1px solid var(--border-default, #d9d0bd);
+  border-radius: var(--event-radius);
+  background: var(--surface-card, #f4efe4);
+}
+
+.mcc-event__card-title {
+  margin: 0 0 0.75rem;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted, #6d5c48);
+}
+
+.mcc-event__factlist {
+  margin: 0;
+  display: grid;
+  gap: 0.15rem;
+}
+
+.mcc-event__factlist dt {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-faint, #a99a83);
+}
+
+.mcc-event__factlist dd {
+  margin: 0 0 0.75rem;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.mcc-event__factlist dd:last-of-type { margin-bottom: 0; }
+.mcc-event__factlist a { color: var(--text-link, #6f3218); }
+
+.mcc-event__repeat {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: color-mix(in oklch, var(--evt) 72%, var(--text-muted, #6d5c48));
+}
+
+.mcc-event__calendar-link {
+  display: inline-block;
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-link, #6f3218);
+}
+
+/* -- Responsive ---------------------------------------------------------- */
+@media (max-width: 900px) {
+  .mcc-event__layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.75rem;
+  }
+  .mcc-event__aside { position: static; }
+}
+
+@media (max-width: 600px) {
+  .mcc-event { padding: 0 0.75rem; }
+  .mcc-event__hero-media { aspect-ratio: 4 / 3; }
+  .mcc-event__hero-body {
+    flex-direction: column;
+    gap: 0.85rem;
+    padding: 1rem 1.1rem 1.25rem;
+  }
+  .mcc-event__datechip {
+    margin-top: -3.25rem;
+    width: 4rem;
+  }
+  .mcc-event__file { flex-wrap: wrap; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mcc-event * { transition: none !important; }
+}
+
+@media print {
+  .mcc-event__aside,
+  .mcc-event__register { display: none; }
+  .mcc-event__hero { box-shadow: none; }
+}

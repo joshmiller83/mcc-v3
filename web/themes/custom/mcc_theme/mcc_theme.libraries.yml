@@ -5,4 +5,6 @@ global-styling:
       css/tokens/typography.css: {}
       css/tokens/effects.css: {}
       css/tokens/spacing.css: {}
+      css/tokens/accents.css: {}
       css/global-overrides.css: {}
+      css/mcc-event-detail.css: {}

@@ -1,0 +1,26 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Event List
+group: MCC Components
+props:
+  type: object
+  required:
+    - events
+  properties:
+    events:
+      type: array
+      title: Events
+      description: >-
+        Compact event entries. Each item takes `title`, `url`, `time_label`,
+        an optional `date_label`, and an `accent` key matching a Mission
+        Category colour (see css/tokens/accents.css).
+      items:
+        type: object
+    show_date:
+      type: boolean
+      title: Show the date alongside the time
+      description: >-
+        Off for single-day lists where the date is already established by the
+        surrounding heading; on for lists spanning several days.
+      default: false
+      examples:
+        - false

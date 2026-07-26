@@ -75,7 +75,15 @@ DDEV project config lives in `.ddev/config.yaml`. Use `.ddev/config.local.yaml` 
 
 - `ddev drush <command>` — Drush, for site administration, config import/export, cache rebuilds, etc.
 - `ddev composer <command>` — Composer, for adding/updating modules, themes, and dependencies.
-- `ddev terminus <command>` — Terminus, giving access to the Pantheon `dev`, `test`, and `live` environments of this site. Treat `test` and `live` with care — these are real environments, not scratch space. Prefer read-only Terminus commands (checking status, logs, backups) unless a change to those environments has been explicitly requested.
+- `ddev exec terminus <command>` — Terminus, giving access to the Pantheon `dev`, `test`, and `live` environments of the legacy site (`mcc-church` on Pantheon) that we're migrating content from. Treat `test` and `live` with care — these are real environments, not scratch space. Prefer read-only Terminus commands (checking status, logs, backups) unless a change to those environments has been explicitly requested. Terminus is installed inside the ddev `web` container, not on the Codespace host — `ddev terminus` (without `exec`) is not a valid command.
+
+## Secrets & tokens
+
+Before asking the user to log in to a CLI interactively, check whether a token is already provisioned as a Codespaces secret:
+
+- Run `env | grep -iE "token|key|secret"` on the Codespace host to see what's already available (e.g. `PANTHEON_MACHINE_TOKEN`, `GITHUB_TOKEN`). Codespaces secrets land as host-level environment variables, not inside the ddev containers, so they need to be passed through explicitly, e.g. `ddev exec "terminus auth:login --machine-token=$PANTHEON_MACHINE_TOKEN"`.
+- Never echo a token's value into a command you type out or into chat — reference it via its env var name so the literal value never appears in the transcript.
+- Only fall back to asking the user for a token/login if nothing suitable turns up in the environment.
 
 ## Deploys
 
