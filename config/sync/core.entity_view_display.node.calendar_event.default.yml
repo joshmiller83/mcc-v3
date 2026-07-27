@@ -13,7 +13,7 @@ dependencies:
     - field.field.node.calendar_event.field_related_ministry
     - node.type.calendar_event
   module:
-    - smart_date
+    - smart_date_recur
     - text
     - user
     - webform
@@ -39,13 +39,13 @@ content:
     weight: 1
     region: content
   field_event_date:
-    type: smartdate_default
+    type: smartdate_recurring
     label: hidden
     settings:
       timezone_override: ''
       format_type: medium
       format: default
-      force_chronological: false
+      force_chronological: true
       add_classes: false
       time_wrapper: true
       localize: false
@@ -57,6 +57,11 @@ content:
         unit: ''
         decimals: 2
         suffix: h
+      past_display: 0
+      upcoming_display: 1
+      show_next: true
+      current_upcoming: true
+      filter_parameter_key: ''
     third_party_settings: {  }
     weight: 0
     region: content

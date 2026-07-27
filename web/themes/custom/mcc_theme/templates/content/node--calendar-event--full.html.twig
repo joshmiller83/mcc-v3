@@ -113,15 +113,31 @@
       <div class="mcc-event__card mcc-event__facts">
         <h2 class="mcc-event__card-title">Event details</h2>
         <dl class="mcc-event__factlist">
-          {% if content.field_event_date|render|trim is not empty %}
+          {#
+            One date, never a list. The Smart Date formatter is configured to
+            print the next occurrence still to come and nothing else — no past
+            dates, and none of the ones after it. An event whose dates have all
+            been and gone leaves that formatter with nothing to print, so it
+            falls back to the occurrence the rest of this page is anchored to,
+            which for a past event is the last one that happened.
+          #}
+          {% set past_when = event.is_past and event.anchor %}
+          {% set live_when = not past_when and content.field_event_date|render|trim is not empty %}
+
+          {% if past_when or live_when %}
             <dt>When</dt>
             <dd>
-              {{ content.field_event_date }}
-              {% if event.extra_occurrences > 0 %}
-                <span class="mcc-event__repeat">
-                  Repeats — {{ event.extra_occurrences }} more
-                  {{ event.extra_occurrences == 1 ? 'date' : 'dates' }}
-                </span>
+              {% if past_when %}
+                <span class="mcc-event__when-date">{{ event.anchor.date_label }}</span>
+                <span class="mcc-event__when-time">{{ event.anchor.time_label }}</span>
+              {% else %}
+                {{ content.field_event_date }}
+                {% if event.extra_occurrences > 0 %}
+                  <span class="mcc-event__repeat">
+                    Repeats — {{ event.extra_occurrences }} more
+                    {{ event.extra_occurrences == 1 ? 'date' : 'dates' }}
+                  </span>
+                {% endif %}
               {% endif %}
             </dd>
           {% endif %}

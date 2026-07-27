@@ -104,8 +104,15 @@ function _mcc_theme_event_context(NodeInterface $node, array &$variables): array
   $event = [
     'category' => $category,
     'occurrences' => $occurrences['all'],
-    'extra_occurrences' => max(0, count($occurrences['all']) - 1),
+    // Dates still to come after the one on show. "22 more dates" on a weekly
+    // study is worth saying; "199 more dates" on one that finished in 2019 is
+    // not, so this counts forwards from the anchor rather than over the lot.
+    'extra_occurrences' => $occurrences['remaining'],
     'is_past' => $occurrences['is_past'],
+    'anchor' => $anchor ? [
+      'date_label' => $anchor['date_label'],
+      'time_label' => $anchor['time_label'],
+    ] : NULL,
     'date_badge' => $anchor ? [
       'month' => strtoupper($anchor['start']->format('M')),
       'day' => $anchor['start']->format('j'),
@@ -144,6 +151,12 @@ function _mcc_theme_event_context(NodeInterface $node, array &$variables): array
  * Recurring events have many occurrences; the page anchors to the next one
  * still to come, falling back to the most recent past one so archived events
  * still read sensibly.
+ *
+ * The "When" row in the details card shows that one occurrence and no others.
+ * For events with a future date the Smart Date formatter does it — see the
+ * `smartdate_recurring` settings on the calendar_event display — but a fully
+ * past event has nothing upcoming for the formatter to show, so `is_past` and
+ * `anchor` are what the template falls back to.
  */
 function _mcc_theme_event_occurrences(NodeInterface $node, $context, \DateTimeZone $tz): array {
   $now = \Drupal::time()->getRequestTime();
@@ -168,18 +181,26 @@ function _mcc_theme_event_occurrences(NodeInterface $node, $context, \DateTimeZo
   usort($all, fn($a, $b) => $a['start_ts'] <=> $b['start_ts']);
 
   $anchor = NULL;
+  $upcoming = 0;
   foreach ($all as $occurrence) {
-    if ($occurrence['is_upcoming']) {
-      $anchor = $occurrence;
-      break;
+    if (!$occurrence['is_upcoming']) {
+      continue;
     }
+    $upcoming++;
+    $anchor ??= $occurrence;
   }
   $is_past = $anchor === NULL && $all !== [];
   if ($is_past) {
     $anchor = end($all);
   }
 
-  return ['all' => $all, 'anchor' => $anchor, 'is_past' => $is_past];
+  return [
+    'all' => $all,
+    'anchor' => $anchor,
+    'is_past' => $is_past,
+    // Everything upcoming except the one being shown.
+    'remaining' => max(0, $upcoming - 1),
+  ];
 }
 
 /**

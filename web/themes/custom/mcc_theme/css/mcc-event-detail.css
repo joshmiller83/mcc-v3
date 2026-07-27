@@ -312,6 +312,17 @@
 .mcc-event__factlist dd:last-of-type { margin-bottom: 0; }
 .mcc-event__factlist a { color: var(--text-link, #6f3218); }
 
+/* The "When" wording for an event with no dates left. The Smart Date formatter
+   prints only occurrences still to come, so a fully past event is worded from
+   EventContext instead — over two lines, because a long-form date and a time
+   range don't sit together in a sidebar column without wrapping mid-phrase. */
+.mcc-event__when-date { display: block; }
+
+.mcc-event__when-time {
+  display: block;
+  color: var(--text-muted, #6d5c48);
+}
+
 .mcc-event__repeat {
   display: block;
   margin-top: 0.25rem;
