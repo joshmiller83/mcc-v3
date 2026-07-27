@@ -32,6 +32,17 @@ Our site should have a clean, warm, and professional country-church aesthetic:
 - **Build the month grid with the `mcc_core.calendar_month` service.** Both controllers use it, so the screen and print views can't drift apart; multi-day bands are derived there from consecutive days rather than stored on the node. The front page's "This week at MCC" panel goes through the same service (`CalendarMonth::week()`) and renders the calendar's own `mcc-calendar-week` component — don't give it a second way to find or lay out events. A Views display can't produce that shape (positioned day columns, derived bands, lane packing), which is why the panel is a block plugin over the service rather than a view.
 - **Re-run `node scripts/calendar-compare.mjs` before committing.** The print sheet fitting on one page is a hard requirement, and it's easy to break from a distance (a base-theme `p { font-size }` rule was enough to do it once).
 
+## Leadership and bio pages
+
+`/who-we-are/our-leadership` and the `bio` full view are built from the *Leadership Structure* taxonomy — see the "Our Leadership and bio pages" section of `README.md`. When working on them:
+
+- **Never hardcode a group's name, order, explainer or singular label.** Section order is the vocabulary's term order; the explainer is the term `description`; the eyebrow is `field_role_singular`; the wide featured card is `field_feature_group`. Adding a group, reordering the page, or rewriting what deacons do must all be possible from the admin UI alone.
+- **Keep the listing two views.** `mcc_leadership_groups` lists terms, `mcc_leadership` lists one group's people from a contextual filter and is embedded per term. Collapsing them into a single view with a grouping field breaks the dual-role case, which is the whole reason for the shape.
+- **A person's card has to be told which section it is in.** Drupal hands every embedded view the same cached node object, so a two-group person cannot work it out at render time — `_mcc_theme_leadership_cards()` passes the term in and adds it to the render cache key. Anything that renders these cards has to do the same or the "Also serves as" line will be wrong in a way that only shows up for four people.
+- **Never render `field_email` or `field_phone_number` because a value exists.** They are excluded from every view display on purpose; `field_publish_contact` is the per-person consent gate, and it defaults to off.
+- **Duplicate people are merged in `BioDuplicateMerger`, never de-duplicated in a template.** Two legacy records per person fold into one node with two terms, on `POST_IMPORT` for `mcc_bio`. If you add a pair, add it to `PAIRS` with the person's name — the name is the guard that stops the merge running against a record somebody has since repurposed.
+- **Watch the alias when retiring a node.** `pathauto.pattern.menu_path` has *empty* selection criteria, so it regenerates an alias for every bundle on every save, bios included. Anything that unpublishes a node has to retire the alias **after** that save, or pathauto hands it straight back — and a live alias silently shadows a redirect, because redirects are matched after inbound path processing has already turned the alias into `/node/N`.
+
 ## Environment & Local Development
 
 This codebase is a Composer-managed Drupal site. Local development uses `ddev`.

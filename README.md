@@ -82,6 +82,51 @@ node scripts/calendar-compare.mjs 2026-11     # a specific month
 
 It writes screenshots plus `compare.html` and `report.md` to the gitignored `.calendar-compare/`, and exits non-zero if the print assertions fail — so it doubles as a regression check after any calendar change.
 
+## Our Leadership and bio pages
+
+`/who-we-are/our-leadership` lists the people who lead the church, and each of them has a page of their own. Both are driven by the *Leadership Structure* taxonomy rather than by anything hardcoded.
+
+The listing is **two views, not one**. `mcc_leadership_groups` lists the terms; `mcc_leadership` lists the people in *one* group, taking the term as a contextual filter, and is embedded once per term. That has three consequences worth knowing:
+
+- **Reordering the vocabulary reorders the page.** Sections come out in term order, from Administration → Structure → Taxonomy → Leadership Structure.
+- **A group with nobody in it is skipped.** No empty heading, no placeholder.
+- **Somebody in two groups is listed under both**, with an "Also serves as Trustee" line on the second card, and a note at the foot of the page saying how many people that applies to. No de-duplication rule is needed because a person is never looked up twice — each section asks its own question.
+
+What a group *says* lives on its term:
+
+- `description` — the role explainer ("What deacons do"). This is the paragraph that carries a bio page: only three of twenty people have written a biography, so for everyone else it is the substance of the page. Seed or reset it with `scripts/mcc_setup_leadership_groups.php`.
+- `field_role_singular` — "Elder" for "Elders", used as the eyebrow above a person's name.
+- `field_feature_group` — draw this group as one wide card above the sections instead of a grid. It is on for Senior Minister, because a group of one rendered as a grid of one looks like a mistake.
+
+On the person, `field_role` holds the role that used to be jammed into the node title, and `field_topics` holds the "Reach out about" chips. Portraits come from `field_bio_pic` through the 3:4 focal-point styles; anyone without one gets their initials as a monogram, not a silhouette — a generic person icon reads as a broken image on a page of real faces.
+
+### Contact details are not published
+
+Fourteen of these people have a phone number on file and six have an email, and none of them agreed to publish it — the values are there because somebody typed them into the legacy site years ago. So a bio page shows a short message form (the `bio_contact` webform, one form reused across every bio with the person passed as hidden data) that goes to the church office, plus the office number as a visible fallback.
+
+`field_email` and `field_phone_number` are left out of every view display, and the template builds those lines itself only when **`field_publish_contact`** is on for that person. The switch is off by default and is meant to be turned on one person at a time, after asking them. Keeping the gate in PHP rather than in the display means turning a formatter back on in the admin UI cannot publish anything by accident.
+
+### Duplicate people are merged, not de-duplicated at render time
+
+Two people were entered twice on the legacy site — once per board they serve on — instead of once with two roles. Gary Allen had a deacon record and a trustee record; Jon Culbertson had the same. `BioDuplicateMerger` in `mcc_migration` folds each pair into the older record: it gains the other's leadership group, is filled in from whatever the retired record had that it lacked, takes over any references and redirects aimed at it, and the duplicate is **unpublished rather than deleted** so the merge is reversible.
+
+It is not a migration process plugin because it cannot be. The two rows are separate source nodes and a process plugin only ever sees one row, so there is no point at which the trustee row can add its term to the deacon node. Skipping the duplicate row instead would drop the second term — the one piece of information it actually carries. So the merge runs on `POST_IMPORT` for `mcc_bio`, the same way the focal point conversion runs after `mcc_files`, and a re-import re-merges without anyone remembering a follow-up step.
+
+Pairs are listed explicitly in the class rather than found by matching titles — a congregation can have two people with the same name, and merging two real people is not worth risking on a string comparison. Each pair records the person's name, and the merge refuses (with a warning) if either record no longer starts with it.
+
+### One-off content scripts
+
+Four scripts under `scripts/` fix things the D7 migration brings over as-is. All are safe to re-run. **Run them in this order** after a re-import:
+
+```bash
+ddev drush php:script scripts/mcc_setup_leadership_groups.php   # term explainers, singular labels, featured flag
+ddev drush php:script scripts/mcc_split_bio_name_role.php       # "Alan Martin Finance " -> title + field_role
+ddev drush php:script scripts/mcc_clean_bio_bodies.php          # Word paste residue out of the biographies
+ddev drush php:script scripts/mcc_merge_duplicate_bios.php      # fold the duplicate records together
+```
+
+The merge goes last even though the migration already ran it once. Jon Culbertson's "Finance" role lives on the record being retired, and it only exists as a *field* after the name/role split has run — so the merge has to pass over it again to carry it onto the surviving record.
+
 ## Ground rules
 
 - Keep it clear and straightforward. This is a small church site, not an enterprise platform — prefer boring, well-supported Drupal patterns over clever ones.

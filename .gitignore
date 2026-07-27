@@ -46,3 +46,4 @@ $RECYCLE.BIN/
 # Local working caches (design-reference unzip + comparison output).
 /.calendar-design
 /.calendar-compare
+/.bio-design
