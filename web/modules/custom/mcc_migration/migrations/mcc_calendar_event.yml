@@ -19,7 +19,19 @@ process:
   status: status
   created: created
   changed: changed
-  body: body
+
+  # calendar_event has no body field either; field_content was attached to the
+  # bundle as "Event Description" for exactly this. See the note in mcc_page.yml
+  # for why the old `body: body` mapping failed silently.
+  # All 712 source rows are full_html and none carry a summary.
+  field_content/value: body/0/value
+  field_content/format:
+    plugin: static_map
+    source: body/0/format
+    map:
+      filtered_html: content_format
+      full_html: content_format
+    default_value: content_format
   # Drupal 7 stores each field value as a delta-indexed array of columns, so
   # the "field/column" shorthand can't reach the column. sub_process iterates
   # every delta and looks up its migrated destination id.
