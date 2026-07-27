@@ -264,7 +264,6 @@
 /* Outlined, never filled: a reversed chip at this size fills in on a
    photocopier and the time becomes unreadable. */
 .mcc-print-time {
-  display: inline-block;
   margin-right: calc(3 * var(--marker-unit, 1px));
   padding: 0 2.5px;
   border: 0.6pt solid var(--walnut-400);
@@ -275,7 +274,6 @@
   line-height: 1.25;
   color: var(--walnut-600);
   white-space: nowrap;
-  vertical-align: 1px;
 }
 
 .mcc-print-title,
