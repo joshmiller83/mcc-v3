@@ -1,9 +1,9 @@
-uuid: 40cd3542-d799-48ab-9ea2-bee485c44ac8
+uuid: 93357963-453b-4d71-ac63-28672c578764
 langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.node.teaser
+    - core.entity_view_mode.node.featured
     - field.field.node.bio.body
     - field.field.node.bio.field_attachments
     - field.field.node.bio.field_bio_pic
@@ -15,28 +15,28 @@ dependencies:
     - field.field.node.bio.field_topics
     - node.type.bio
   module:
+    - text
     - user
-id: node.bio.teaser
+id: node.bio.featured
 targetEntityType: node
 bundle: bio
-mode: teaser
+mode: featured
 content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
   field_bio_pic:
     type: entity_reference_entity_view
     label: hidden
     settings:
-      view_mode: 3_4_medium
+      view_mode: 3_4_large
       link: false
     third_party_settings: {  }
     weight: 0
-    region: content
-  field_ministry_structure:
-    type: entity_reference_label
-    label: hidden
-    settings:
-      link: false
-    third_party_settings: {  }
-    weight: 2
     region: content
   field_role:
     type: string
@@ -48,9 +48,9 @@ content:
     weight: 1
     region: content
 hidden:
-  body: true
   field_attachments: true
   field_email: true
+  field_ministry_structure: true
   field_phone_number: true
   field_publish_contact: true
   field_topics: true

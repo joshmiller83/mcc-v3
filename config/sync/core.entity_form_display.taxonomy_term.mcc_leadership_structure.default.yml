@@ -1,0 +1,75 @@
+uuid: 655d3098-5889-44cf-ab3e-2ff4f2e22690
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.mcc_leadership_structure.field_feature_group
+    - field.field.taxonomy_term.mcc_leadership_structure.field_role_singular
+    - taxonomy.vocabulary.mcc_leadership_structure
+  module:
+    - path
+    - text
+id: taxonomy_term.mcc_leadership_structure.default
+targetEntityType: taxonomy_term
+bundle: mcc_leadership_structure
+mode: default
+content:
+  description:
+    type: text_textarea
+    weight: 0
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_feature_group:
+    type: boolean_checkbox
+    weight: 5
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_role_singular:
+    type: string_textfield
+    weight: -4
+    region: content
+    settings:
+      size: 60
+      placeholder: Elder
+    third_party_settings: {  }
+  name:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  relations:
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  simple_sitemap:
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    weight: 100
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+hidden:
+  publish_on: true
+  publish_state: true
+  unpublish_on: true
+  unpublish_state: true

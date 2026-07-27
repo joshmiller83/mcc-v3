@@ -30,7 +30,12 @@ process:
     source: body/0/format
     map:
       filtered_html: content_format
-      full_html: full_html
+      # The four bios marked "full html" on the legacy site are Word pastes,
+      # not hand-written HTML: inline Times New Roman, `margin: 0in`, empty
+      # spacer paragraphs. Nothing in them needs more than the standard
+      # format allows, and importing them as full HTML puts serif text in the
+      # wrong size on the page. See scripts/mcc_clean_bio_bodies.php.
+      full_html: content_format
     # Anything unrecognised lands in the restrictive format rather than
     # granting full HTML to unreviewed legacy markup.
     default_value: content_format

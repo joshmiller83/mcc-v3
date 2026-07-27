@@ -1,0 +1,19 @@
+uuid: ddf53a8e-79fa-4d6d-8cff-c2e3361af0c1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_topics
+    - node.type.bio
+id: node.bio.field_topics
+field_name: field_topics
+entity_type: node
+bundle: bio
+label: 'Reach out about'
+description: 'Two to four things a visitor would contact this person about, one per value. Shown as chips on their page.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

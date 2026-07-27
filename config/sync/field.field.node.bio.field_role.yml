@@ -1,0 +1,19 @@
+uuid: 93a0a5fc-0c42-4e04-b829-f3802ecfc63f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_role
+    - node.type.bio
+id: node.bio.field_role
+field_name: field_role
+entity_type: node
+bundle: bio
+label: Role
+description: 'The role this person serves in, shown beneath their name. Keep it short — "Chairman of the Elders", not a sentence.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

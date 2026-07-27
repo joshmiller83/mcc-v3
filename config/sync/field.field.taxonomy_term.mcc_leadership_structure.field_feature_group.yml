@@ -1,0 +1,21 @@
+uuid: 931ae526-da00-4ae5-a2c3-7814948bc416
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_feature_group
+    - taxonomy.vocabulary.mcc_leadership_structure
+id: taxonomy_term.mcc_leadership_structure.field_feature_group
+field_name: field_feature_group
+entity_type: taxonomy_term
+bundle: mcc_leadership_structure
+label: 'Feature this group'
+description: 'Render this group as a single wide card above the other sections instead of a grid. Intended for a group with one member, such as the senior minister.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

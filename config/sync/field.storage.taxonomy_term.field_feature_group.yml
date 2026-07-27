@@ -1,0 +1,18 @@
+uuid: 89fed9ac-f40c-4b73-aaff-2db3867b8838
+langcode: en
+status: true
+dependencies:
+  module:
+    - taxonomy
+id: taxonomy_term.field_feature_group
+field_name: field_feature_group
+entity_type: taxonomy_term
+type: boolean
+settings: {  }
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

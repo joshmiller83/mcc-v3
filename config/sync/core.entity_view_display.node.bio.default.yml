@@ -9,9 +9,11 @@ dependencies:
     - field.field.node.bio.field_email
     - field.field.node.bio.field_ministry_structure
     - field.field.node.bio.field_phone_number
+    - field.field.node.bio.field_publish_contact
+    - field.field.node.bio.field_role
+    - field.field.node.bio.field_topics
     - node.type.bio
   module:
-    - media
     - text
     - user
 id: node.bio.default
@@ -24,55 +26,53 @@ content:
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 1
+    weight: 3
     region: content
   field_attachments:
-    type: media_thumbnail
-    label: above
-    settings:
-      image_link: ''
-      image_style: ''
-      image_loading:
-        attribute: lazy
-    third_party_settings: {  }
-    weight: 112
-    region: content
-  field_bio_pic:
-    type: media_thumbnail
-    label: above
-    settings:
-      image_link: ''
-      image_style: ''
-      image_loading:
-        attribute: lazy
-    third_party_settings: {  }
-    weight: 108
-    region: content
-  field_email:
-    type: email_mailto
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    weight: 109
-    region: content
-  field_ministry_structure:
     type: entity_reference_label
-    label: above
+    label: hidden
     settings:
       link: true
     third_party_settings: {  }
-    weight: 111
+    weight: 5
     region: content
-  field_phone_number:
-    type: basic_string
-    label: above
-    settings: {  }
+  field_bio_pic:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: 3_4_large
+      link: false
     third_party_settings: {  }
-    weight: 110
+    weight: 0
     region: content
-  links:
-    settings: {  }
+  field_ministry_structure:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
     third_party_settings: {  }
-    weight: 100
+    weight: 4
     region: content
-hidden: {  }
+  field_role:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+      link_rel: canonical
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_topics:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+      link_rel: canonical
+    third_party_settings: {  }
+    weight: 2
+    region: content
+hidden:
+  field_email: true
+  field_phone_number: true
+  field_publish_contact: true
+  links: true

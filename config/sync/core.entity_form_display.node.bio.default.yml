@@ -9,6 +9,9 @@ dependencies:
     - field.field.node.bio.field_email
     - field.field.node.bio.field_ministry_structure
     - field.field.node.bio.field_phone_number
+    - field.field.node.bio.field_publish_contact
+    - field.field.node.bio.field_role
+    - field.field.node.bio.field_topics
     - node.type.bio
     - workflows.workflow.basic_editorial
   module:
@@ -76,6 +79,29 @@ content:
     region: content
     settings:
       placeholder: ''
+    third_party_settings: {  }
+  field_publish_contact:
+    type: boolean_checkbox
+    weight: 133
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_role:
+    type: string_textfield
+    weight: -4
+    region: content
+    settings:
+      size: 60
+      placeholder: 'Chairman of the Elders'
+    third_party_settings: {  }
+  field_topics:
+    type: string_textfield
+    weight: 2
+    region: content
+    settings:
+      size: 60
+      placeholder: 'Grief & hospital care'
     third_party_settings: {  }
   moderation_state:
     type: moderation_state_default

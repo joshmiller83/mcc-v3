@@ -1,0 +1,21 @@
+uuid: 013f96a8-054e-4fb2-aa6c-db211c096e04
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_publish_contact
+    - node.type.bio
+id: node.bio.field_publish_contact
+field_name: field_publish_contact
+entity_type: node
+bundle: bio
+label: 'Publish contact details'
+description: 'Off by default. Only switch this on after asking this person directly whether their phone number and email may appear on the public website.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

@@ -1,0 +1,19 @@
+uuid: 66ff9a0b-d76b-466d-b737-4050b63133c9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_role_singular
+    - taxonomy.vocabulary.mcc_leadership_structure
+id: taxonomy_term.mcc_leadership_structure.field_role_singular
+field_name: field_role_singular
+entity_type: taxonomy_term
+bundle: mcc_leadership_structure
+label: 'Singular label'
+description: 'One member of this group — "Elder" for "Elders". Used as the eyebrow above a person''s name.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string
