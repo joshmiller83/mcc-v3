@@ -26,7 +26,28 @@ process:
   changed: changed
   promote: promote
   sticky: sticky
-  body: body
+
+  # The page bundle has no body field — Drupal CMS gives it field_content. The
+  # old `body: body` mapping resolved to NULL and was skipped without an error
+  # (EntityContentBase::updateEntity only assigns when the value is a
+  # TypedDataInterface), so every page imported with an empty body.
+  # d7_node exposes Field API values delta-indexed, hence body/0/…; none of the
+  # 21 source pages use a summary, which field_content (text_long) has no room
+  # for anyway.
+  field_content/value: body/0/value
+  field_content/format:
+    plugin: static_map
+    source: body/0/format
+    map:
+      filtered_html: content_format
+      # The 20 pages marked "full html" are Apple/Word pastes, not hand-written
+      # HTML — inline `font-family: Helvetica`, `Times New Roman`, and
+      # `Apple-style-span` wrappers. Same call as mcc_bio: nothing in them needs
+      # more than the standard format allows.
+      full_html: content_format
+    # Anything unrecognised lands in the restrictive format rather than
+    # granting full HTML to unreviewed legacy markup.
+    default_value: content_format
   field_featured_image:
     plugin: migration_lookup
     migration: mcc_media_image

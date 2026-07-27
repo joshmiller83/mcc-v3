@@ -56,7 +56,6 @@ component_tree:
       text_size: default
       text_color: default
       align: left
-      url: 'No URL'
   '1:main_slot:0:caa1e4b2-d58b-4140-b99b-ab3e1ce55ad5':
     parent_uuid: b436211b-95ef-40ea-987a-e7b0f5782e33
     slot: main_slot
