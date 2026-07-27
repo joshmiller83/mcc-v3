@@ -49,6 +49,31 @@ After the installer is complete, you will land on the dashboard.
 
 Terminus gives access to Pantheon's `dev`, `test`, and `live` environments via `ddev terminus`. See [AGENTS.md](file:///workspaces/mcc-v3/AGENTS.md) for rules on when/how those commands should be used.
 
+## The calendar
+
+`/calendar` is the month grid and `/calendar/print` is the one-page bulletin insert. Both are served by `mcc_core` and rendered with Single Directory Components in `mcc_theme`.
+
+Everything that varies is data, not code:
+
+- **Colour and shape** live on the *Mission category* taxonomy — `field_category_color` (a [Color Field](https://www.drupal.org/project/color_field) hex value) and `field_marker_shape` (circle, square, triangle, diamond, hexagon, ring). Add a category in the admin UI and it shows up on the calendar, in the legend and in print with no code change. The colour is emitted as a `--evt` custom property on each element and every tint is derived from it with `color-mix()`.
+- **Layout choices** live in config at **Administration → Configuration → Content authoring → Calendar** (`mcc_core.calendar.settings`): the eyebrow text, day density, whether to show the legend, and the print sheet's tagline, footers, adjacent-day shading, and busy-day style.
+
+Two behaviours worth knowing about:
+
+- **Nothing collapses.** There is no "+3 more" — a day shows every event it has, and the print sheet shrinks its type (server-side estimate, then a client-side fit loop) until the whole month fits on 8.5×11 without paginating or clipping.
+- **Multi-day events are derived, not declared.** An editor just enters the event on each day it happens. `CalendarMonth` collects the days a node claims, splits them into runs of consecutive dates, and renders any run of two or more as a band spanning those columns. A single occurrence long enough to cover several days produces the same band.
+
+### Comparing against the design reference
+
+`scripts/calendar-compare.mjs` renders the design handoff (`calendar_design.zip`) and the live Drupal pages side by side in headless Chromium, and asserts that the print sheet is exactly one Letter page with nothing clipped.
+
+```bash
+node scripts/calendar-compare.mjs             # defaults to a 5-week and a 6-week month
+node scripts/calendar-compare.mjs 2026-11     # a specific month
+```
+
+It writes screenshots plus `compare.html` and `report.md` to the gitignored `.calendar-compare/`, and exits non-zero if the print assertions fail — so it doubles as a regression check after any calendar change.
+
 ## Ground rules
 
 - Keep it clear and straightforward. This is a small church site, not an enterprise platform — prefer boring, well-supported Drupal patterns over clever ones.

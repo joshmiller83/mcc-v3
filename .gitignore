@@ -43,3 +43,6 @@ $RECYCLE.BIN/
 # Database dumps
 *.sql
 *.sql.gz
+# Local working caches (design-reference unzip + comparison output).
+/.calendar-design
+/.calendar-compare

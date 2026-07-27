@@ -23,6 +23,15 @@ Our site should have a clean, warm, and professional country-church aesthetic:
 - **Logo:** Custom logo settings (assets to be provided by the user).
 - **Subtheming:** Style customizations are encapsulated in the custom `mcc_theme` subtheme, overriding base theme design tokens.
 
+## The calendar
+
+`/calendar` and `/calendar/print` are built from fielded entities and config — see the "The calendar" section of `README.md` for the shape of it. When working on them:
+
+- **Never hard-code a category's colour, shape or name** in PHP, Twig or CSS. Colour comes from `field_category_color` on the *Mission category* term and is passed down as a `--evt` custom property; shape comes from `field_marker_shape` and is passed down as a `data-shape` attribute. A new category must be addable from the admin UI alone.
+- **Resolve category styling through `EventContext`**, not by reading the term's fields again somewhere else. It's the single place the fallback colour/shape and the all-day and short-time rules live.
+- **Build the month grid with the `mcc_core.calendar_month` service.** Both controllers use it, so the screen and print views can't drift apart; multi-day bands are derived there from consecutive days rather than stored on the node.
+- **Re-run `node scripts/calendar-compare.mjs` before committing.** The print sheet fitting on one page is a hard requirement, and it's easy to break from a distance (a base-theme `p { font-size }` rule was enough to do it once).
+
 ## Environment & Local Development
 
 This codebase is a Composer-managed Drupal site. Local development uses `ddev`.
@@ -75,6 +84,7 @@ DDEV project config lives in `.ddev/config.yaml`. Use `.ddev/config.local.yaml` 
 
 - `ddev drush <command>` — Drush, for site administration, config import/export, cache rebuilds, etc.
 - `ddev composer <command>` — Composer, for adding/updating modules, themes, and dependencies.
+- `node scripts/calendar-compare.mjs [YYYY-MM …]` — renders the `calendar_design.zip` reference and the live `/calendar` and `/calendar/print` pages in headless Chromium and diffs them side by side. It also asserts the print sheet is one Letter page with nothing clipped, and exits non-zero when it isn't. Run it after any change to the calendar components, `CalendarMonth`, or the print CSS. Runs on the Codespace host (no ddev); output lands in the gitignored `.calendar-compare/`.
 - `ddev exec terminus <command>` — Terminus, giving access to the Pantheon `dev`, `test`, and `live` environments of the legacy site (`mcc-church` on Pantheon) that we're migrating content from. Treat `test` and `live` with care — these are real environments, not scratch space. Prefer read-only Terminus commands (checking status, logs, backups) unless a change to those environments has been explicitly requested. Terminus is installed inside the ddev `web` container, not on the Codespace host — `ddev terminus` (without `exec`) is not a valid command.
 
 ## Secrets & tokens
