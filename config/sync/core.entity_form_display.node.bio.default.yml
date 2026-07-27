@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.bio.body
     - field.field.node.bio.field_attachments
     - field.field.node.bio.field_bio_pic
     - field.field.node.bio.field_email
@@ -15,11 +16,22 @@ dependencies:
     - media_library
     - path
     - telephone
+    - text
 id: node.bio.default
 targetEntityType: node
 bundle: bio
 mode: default
 content:
+  body:
+    type: text_textarea_with_summary
+    weight: 1
+    region: content
+    settings:
+      rows: 9
+      summary_rows: 3
+      placeholder: ''
+      show_summary: false
+    third_party_settings: {  }
   created:
     type: datetime_timestamp
     weight: 10

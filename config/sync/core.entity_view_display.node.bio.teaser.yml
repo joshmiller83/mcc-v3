@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
+    - field.field.node.bio.body
     - field.field.node.bio.field_attachments
     - field.field.node.bio.field_bio_pic
     - field.field.node.bio.field_email
@@ -35,6 +36,7 @@ content:
     weight: 1
     region: content
 hidden:
+  body: true
   field_attachments: true
   field_email: true
   field_phone_number: true

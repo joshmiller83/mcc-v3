@@ -11,27 +11,58 @@ source:
   plugin: d7_node
   node_type: bio
 process:
+  # nid is pinned deliberately so re-imports update in place rather than
+  # duplicating. Revision IDs are left to core.
   nid: nid
   title: title
   uid: node_uid
   status: status
   created: created
   changed: changed
-  body: body
+
+  # d7_node exposes every Field API value as a delta-indexed array, so each
+  # property needs its delta. Without it these resolve to NULL and the field
+  # imports empty without raising an error.
+  body/value: body/0/value
+  body/summary: body/0/summary
+  body/format:
+    plugin: static_map
+    source: body/0/format
+    map:
+      filtered_html: content_format
+      full_html: full_html
+    # Anything unrecognised lands in the restrictive format rather than
+    # granting full HTML to unreviewed legacy markup.
+    default_value: content_format
+
   field_bio_pic:
     plugin: migration_lookup
     migration: mcc_media_image
-    source: field_bio_pic/fid
-  field_email: field_email/email
-  field_phone_number: field_phone_number/value
+    source: field_bio_pic/0/fid
+
+  field_email: field_email/0/email
+  field_phone_number: field_phone_number/0/value
+
+  # Multi-value: 4 of the 20 bios sit in two leadership structures.
   field_ministry_structure:
-    plugin: migration_lookup
-    migration: mcc_taxonomy
-    source: field_ministry_structure/tid
+    plugin: sub_process
+    source: field_ministry_structure
+    process:
+      target_id:
+        plugin: migration_lookup
+        migration: mcc_taxonomy
+        source: tid
+
+  # No bio carries an attachment today, but the mapping is kept correct so a
+  # later re-import picks them up.
   field_attachments:
-    plugin: migration_lookup
-    migration: mcc_media_document
-    source: field_attachments/fid
+    plugin: sub_process
+    source: field_attachments
+    process:
+      target_id:
+        plugin: migration_lookup
+        migration: mcc_media_document
+        source: fid
 destination:
   plugin: 'entity:node'
   default_bundle: bio
