@@ -70,6 +70,18 @@
   inset: 0;
 }
 
+/* contextual.module wraps the media in `.contextual-region` and gives it
+   `position: relative` so the edit pencil has something to anchor to. That
+   wrapper sits between this well and the image, so it becomes the image's
+   containing block — and as its only content is the out-of-flow image, it has
+   no height and the portrait renders 0px tall. Anonymous visitors never get
+   this markup, so the page looks fine when logged out and is broken for
+   editors. Taking the wrapper out of the positioning chain fixes it; the
+   pencil then anchors to the well, which is where it belongs anyway. */
+.mcc-person-card__photo .contextual-region {
+  position: static;
+}
+
 .mcc-person-card__photo img {
   position: absolute;
   inset: 0;

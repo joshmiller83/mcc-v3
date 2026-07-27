@@ -27,6 +27,13 @@
   inset: 0;
 }
 
+/* See mcc-person-card.css: contextual.module's `.contextual-region` would
+   otherwise become the image's containing block and collapse it to 0px tall
+   for logged-in editors only. */
+.mcc-person-feature__photo .contextual-region {
+  position: static;
+}
+
 /* See mcc-person-card.css: no `display: contents` here, it would unhide the
    media field's visually-hidden label. */
 .mcc-person-feature__photo img {
