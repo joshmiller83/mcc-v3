@@ -9,3 +9,6 @@ dependencies:
   - migrate_plus:migrate_plus
   - crop:crop
   - focal_point:focal_point
+  # The bio duplicate merge leaves a redirect behind at the retired record's
+  # old URL — see BioDuplicateMerger.
+  - redirect:redirect

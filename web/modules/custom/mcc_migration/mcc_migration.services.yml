@@ -18,3 +18,18 @@ services:
       - '@mcc_migration.manualcrop_to_focal_point'
     tags:
       - { name: event_subscriber }
+
+  mcc_migration.bio_duplicate_merger:
+    class: Drupal\mcc_migration\BioDuplicateMerger
+    arguments:
+      - '@entity_type.manager'
+      - '@path_alias.manager'
+      - '@datetime.time'
+      - '@logger.channel.mcc_migration'
+
+  mcc_migration.bio_merge_subscriber:
+    class: Drupal\mcc_migration\EventSubscriber\BioMergeMigrateSubscriber
+    arguments:
+      - '@mcc_migration.bio_duplicate_merger'
+    tags:
+      - { name: event_subscriber }
