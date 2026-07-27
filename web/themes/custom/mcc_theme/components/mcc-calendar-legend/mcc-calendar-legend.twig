@@ -1,0 +1,12 @@
+<ul class="mcc-callegend mcc-callegend--{{ variant|default('screen') }}" aria-label="Event categories">
+  {% for item in items %}
+    <li class="mcc-callegend__item" style="--evt: {{ item.color }}">
+      {{ include('mcc_theme:mcc-calendar-marker', {
+        color: item.color,
+        shape: item.shape,
+        size: variant == 'print' ? 'print_legend' : 'legend',
+      }, with_context = false) }}
+      <span class="mcc-callegend__label">{{ item.label }}</span>
+    </li>
+  {% endfor %}
+</ul>

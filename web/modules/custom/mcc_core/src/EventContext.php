@@ -11,13 +11,36 @@ use Drupal\node\NodeInterface;
 /**
  * Shared lookups for calendar events.
  *
- * Both the monthly calendar (MccCalendarController) and the event detail page
- * (mcc_theme_preprocess_node) need the same three things: what a Mission
- * Category looks like, which events fall in a date window, and how to describe
- * a single occurrence in words. Keeping them here means a category's colour and
- * icon are resolved in exactly one place.
+ * The monthly calendar, the print sheet and the event detail page all need the
+ * same three things: what a Mission Category looks like, which events fall in a
+ * date window, and how to describe a single occurrence in words. Keeping them
+ * here means a category's colour, marker and icon are resolved in exactly one
+ * place.
  */
 class EventContext {
+
+  /**
+   * Colour used for events whose category has no colour set (or no category).
+   *
+   * A muted warm grey: visibly "unclassified" without looking broken.
+   */
+  const FALLBACK_COLOR = '#6B6257';
+
+  /**
+   * Marker used when a category has no shape set.
+   */
+  const FALLBACK_SHAPE = 'circle';
+
+  /**
+   * An occurrence counts as all-day when it starts at midnight and runs at
+   * least this long.
+   *
+   * Smart Date writes 23:59 for an all-day event, but events migrated from the
+   * old Drupal 7 site landed on 23:45 and similar, so an exact end-time match
+   * would mislabel them. 23 hours is comfortably longer than any real timed
+   * event the church schedules.
+   */
+  const ALL_DAY_SECONDS = 82800;
 
   public function __construct(
     protected EntityTypeManagerInterface $entityTypeManager,
@@ -36,12 +59,12 @@ class EventContext {
   /**
    * Presentation data for an event's Mission Category.
    *
-   * The accent colour and icon are fields on the taxonomy term, so adding or
-   * restyling a category never requires a code change.
+   * The colour, marker shape and icon are all fields on the taxonomy term, so
+   * adding or restyling a category never requires a code change.
    *
    * @return array|null
-   *   ['tid', 'label', 'accent', 'url', 'icon_url', 'weight'], or NULL when the
-   *   event has no category.
+   *   ['tid', 'label', 'color', 'shape', 'url', 'icon_url', 'weight'], or NULL
+   *   when the event has no category.
    */
   public function category(NodeInterface $node): ?array {
     if (!$node->hasField('field_mission_category') || $node->get('field_mission_category')->isEmpty()) {
@@ -52,19 +75,54 @@ class EventContext {
       return NULL;
     }
 
-    $accent = 'default';
-    if ($term->hasField('field_accent_color') && !$term->get('field_accent_color')->isEmpty()) {
-      $accent = $term->get('field_accent_color')->value;
-    }
-
     return [
       'tid' => (int) $term->id(),
       'label' => $term->label(),
-      'accent' => $accent,
+      'color' => $this->termColor($term),
+      'shape' => $this->termShape($term),
       'url' => $term->toUrl()->toString(),
       'icon_url' => $this->iconUrl($term),
       'weight' => (int) $term->getWeight(),
     ];
+  }
+
+  /**
+   * The category styling used for events with no category at all.
+   */
+  public function fallbackCategory(): array {
+    return [
+      'tid' => 0,
+      'label' => 'Other',
+      'color' => self::FALLBACK_COLOR,
+      'shape' => self::FALLBACK_SHAPE,
+      'url' => NULL,
+      'icon_url' => NULL,
+      'weight' => 999,
+    ];
+  }
+
+  /**
+   * A term's hex colour, normalised to `#rrggbb`.
+   */
+  protected function termColor($term): string {
+    if (!$term->hasField('field_category_color') || $term->get('field_category_color')->isEmpty()) {
+      return self::FALLBACK_COLOR;
+    }
+    $value = trim((string) $term->get('field_category_color')->color);
+    // color_field's storage format is configurable, so accept it with or
+    // without the leading hash rather than depending on one setting.
+    $value = ltrim($value, '#');
+    return preg_match('/^[0-9A-Fa-f]{6}$/', $value) ? '#' . strtoupper($value) : self::FALLBACK_COLOR;
+  }
+
+  /**
+   * A term's marker shape key.
+   */
+  protected function termShape($term): string {
+    if (!$term->hasField('field_marker_shape') || $term->get('field_marker_shape')->isEmpty()) {
+      return self::FALLBACK_SHAPE;
+    }
+    return (string) $term->get('field_marker_shape')->value;
   }
 
   /**
@@ -117,15 +175,15 @@ class EventContext {
    *
    * @return array
    *   ['all_day', 'multi_day', 'label', 'short'] where `label` is the full
-   *   description and `short` is just the start time (empty when all day).
+   *   description and `short` is the compact start time the calendar grid uses
+   *   (empty when all day).
    */
   public function describeOccurrence(int $start_ts, int $end_ts, ?\DateTimeZone $tz = NULL): array {
     $tz = $tz ?: $this->timezone();
     $start = DrupalDateTime::createFromTimestamp($start_ts, $tz);
     $end = DrupalDateTime::createFromTimestamp($end_ts, $tz);
 
-    // An event marked "all day" spans a full day with no meaningful time.
-    $all_day = $start->format('H:i') === '00:00' && $end->format('H:i') === '23:59';
+    $all_day = $this->isAllDay($start_ts, $end_ts, $tz);
     $multi_day = $start->format('Y-m-d') !== $end->format('Y-m-d');
 
     if ($all_day) {
@@ -144,8 +202,30 @@ class EventContext {
       'all_day' => $all_day,
       'multi_day' => $multi_day,
       'label' => $label,
-      'short' => $all_day ? '' : $start->format('g:i A'),
+      'short' => $all_day ? '' : $this->shortTime($start),
     ];
+  }
+
+  /**
+   * Whether an occurrence should read as "all day".
+   */
+  public function isAllDay(int $start_ts, int $end_ts, ?\DateTimeZone $tz = NULL): bool {
+    $tz = $tz ?: $this->timezone();
+    $start = DrupalDateTime::createFromTimestamp($start_ts, $tz);
+    return $start->format('H:i') === '00:00' && ($end_ts - $start_ts) >= self::ALL_DAY_SECONDS;
+  }
+
+  /**
+   * The compact time format the calendar grid uses: 9a, 8:30a, 7p, 6:45p.
+   *
+   * Grid cells are barely an inch wide on paper, so times are written as short
+   * as they can be read: no leading zero, no ":00", single-letter meridiem.
+   */
+  public function shortTime(DrupalDateTime $time): string {
+    $minutes = (int) $time->format('i');
+    return $time->format('g')
+      . ($minutes ? ':' . $time->format('i') : '')
+      . substr(strtolower($time->format('a')), 0, 1);
   }
 
 }

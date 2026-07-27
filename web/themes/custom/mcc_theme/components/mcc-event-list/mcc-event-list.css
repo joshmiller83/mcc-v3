@@ -1,8 +1,8 @@
 /**
  * MCC Event List
  * Compact colour-coded event rows for sidebar context panels.
- * `--evt` is supplied by the shared accent palette (css/tokens/accents.css)
- * via the [data-accent] attribute on each row.
+ * `--evt` is set inline on each row from the event's Mission Category colour
+ * (see css/tokens/accents.css for the fallback).
  */
 
 .mcc-event-list {

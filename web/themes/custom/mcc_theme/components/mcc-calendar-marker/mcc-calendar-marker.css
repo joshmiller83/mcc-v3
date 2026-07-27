@@ -1,0 +1,75 @@
+/**
+ * Calendar category marker.
+ *
+ * Drawn in CSS rather than as an icon font or SVG for one reason: these end up
+ * about 3.5pt across on the printed sheet, where an icon turns to mush but a
+ * filled circle stays a filled circle. Sizes are expressed against
+ * `--marker-unit` so the print sheet can scale them along with its type.
+ */
+
+.mcc-marker {
+  --marker-box: 12px;
+
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--marker-box);
+  height: var(--marker-box);
+}
+
+.mcc-marker--legend { --marker-box: 14px; }
+.mcc-marker--print { --marker-box: calc(7 * var(--marker-unit, 1px)); }
+.mcc-marker--print_legend { --marker-box: calc(10 * var(--marker-unit, 1px)); }
+
+.mcc-marker::before {
+  content: "";
+  display: block;
+  box-sizing: border-box;
+  width: calc(5 * var(--marker-unit, 1px));
+  height: calc(5 * var(--marker-unit, 1px));
+  background: var(--evt, currentColor);
+}
+
+.mcc-marker[data-shape="circle"]::before { border-radius: 50%; }
+
+.mcc-marker[data-shape="ring"]::before {
+  border-radius: 50%;
+  background: transparent;
+  border: calc(1.3 * var(--marker-unit, 1px)) solid var(--evt, currentColor);
+}
+
+.mcc-marker[data-shape="square"]::before { border-radius: calc(1 * var(--marker-unit, 1px)); }
+
+.mcc-marker[data-shape="triangle"]::before {
+  width: calc(6 * var(--marker-unit, 1px));
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+}
+
+.mcc-marker[data-shape="diamond"]::before {
+  width: calc(4.5 * var(--marker-unit, 1px));
+  height: calc(4.5 * var(--marker-unit, 1px));
+  border-radius: calc(0.5 * var(--marker-unit, 1px));
+  transform: rotate(45deg);
+}
+
+.mcc-marker[data-shape="hexagon"]::before {
+  width: calc(6 * var(--marker-unit, 1px));
+  height: calc(5.4 * var(--marker-unit, 1px));
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+}
+
+.mcc-marker[data-shape="plus"]::before {
+  width: calc(6 * var(--marker-unit, 1px));
+  height: calc(6 * var(--marker-unit, 1px));
+  clip-path: polygon(
+    38% 0%, 62% 0%, 62% 38%, 100% 38%, 100% 62%, 62% 62%,
+    62% 100%, 38% 100%, 38% 62%, 0% 62%, 0% 38%, 38% 38%
+  );
+}
+
+.mcc-marker[data-shape="bar"]::before {
+  width: calc(6.5 * var(--marker-unit, 1px));
+  height: calc(2.5 * var(--marker-unit, 1px));
+  border-radius: calc(1 * var(--marker-unit, 1px));
+}

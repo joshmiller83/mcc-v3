@@ -34,6 +34,7 @@
         "drupal/caresphere_theme": "^1.2.0",
         "drupal/checklistapi": "^2.1.7",
         "drupal/coffee": "^2.0.1",
+        "drupal/color_field": "^3.0",
         "drupal/core": "^11.3.10",
         "drupal/core-composer-scaffold": "^11.3.10",
         "drupal/core-project-message": "^11.3.10",

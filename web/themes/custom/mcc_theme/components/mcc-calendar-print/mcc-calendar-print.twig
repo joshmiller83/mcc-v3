@@ -1,0 +1,131 @@
+{#
+  One Letter page. The sheet is a flex column — header, weekday band, grid,
+  footer — and the grid is the only part allowed to grow, so the footer always
+  sits on the bottom margin regardless of how many weeks the month has.
+#}
+<div class="mcc-print" style="--print-scale: {{ scale|default(1) }};">
+
+  <div class="mcc-print__toolbar">
+    <div class="mcc-print__toolbar-group">
+      <a href="{{ toolbar.calendar_url }}">&lsaquo; Back to the calendar</a>
+      <span class="mcc-print__hint">One Letter page, portrait. Print at 100% with margins set to none.</span>
+    </div>
+    <div class="mcc-print__toolbar-group">
+      <a class="mcc-print__round" href="{{ toolbar.prev_url }}" rel="prev"
+         aria-label="Previous month, {{ toolbar.prev_label }}"><span aria-hidden="true">&lsaquo;</span></a>
+      <span class="mcc-print__toolbar-month">{{ month_label }}</span>
+      <a class="mcc-print__round" href="{{ toolbar.next_url }}" rel="next"
+         aria-label="Next month, {{ toolbar.next_label }}"><span aria-hidden="true">&rsaquo;</span></a>
+      <button type="button" class="mcc-print__button" data-mcc-print>Print this month</button>
+    </div>
+  </div>
+
+  <section class="mcc-print-sheet" aria-label="{{ month_label }} calendar, printable">
+
+    <header class="mcc-print-sheet__head">
+      <div class="mcc-print-sheet__titles">
+        <h1 class="mcc-print-sheet__title">{{ month_label }}</h1>
+        {% if tagline %}<span class="mcc-print-sheet__tagline">{{ tagline }}</span>{% endif %}
+      </div>
+      {% if legend is not empty %}
+        {{ include('mcc_theme:mcc-calendar-legend', { items: legend, variant: 'print' }, with_context = false) }}
+      {% endif %}
+    </header>
+
+    {% if busy_day_style == 'digest' and standing is not empty %}
+      <div class="mcc-print-sheet__standing">
+        <span class="mcc-print-sheet__standing-label">Every week</span>
+        <span class="mcc-print-sheet__standing-body">{{ standing|join('  |  ') }}</span>
+      </div>
+    {% endif %}
+
+    <div class="mcc-print-sheet__weekdays">
+      {% for weekday in weekdays %}
+        <div class="mcc-print-sheet__weekday">{{ weekday.short }}</div>
+      {% endfor %}
+    </div>
+
+    {# Equal shares of whatever height is left: this is the stretch-to-fit. #}
+    <div class="mcc-print-sheet__grid" style="grid-template-rows: repeat({{ week_count }}, 1fr);">
+      {% for week in weeks %}
+        {% set rows = [] %}
+        {% for lane in 1..(week.lane_count + 1) %}
+          {% set rows = rows|merge(['auto']) %}
+        {% endfor %}
+
+        <div class="mcc-print-week" style="grid-template-rows: {{ rows|join(' ') }} 1fr;">
+
+          {% for day in week.days %}
+            <div class="mcc-print-week__cell{{ day.in_month ? '' : ' is-adjacent' }}"
+                 style="grid-column: {{ day.column }}; grid-row: 1 / -1;"></div>
+          {% endfor %}
+
+          {% for day in week.days %}
+            <div class="mcc-print-week__daynum{{ day.in_month ? '' : ' is-faint' }}"
+                 style="grid-column: {{ day.column }}; grid-row: 1;">{{ day.blank ? '' : day.day }}</div>
+          {% endfor %}
+
+          {% for band in week.bands %}
+            {{ include('mcc_theme:mcc-calendar-band', { band: band, variant: 'print' }, with_context = false) }}
+          {% endfor %}
+
+          {% for day in week.days %}
+            <div class="mcc-print-week__list"
+                 style="grid-column: {{ day.column }}; grid-row: {{ week.singles_row }};">
+
+              {% if day.is_busy and busy_day_style == 'runs' %}
+                {# One flowing line per time slot: the most compact layout. #}
+                {% for group in day.groups %}
+                  <p class="mcc-print-line">
+                    {% if group.time %}<span class="mcc-print-time">{{ group.time }}</span>{% endif %}
+                    {%- for event in group.items -%}
+                      {%- if not loop.first %}<span class="mcc-print-sep"> &middot; </span>{% endif -%}
+                      <span class="mcc-print-run" style="--evt: {{ event.color }}">
+                        {{- include('mcc_theme:mcc-calendar-marker', { color: event.color, shape: event.shape, size: 'print' }, with_context = false) -}}
+                        {{- event.title -}}
+                      </span>
+                    {%- endfor -%}
+                  </p>
+                {% endfor %}
+
+              {% elseif day.is_busy and busy_day_style == 'grouped' %}
+                {# The time is printed once per slot; the rest of the slot's
+                   events follow as marker-led lines under the same indent. #}
+                {% for group in day.groups %}
+                  {% for event in group.items %}
+                    <p class="mcc-print-line" style="--evt: {{ event.color }}">
+                      {{ include('mcc_theme:mcc-calendar-marker', { color: event.color, shape: event.shape, size: 'print' }, with_context = false) }}
+                      {%- if loop.first and group.time %}<span class="mcc-print-time">{{ group.time }}</span>{% endif -%}
+                      <span class="mcc-print-title">{{ event.title }}</span>
+                    </p>
+                  {% endfor %}
+                {% endfor %}
+
+              {% else %}
+                {% for event in day.events %}
+                  <p class="mcc-print-line" style="--evt: {{ event.color }}">
+                    {{ include('mcc_theme:mcc-calendar-marker', { color: event.color, shape: event.shape, size: 'print' }, with_context = false) }}
+                    {%- if event.time %}<span class="mcc-print-time">{{ event.time }}</span>{% endif -%}
+                    <span class="mcc-print-title">{{ event.title }}</span>
+                  </p>
+                {% endfor %}
+              {% endif %}
+
+              {% if day.lifted is defined and day.lifted > 0 %}
+                <p class="mcc-print-standing-note">Standing schedule above</p>
+              {% endif %}
+
+            </div>
+          {% endfor %}
+
+        </div>
+      {% endfor %}
+    </div>
+
+    <footer class="mcc-print-sheet__foot">
+      <span>{{ footer_left }}</span>
+      <span>{{ footer_right }}</span>
+    </footer>
+
+  </section>
+</div>

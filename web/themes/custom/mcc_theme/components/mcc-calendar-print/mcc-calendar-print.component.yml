@@ -1,0 +1,89 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Calendar Print Sheet
+group: MCC Components
+description: >
+  The month on one sheet of US Letter paper, portrait, for the printed
+  calendar the office hands out. Everything is sized in points, the page box is
+  exactly 8.5in × 11in with `@page { margin: 0 }`, and the week rows share the
+  remaining height as `1fr` each — so a five-week and a six-week month both
+  fill the page without hand-tuning.
+
+  Nothing may be clipped: a cut-off line on paper is an event the church never
+  hears about. The `scale` prop is the controller's estimate of how far the type
+  has to shrink for a busy month, and the component's script tightens that
+  estimate against the rendered page.
+libraryOverrides:
+  dependencies:
+    - core/drupal
+    - core/once
+props:
+  type: object
+  required:
+    - month_label
+    - weekdays
+    - weeks
+  properties:
+    month_label:
+      type: string
+      title: Month label
+      examples:
+        - 'July 2026'
+    tagline:
+      type: string
+      title: Tagline
+      default: ''
+    weekdays:
+      type: array
+      title: Weekday headings
+      items:
+        type: object
+    weeks:
+      type: array
+      title: Weeks
+      items:
+        type: object
+    week_count:
+      type: integer
+      title: Number of week rows
+      default: 5
+    legend:
+      type: array
+      title: Category legend
+      items:
+        type: object
+    busy_day_style:
+      type: string
+      title: Layout for days with many events
+      description: >
+        grouped — print the time once per time slot, one line per event.
+        runs — one flowing line per time slot.
+        digest — lift the standing weekly schedule into a band under the header.
+      enum: [grouped, runs, digest]
+      default: grouped
+    standing:
+      type: array
+      title: Standing weekly schedule
+      description: 'Digest layout only: one clause per weekday.'
+      items:
+        type: string
+    scale:
+      type: number
+      title: Type scale
+      description: 'Multiplier applied to the sheet''s base type size. 1 means the month fits at full size.'
+      default: 1
+    footer_left:
+      type: string
+      default: ''
+    footer_right:
+      type: string
+      default: ''
+    toolbar:
+      type: object
+      title: On-screen toolbar
+      description: 'Hidden when printing.'
+      properties:
+        calendar_url: { type: string }
+        prev_url: { type: string }
+        prev_label: { type: string }
+        next_url: { type: string }
+        next_label: { type: string }

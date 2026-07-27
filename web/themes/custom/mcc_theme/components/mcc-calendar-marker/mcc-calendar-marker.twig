@@ -1,0 +1,9 @@
+{#
+  Decorative: the category name is always present as text next to it (chips
+  name the event, the legend names the category), so the marker itself carries
+  no information a screen reader would miss.
+#}
+<span class="mcc-marker mcc-marker--{{ size|default('chip') }}"
+      data-shape="{{ shape|default('circle') }}"
+      style="--evt: {{ color }}"
+      aria-hidden="true"></span>

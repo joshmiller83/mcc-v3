@@ -7,9 +7,17 @@ mcc_core.calendar:
     _permission: 'access content'
 
 mcc_core.print_monthly:
-  path: '/calendar/print-monthly'
+  path: '/calendar/print'
   defaults:
-    _controller: '\Drupal\mcc_core\Controller\MccCalendarPrintController::printMonthly'
-    _title: 'Print Monthly Events'
+    _controller: '\Drupal\mcc_core\Controller\MccCalendarPrintController::view'
+    _title: 'Printable calendar'
   requirements:
     _permission: 'access content'
+
+mcc_core.calendar_settings:
+  path: '/admin/config/content/mcc-calendar'
+  defaults:
+    _form: '\Drupal\mcc_core\Form\CalendarSettingsForm'
+    _title: 'Calendar'
+  requirements:
+    _permission: 'administer site configuration'

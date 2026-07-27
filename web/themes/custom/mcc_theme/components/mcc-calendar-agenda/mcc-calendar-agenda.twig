@@ -1,0 +1,37 @@
+<div class="mcc-agenda">
+  {% if days is empty %}
+    <p class="mcc-agenda__empty">Nothing is scheduled for {{ month_label }}.</p>
+  {% endif %}
+
+  {% for day in days %}
+    <section class="mcc-agenda__day{{ day.is_today ? ' is-today' : '' }}" id="agenda-{{ day.date }}">
+      <h3 class="mcc-agenda__date">
+        {{ day.label }}
+        {% if day.is_today %}<span class="mcc-agenda__today">Today</span>{% endif %}
+        {% if can_add and day.add_url %}
+          <a class="mcc-agenda__add" href="{{ day.add_url }}" target="_blank" rel="noopener">
+            Add<span class="visually-hidden"> an event on {{ day.label }} (opens in a new tab)</span>
+          </a>
+        {% endif %}
+      </h3>
+      <ul class="mcc-agenda__list">
+        {% for entry in day.entries %}
+          <li class="mcc-agenda__item" style="--evt: {{ entry.color }}">
+            {{ include('mcc_theme:mcc-calendar-marker', { color: entry.color, shape: entry.shape, size: 'chip' }, with_context = false) }}
+            <span class="mcc-agenda__body">
+              <a class="mcc-agenda__title" href="{{ entry.url }}">{{ entry.title }}</a>
+              <span class="mcc-agenda__meta">
+                {%- if entry.is_band -%}
+                  {{ entry.range }}{{ entry.time ? ' · ' ~ entry.time }}
+                {%- else -%}
+                  {{ entry.time_label }}
+                {%- endif -%}
+                {{ entry.category ? ' · ' ~ entry.category }}
+              </span>
+            </span>
+          </li>
+        {% endfor %}
+      </ul>
+    </section>
+  {% endfor %}
+</div>

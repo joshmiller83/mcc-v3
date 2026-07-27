@@ -1,0 +1,51 @@
+{#
+  The row track list has to be explicit, not implicit: the background cells
+  span `1 / -1`, which only means "the whole row stack" when the grid knows how
+  many rows there are.
+#}
+{% set rows = [] %}
+{% for lane in 1..(week.lane_count + 2) %}
+  {% set rows = rows|merge(['auto']) %}
+{% endfor %}
+
+<div class="mcc-calweek" style="grid-template-rows: {{ rows|join(' ') }};">
+
+  {# Background: day tint, hairlines, and the per-day add affordance. #}
+  {% for day in week.days %}
+    <div class="mcc-calweek__cell{{ day.in_month ? '' : ' is-adjacent' }}{{ day.is_today ? ' is-today' : '' }}"
+         style="grid-column: {{ day.column }}; grid-row: 1 / -1;">
+      {% if can_add and day.add_url %}
+        <a class="mcc-calweek__add" href="{{ day.add_url }}" target="_blank" rel="noopener"
+           aria-label="Add an event on {{ day.label }} (opens in a new tab)">
+          <span aria-hidden="true">+</span>
+        </a>
+      {% endif %}
+    </div>
+  {% endfor %}
+
+  {# Row 1: day numbers. #}
+  {% for day in week.days %}
+    <div class="mcc-calweek__head{{ can_add ? ' has-add' : '' }}"
+         style="grid-column: {{ day.column }}; grid-row: 1;">
+      <span class="mcc-calweek__daynum{{ day.in_month ? '' : ' is-faint' }}">{{ day.day }}</span>
+      {% if day.is_today %}
+        <span class="mcc-calweek__today">Today</span>
+      {% endif %}
+    </div>
+  {% endfor %}
+
+  {# Rows 2…: multi-day bands, one lane each. #}
+  {% for band in week.bands %}
+    {{ include('mcc_theme:mcc-calendar-band', { band: band, variant: 'screen' }, with_context = false) }}
+  {% endfor %}
+
+  {# Last row: every single-day event, in full. Nothing is collapsed away. #}
+  {% for day in week.days %}
+    <ul class="mcc-calweek__list" style="grid-column: {{ day.column }}; grid-row: {{ week.singles_row }};">
+      {% for event in day.events %}
+        <li>{{ include('mcc_theme:mcc-calendar-chip', { event: event }, with_context = false) }}</li>
+      {% endfor %}
+    </ul>
+  {% endfor %}
+
+</div>

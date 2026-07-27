@@ -1,0 +1,8 @@
+<a class="mcc-chip" href="{{ event.url }}" style="--evt: {{ event.color }}">
+  {{ include('mcc_theme:mcc-calendar-marker', { color: event.color, shape: event.shape, size: 'chip' }, with_context = false) }}
+  <span class="mcc-chip__title">{{ event.title }}</span>
+  {% if event.time %}<span class="mcc-chip__time">{{ event.time }}</span>{% endif %}
+  <span class="visually-hidden">
+    {{- event.category ? event.category ~ '. ' }}{{ event.time_label -}}
+  </span>
+</a>

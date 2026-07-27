@@ -1,0 +1,37 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: 'Calendar multi-day band'
+description: >
+  One week's slice of a multi-day event, drawn as a continuous bar across the
+  columns it covers. A band that carries on past Saturday loses its right
+  border and gains a ›› marker; the slice that resumes on Sunday loses its
+  left border, so the two read as one bar interrupted by the week break rather
+  than two separate events.
+group: MCC Components
+props:
+  type: object
+  required:
+    - band
+  properties:
+    band:
+      type: object
+      title: Band segment
+      properties:
+        title: { type: string }
+        url: { type: string }
+        segment_time: { type: string, description: 'Written once, on the segment that starts the run.' }
+        time_label: { type: string }
+        range: { type: string, description: 'Human date range, e.g. "Jul 13 – 17".' }
+        color: { type: string }
+        shape: { type: string }
+        category: { type: string }
+        column_start: { type: integer }
+        span: { type: integer }
+        row: { type: integer }
+        is_start: { type: boolean }
+        continues: { type: boolean }
+    variant:
+      type: string
+      title: Variant
+      description: 'Screen bands are sized in px; print bands in pt, scaled to fit the sheet.'
+      enum: [screen, print]
+      default: screen

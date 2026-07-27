@@ -1,0 +1,57 @@
+/**
+ * Calendar event chip.
+ *
+ * The pale background is mixed from the category's own colour, so a category
+ * added in the admin UI gets a matching tint with no stylesheet change.
+ */
+
+.mcc-chip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 2px 5px;
+  padding: 4px 6px 4px 5px;
+  background: color-mix(in oklch, var(--evt) 12%, white);
+  border-left: 3px solid var(--evt);
+  border-radius: 0 5px 5px 0;
+  color: var(--text-body);
+  text-decoration: none;
+  transition: filter var(--duration-fast, 120ms) var(--ease-standard, ease);
+}
+
+.mcc-chip:hover,
+.mcc-chip:focus-visible {
+  filter: brightness(0.97);
+  text-decoration: none;
+}
+
+.mcc-chip:focus-visible {
+  outline: 2px solid var(--color-secondary);
+  outline-offset: 1px;
+}
+
+.mcc-chip .mcc-marker { margin-top: 2px; }
+
+.mcc-chip__title {
+  flex: 1;
+  min-width: 64px;
+  font-family: var(--font-body);
+  font-weight: var(--fw-bold);
+  font-size: 12px;
+  line-height: 1.25;
+  /* Never split a word: a cell that grows is fine, a broken word is not. */
+  overflow-wrap: normal;
+  word-break: keep-all;
+  text-wrap: pretty;
+}
+
+.mcc-chip__time {
+  flex: none;
+  margin-top: 1px;
+  font-family: var(--font-body);
+  font-weight: var(--fw-bold);
+  font-size: 11px;
+  line-height: 1.25;
+  color: var(--evt);
+  opacity: 0.85;
+}

@@ -1,0 +1,33 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: 'Calendar category marker'
+description: >
+  The small geometric shape that identifies an event's Mission Category. Both
+  the shape and the colour come from fields on the category term, so adding a
+  category is an editorial action. The shape carries the meaning on its own:
+  the printed calendar is regularly photocopied in black and white, and some
+  readers can't tell the colours apart.
+group: MCC Components
+props:
+  type: object
+  required:
+    - color
+  properties:
+    color:
+      type: string
+      title: Colour
+      description: 'Hex colour from the category term, e.g. #263B29.'
+    shape:
+      type: string
+      title: Shape
+      description: 'Marker shape key from the category term.'
+      enum: [circle, ring, square, triangle, diamond, hexagon, plus, bar]
+      default: circle
+    size:
+      type: string
+      title: Size
+      description: >
+        Which context the marker sits in. The shape itself stays bullet-sized
+        throughout; this only sets the box it is centred in, so markers line up
+        with the text beside them.
+      enum: [chip, legend, print, print_legend]
+      default: chip

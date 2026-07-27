@@ -1,0 +1,22 @@
+uuid: 22333391-1ff4-45e3-875c-782542eeab2d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_category_color
+    - taxonomy.vocabulary.mcc_mission_category
+  module:
+    - color_field
+id: taxonomy_term.mcc_mission_category.field_category_color
+field_name: field_category_color
+entity_type: taxonomy_term
+bundle: mcc_mission_category
+label: 'Calendar colour'
+description: 'Colour used everywhere this category appears — calendar chips and bands, the legend, and event pages. Any colour works; the pale chip background is derived from it automatically.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  opacity: 0
+field_type: color_field_type

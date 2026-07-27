@@ -2,15 +2,24 @@
 
 /**
  * @file
- * Seeds the Mission Category terms with an accent colour and an icon.
+ * Seeds the Mission Category terms with their calendar styling and an icon.
  *
- * The colours chosen here reproduce exactly what MccCalendarController's old
- * hardcoded CATEGORY_ACCENTS constant produced, so /calendar looks unchanged —
- * the values are just data now instead of code.
+ * The calendar draws every category from three fields on its taxonomy term:
  *
- * Icons are simple original stroke drawings saved as `svg_image` media, so an
- * editor can swap one out (or supply one for a brand-new category) without a
- * developer. Safe to re-run.
+ * - field_category_color — the colour, as a plain hex value. The calendar emits
+ *   it as a CSS custom property and derives the pale chip/band background from
+ *   it with color-mix(), so a new colour never needs a stylesheet change.
+ * - field_marker_shape  — the small CSS-drawn shape beside each event. The
+ *   office photocopies the printed calendar in black and white, where the
+ *   shape is the only thing left distinguishing the categories.
+ * - field_icon          — an SVG used on event detail pages. Deliberately not
+ *   used on the calendar: at 7pt in print an icon is a smudge.
+ *
+ * The colours and shapes below are the five from the design handoff, plus one
+ * for Equip (which the handoff's five-type palette doesn't cover). Everything
+ * here is a starting point an editor can change in the UI afterwards.
+ *
+ * Safe to re-run. Run with: ddev drush php:script scripts/mcc_setup_category_styles.php
  */
 
 use Drupal\Core\File\FileExists;
@@ -36,34 +45,34 @@ $svg = function (string $paths): string {
     . 'stroke-linejoin="round">' . $paths . '</svg>';
 };
 
-// term name => [accent colour, icon slug, icon path data]
+// term name => [hex colour, marker shape, icon slug, icon path data]
 $categories = [
-  'Worship' => ['forest', 'music-note',
+  'Worship' => ['#263b29', 'circle', 'music-note',
     '<path d="M9 18V5l10-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/>',
   ],
-  'Serve' => ['terracotta', 'serving-hands',
+  'Serve' => ['#924b29', 'triangle', 'serving-hands',
     '<path d="M12 12.5S8.2 10.1 8.2 7.3A2.6 2.6 0 0 1 12 5a2.6 2.6 0 0 1 3.8 2.3c0 2.8-3.8 5.2-3.8 5.2Z"/>'
     . '<path d="M4 15c1.8 3 4.7 4.8 8 4.8s6.2-1.8 8-4.8"/>',
   ],
-  'Fellowship' => ['walnut', 'two-people',
+  'Fellowship' => ['#674f43', 'square', 'two-people',
     '<circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/>'
     . '<path d="M16 5.5a3 3 0 0 1 0 5.8"/><path d="M21 20a6 6 0 0 0-4-5.6"/>',
   ],
-  'Youth' => ['brick', 'sprout',
+  'Youth' => ['#932b27', 'ring', 'sprout',
     '<path d="M12 20v-7"/><path d="M12 13c0-3.3 2.7-6 6-6 0 3.3-2.7 6-6 6Z"/>'
     . '<path d="M12 15c0-2.8-2.2-5-5-5 0 2.8 2.2 5 5 5Z"/>',
   ],
-  'Equip' => ['sage', 'open-book',
+  'Equip' => ['#3d5f5a', 'hexagon', 'open-book',
     '<path d="M12 7v13"/>'
     . '<path d="M12 7C10.5 5.5 8.4 4.7 6 4.7H3v12.6h3c2.4 0 4.5.8 6 2.3"/>'
     . '<path d="M12 7c1.5-1.5 3.6-2.3 6-2.3h3v12.6h-3c-2.4 0-4.5.8-6 2.3"/>',
   ],
-  'Lead' => ['sand', 'compass',
+  'Lead' => ['#6f5b16', 'diamond', 'compass',
     '<circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2.1 5.4-5.4 2.1 2.1-5.4 5.4-2.1Z"/>',
   ],
 ];
 
-foreach ($categories as $name => [$accent, $slug, $paths]) {
+foreach ($categories as $name => [$color, $shape, $slug, $paths]) {
   $terms = $term_storage->loadByProperties([
     'vid' => 'mcc_mission_category',
     'name' => $name,
@@ -99,10 +108,11 @@ foreach ($categories as $name => [$accent, $slug, $paths]) {
   ]);
   $media->save();
 
-  $term->set('field_accent_color', $accent);
+  $term->set('field_category_color', ['color' => $color]);
+  $term->set('field_marker_shape', $shape);
   $term->set('field_icon', ['target_id' => $media->id()]);
   $term->save();
-  print sprintf("%-12s accent=%-11s icon=media/%d\n", $name, $accent, $media->id());
+  print sprintf("%-12s %s  %-9s icon=media/%d\n", $name, $color, $shape, $media->id());
 }
 
 print "Done.\n";

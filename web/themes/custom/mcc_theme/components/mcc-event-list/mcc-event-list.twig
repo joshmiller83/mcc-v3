@@ -5,7 +5,7 @@
 #}
 <ul{{ attributes.addClass('mcc-event-list') }}>
   {% for event in events %}
-    <li class="mcc-event-list__item" data-accent="{{ event.accent|default('default') }}">
+    <li class="mcc-event-list__item" style="--evt: {{ event.color }}">
       <a href="{{ event.url }}" class="mcc-event-list__link">
         <span class="mcc-event-list__title">{{ event.title }}</span>
         <span class="mcc-event-list__meta">

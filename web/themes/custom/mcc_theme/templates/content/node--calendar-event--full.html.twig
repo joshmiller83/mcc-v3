@@ -10,14 +10,15 @@
  * run of empty headings.
  *
  * `mcc_event` is built by _mcc_theme_event_context() in mcc_theme.theme.
- * Category colour comes from the taxonomy term via [data-accent]; see
- * css/tokens/accents.css.
+ * The category's colour is set inline as `--evt` — it is a field value on the
+ * taxonomy term, not one of a fixed set of names, so it can't live in a
+ * stylesheet. Everything below reads `--evt`; see css/tokens/accents.css for
+ * the fallback.
  */
 #}
 {% set event = mcc_event %}
-{% set accent = event.category.accent|default('default') %}
 
-<article{{ attributes.addClass('mcc-event').addClass(event.is_past ? 'is-past' : '') }} data-accent="{{ accent }}">
+<article{{ attributes.addClass('mcc-event').addClass(event.is_past ? 'is-past' : '') }} style="--evt: {{ event.category.color|default('#6B6257') }}">
 
   <header class="mcc-event__hero">
     <div class="mcc-event__hero-media">

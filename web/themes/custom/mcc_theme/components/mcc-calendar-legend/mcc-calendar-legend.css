@@ -1,0 +1,44 @@
+/**
+ * Calendar legend.
+ */
+
+.mcc-callegend {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mcc-callegend__item {
+  display: flex;
+  align-items: center;
+}
+
+.mcc-callegend__label {
+  font-family: var(--font-body);
+  font-weight: var(--fw-bold);
+  color: var(--evt);
+}
+
+/* -- Screen ------------------------------------------------------------ */
+.mcc-callegend--screen { gap: 8px; }
+
+.mcc-callegend--screen .mcc-callegend__item {
+  gap: 7px;
+  padding: 5px 14px 5px 10px;
+  background: color-mix(in oklch, var(--evt) 10%, white);
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+}
+
+.mcc-callegend--screen .mcc-callegend__label { font-size: 13px; }
+
+/* -- Print ------------------------------------------------------------- */
+.mcc-callegend--print {
+  gap: 4px 9px;
+  justify-content: flex-end;
+}
+
+.mcc-callegend--print .mcc-callegend__item { gap: 4px; }
+.mcc-callegend--print .mcc-callegend__label { font-size: 1.07em; }

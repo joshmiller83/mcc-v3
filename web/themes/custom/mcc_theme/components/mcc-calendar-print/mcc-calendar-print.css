@@ -1,0 +1,345 @@
+/**
+ * Calendar print sheet.
+ *
+ * Sized entirely in points and inches, never viewport units: this page has one
+ * job, which is to be 8.5in × 11in of paper. `--print-scale` multiplies the
+ * base type size (see mcc-calendar-print.js and the controller's estimate) and
+ * everything inside the grid is expressed in `em` against it, so shrinking the
+ * sheet shrinks lines, gaps and markers together.
+ */
+
+.mcc-print {
+  --sheet-w: 8.5in;
+  --sheet-h: 11in;
+  --print-scale: 1;
+  --ink: var(--walnut-900);
+  /* Markers and the gaps around them shrink with the type. */
+  --marker-unit: calc(1px * var(--print-scale));
+  --rule: var(--neutral-300);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 0 0 32px;
+  background: var(--neutral-100);
+  font-family: var(--font-body);
+}
+
+/* -- On-screen toolbar ------------------------------------------------- */
+.mcc-print__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  width: 100%;
+  padding: 12px var(--space-6, 1.5rem);
+  background: var(--surface-page);
+  border-bottom: 1px solid var(--border-default);
+}
+
+.mcc-print__toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mcc-print__toolbar a { font-weight: var(--fw-bold); font-size: 14px; }
+
+.mcc-print__hint,
+.mcc-print__toolbar-month {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.mcc-print__toolbar-month {
+  min-width: 150px;
+  text-align: center;
+  font-weight: var(--fw-bold);
+  font-size: 15px;
+  color: var(--text-body);
+}
+
+.mcc-print__round {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  background: var(--surface-card);
+  color: var(--text-body);
+  font-size: 16px;
+  text-decoration: none;
+}
+
+.mcc-print__button {
+  height: 38px;
+  padding: 0 20px;
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-md);
+  background: var(--color-primary);
+  color: var(--text-on-primary);
+  font-family: var(--font-body);
+  font-weight: var(--fw-bold);
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.mcc-print__button:hover { background: var(--color-primary-hover); }
+
+/* -- The sheet --------------------------------------------------------- */
+.mcc-print-sheet {
+  box-sizing: border-box;
+  width: var(--sheet-w);
+  height: var(--sheet-h);
+  padding: 0.28in 0.28in 0.24in;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: white;
+  color: var(--ink);
+  /* Base type size for the grid. Everything below is em against this. */
+  font-size: calc(7pt * var(--print-scale));
+  box-shadow: 0 12px 32px rgb(37 22 15 / 18%);
+}
+
+/* The sheet is a piece of paper, not a page of the website. The base theme
+   sizes bare `p`, `ul` and heading elements directly, and an element selector
+   beats inheritance no matter how the sheet sets its own font-size — so those
+   elements are reset back to inheriting here. Anything that genuinely wants a
+   different size below states it with at least this much specificity. */
+.mcc-print-sheet p,
+.mcc-print-sheet ul,
+.mcc-print-sheet ol,
+.mcc-print-sheet li,
+.mcc-print-sheet h1,
+.mcc-print-sheet h2,
+.mcc-print-sheet h3 {
+  margin: 0;
+  padding: 0;
+  font-size: inherit;
+  line-height: inherit;
+  list-style: none;
+}
+
+.mcc-print-sheet__head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+  padding-bottom: 5px;
+  border-bottom: 2px solid var(--green-800);
+}
+
+.mcc-print-sheet__titles {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.mcc-print-sheet .mcc-print-sheet__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 17pt;
+  line-height: 1;
+  color: var(--green-800);
+}
+
+.mcc-print-sheet__tagline {
+  font-style: italic;
+  font-size: 8pt;
+  color: var(--walnut-600);
+}
+
+/* -- "Every week" digest band ------------------------------------------ */
+.mcc-print-sheet__standing {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 4px;
+  padding: 3px 5px;
+  background: var(--green-50);
+  border: 0.6pt solid var(--green-200);
+}
+
+.mcc-print-sheet__standing-label {
+  flex: none;
+  font-weight: var(--fw-bold);
+  font-size: 0.93em;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--green-800);
+}
+
+.mcc-print-sheet__standing-body {
+  flex: 1;
+  line-height: 1.3;
+  color: var(--walnut-700);
+}
+
+/* -- Weekday band ------------------------------------------------------ */
+.mcc-print-sheet__weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-top: 5px;
+  background: var(--green-800);
+}
+
+.mcc-print-sheet__weekday {
+  padding: 2px;
+  text-align: center;
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: white;
+}
+
+/* -- Month grid -------------------------------------------------------- */
+.mcc-print-sheet__grid {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  border-left: 0.6pt solid var(--rule);
+  border-top: 0.6pt solid var(--rule);
+}
+
+.mcc-print-week {
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.mcc-print-week__cell {
+  background: white;
+  border-right: 0.6pt solid var(--rule);
+  border-bottom: 0.6pt solid var(--rule);
+}
+
+.mcc-print-week__cell.is-adjacent {
+  background: color-mix(in srgb, var(--oatmeal) 40%, white);
+}
+
+.mcc-print-week__daynum {
+  position: relative;
+  z-index: 1;
+  padding: 1px 4px 0;
+  font-weight: var(--fw-bold);
+  font-size: 1.14em;
+  line-height: 1.1;
+  color: var(--walnut-900);
+}
+
+.mcc-print-week__daynum.is-faint { color: var(--neutral-400); }
+
+.mcc-print-week__list {
+  position: relative;
+  z-index: 1;
+  min-height: 0;
+  padding: 0 3px 2px;
+  overflow: hidden;
+}
+
+/* -- Event lines ------------------------------------------------------- */
+/* Hanging indent, so a wrapped title lines up with the text above it rather
+   than sliding back under the marker. */
+.mcc-print-sheet .mcc-print-line {
+  margin: 0 0 0.5px;
+  font-size: 1em;
+  padding-left: 10px;
+  text-indent: -10px;
+  line-height: 1.25;
+  color: var(--walnut-900);
+}
+
+.mcc-print-line .mcc-marker {
+  display: inline-flex;
+  vertical-align: -1px;
+  margin-right: calc(3 * var(--marker-unit, 1px));
+}
+
+/* Outlined, never filled: a reversed chip at this size fills in on a
+   photocopier and the time becomes unreadable. */
+.mcc-print-time {
+  display: inline-block;
+  margin-right: calc(3 * var(--marker-unit, 1px));
+  padding: 0 2.5px;
+  border: 0.6pt solid var(--walnut-400);
+  border-radius: 3px;
+  background: transparent;
+  font-weight: var(--fw-bold);
+  font-size: 0.79em;
+  line-height: 1.25;
+  color: var(--walnut-600);
+  white-space: nowrap;
+  vertical-align: 1px;
+}
+
+.mcc-print-title,
+.mcc-print-run {
+  font-weight: var(--fw-bold);
+  color: var(--evt);
+}
+
+.mcc-print-run .mcc-marker { margin-right: calc(2 * var(--marker-unit, 1px)); }
+.mcc-print-sep { color: var(--walnut-600); }
+
+.mcc-print-sheet .mcc-print-standing-note {
+  margin: 0;
+  font-style: italic;
+  font-size: 0.89em;
+  line-height: 1.2;
+  color: var(--green-700);
+}
+
+/* -- Footer ------------------------------------------------------------ */
+.mcc-print-sheet .mcc-print-sheet__foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 5px;
+  font-size: 7pt;
+  color: var(--walnut-600);
+}
+
+/* -- Print ------------------------------------------------------------- */
+@page {
+  size: 8.5in 11in;
+  /* The visual margin is the sheet's own padding. Zero here stops the browser
+     drawing its date/URL/page-number chrome, which would otherwise push the
+     grid onto a second page. */
+  margin: 0;
+}
+
+@media print {
+  /* Anything with a margin between the page box and the sheet pushes the
+     bottom of an exactly-11in sheet onto a second page. */
+  html,
+  body,
+  .layout-container,
+  .layout-container--bare,
+  .layout-container--bare > main {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+  }
+
+  .mcc-print {
+    display: block;
+    padding: 0;
+    background: none;
+  }
+
+  .mcc-print__toolbar { display: none; }
+
+  /* The sheet keeps its exact 8.5in x 11in box — that fixed height is what the
+     1fr week rows divide between them. */
+  .mcc-print-sheet {
+    box-shadow: none;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}

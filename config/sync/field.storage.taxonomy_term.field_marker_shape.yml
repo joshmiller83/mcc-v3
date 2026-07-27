@@ -1,0 +1,45 @@
+uuid: 50845f45-171f-4058-83e7-64c16f9f2e81
+langcode: en
+status: true
+dependencies:
+  module:
+    - options
+    - taxonomy
+id: taxonomy_term.field_marker_shape
+field_name: field_marker_shape
+entity_type: taxonomy_term
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: circle
+      label: 'Filled circle'
+    -
+      value: ring
+      label: 'Open ring'
+    -
+      value: square
+      label: Square
+    -
+      value: triangle
+      label: Triangle
+    -
+      value: diamond
+      label: Diamond
+    -
+      value: hexagon
+      label: Hexagon
+    -
+      value: plus
+      label: Plus
+    -
+      value: bar
+      label: Bar
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

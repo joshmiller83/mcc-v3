@@ -1,0 +1,27 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: 'Calendar week row'
+description: >
+  One Sunday-to-Saturday row of the month grid. Each week is its own seven
+  column grid so that multi-day bands can span columns; a full-height
+  background cell per column paints the day tint and hairlines underneath
+  everything else. Rows are: day numbers, then one row per band lane, then the
+  day's single-day events.
+group: MCC Components
+props:
+  type: object
+  required:
+    - week
+  properties:
+    week:
+      type: object
+      title: Week
+      properties:
+        days: { type: array }
+        bands: { type: array }
+        lane_count: { type: integer }
+        singles_row: { type: integer }
+    can_add:
+      type: boolean
+      title: 'Show the add-event affordance'
+      description: 'Set when the viewer may create events. Reveals a + on each day on hover or focus.'
+      default: false

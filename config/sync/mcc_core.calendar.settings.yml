@@ -1,0 +1,13 @@
+_core:
+  default_config_hash: xXk1TyoWbUpbAUdvmep4DYdTk47MMCZBFC1CAfepOsg
+eyebrow: 'Church calendar'
+density: comfortable
+show_legend: true
+footnote: 'Events that run more than one day stretch across the week as a single band. Closings and changes are posted on Channel 13, Facebook, and through One Call Now. Questions about an event? Call the church office at (765) 325-2772.'
+print:
+  busy_day_style: grouped
+  show_adjacent_days: true
+  busy_threshold: 4
+  tagline: 'Mechanicsburg Christian Church · We Love People!'
+  footer_left: '650 W. Horton Road, Kirklin, IN 46050 · (765) 325-2772 · mechanicsburgchristian.com'
+  footer_right: 'Closings are posted on Channel 13, Facebook, and One Call Now.'

@@ -1,0 +1,103 @@
+/**
+ * Calendar agenda (narrow screens).
+ */
+
+.mcc-agenda {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.mcc-agenda__empty {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--text-muted);
+}
+
+.mcc-agenda__day {
+  background: white;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.mcc-agenda__day.is-today { border-color: var(--color-secondary); }
+
+.mcc-agenda__date {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0.6rem 0.85rem;
+  background: color-mix(in srgb, var(--oatmeal) 45%, white);
+  border-bottom: 1px solid var(--border-subtle);
+  font-family: var(--font-body);
+  font-weight: var(--fw-bold);
+  font-size: 0.95rem;
+  color: var(--color-primary);
+}
+
+.mcc-agenda__today {
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--color-secondary);
+  color: white;
+  font-size: 0.625rem;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+}
+
+.mcc-agenda__add {
+  margin-left: auto;
+  padding: 3px 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: var(--fw-bold);
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.mcc-agenda__list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mcc-agenda__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.55rem 0.85rem;
+  border-left: 4px solid var(--evt);
+}
+
+.mcc-agenda__item + .mcc-agenda__item { border-top: 1px solid var(--border-subtle); }
+
+.mcc-agenda__item .mcc-marker { margin-top: 0.2rem; }
+
+.mcc-agenda__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.mcc-agenda__title {
+  font-family: var(--font-body);
+  font-weight: var(--fw-bold);
+  font-size: 0.95rem;
+  line-height: 1.3;
+  color: var(--text-body);
+  text-decoration: none;
+}
+
+.mcc-agenda__title:hover { color: var(--text-link); text-decoration: underline; }
+
+.mcc-agenda__meta {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}

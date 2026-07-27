@@ -1,0 +1,38 @@
+mcc_core.calendar.settings:
+  type: config_object
+  label: 'Calendar settings'
+  mapping:
+    eyebrow:
+      type: label
+      label: 'Kicker above the month title'
+    density:
+      type: string
+      label: 'Screen cell density'
+    show_legend:
+      type: boolean
+      label: 'Show the category legend'
+    footnote:
+      type: text
+      label: 'Note below the month grid'
+    print:
+      type: mapping
+      label: 'Printed sheet'
+      mapping:
+        busy_day_style:
+          type: string
+          label: 'Layout for days with many events'
+        show_adjacent_days:
+          type: boolean
+          label: 'Show days from neighbouring months'
+        busy_threshold:
+          type: integer
+          label: 'Events on one day before switching layout'
+        tagline:
+          type: label
+          label: 'Tagline beside the month title'
+        footer_left:
+          type: label
+          label: 'Footer, left'
+        footer_right:
+          type: label
+          label: 'Footer, right'

@@ -1,0 +1,54 @@
+<?php
+
+/**
+ * @file
+ * Hooks for MCC Core.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_ENTITY_TYPE_prepare_form() for node entities.
+ *
+ * The calendar's per-day "add an event" button links to the node form with the
+ * day it was clicked on in the query string. Filling it in here — on the entity,
+ * before the form is built — means the Smart Date widget picks it up through
+ * its normal path, with no assumptions about the widget's internals.
+ *
+ * The time is a placeholder the editor is expected to change; only the date
+ * carries real intent, because that is the only thing they actually chose.
+ */
+function mcc_core_node_prepare_form(EntityInterface $node, string $operation, FormStateInterface $form_state): void {
+  if ($node->bundle() !== 'calendar_event' || !$node->isNew()) {
+    return;
+  }
+  if (!$node->hasField('field_event_date') || !$node->get('field_event_date')->isEmpty()) {
+    return;
+  }
+
+  $date = \Drupal::request()->query->get('date');
+  if (!is_string($date) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
+    return;
+  }
+
+  $timezone = \Drupal::service('mcc_core.event_context')->timezone();
+  $start = \DateTimeImmutable::createFromFormat('!Y-m-d', $date, $timezone);
+  if (!$start || $start->format('Y-m-d') !== $date) {
+    return;
+  }
+  $start = $start->setTime(9, 0);
+
+  $duration = 60;
+  $default = $node->get('field_event_date')->getFieldDefinition()->getDefaultValueLiteral()[0] ?? [];
+  if (!empty($default['default_duration']) && is_numeric($default['default_duration'])) {
+    $duration = (int) $default['default_duration'];
+  }
+
+  $node->set('field_event_date', [[
+    'value' => $start->getTimestamp(),
+    'end_value' => $start->getTimestamp() + $duration * 60,
+    'duration' => $duration,
+    'timezone' => $timezone->getName(),
+  ]]);
+}

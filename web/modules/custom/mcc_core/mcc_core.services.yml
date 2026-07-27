@@ -5,3 +5,7 @@ services:
       - '@entity_type.manager'
       - '@config.factory'
       - '@file_url_generator'
+  mcc_core.calendar_month:
+    class: Drupal\mcc_core\CalendarMonth
+    arguments:
+      - '@mcc_core.event_context'

@@ -1,8 +1,8 @@
 /**
  * Event detail page (node--calendar-event--full.html.twig).
  *
- * Category colour arrives as `--evt` from the shared accent palette
- * (css/tokens/accents.css) via [data-accent] on the article, so this file
+ * Category colour arrives as `--evt`, set inline on the article from the
+ * taxonomy term's colour field (css/tokens/accents.css holds the fallback), so this file
  * never names a category colour directly.
  */
 

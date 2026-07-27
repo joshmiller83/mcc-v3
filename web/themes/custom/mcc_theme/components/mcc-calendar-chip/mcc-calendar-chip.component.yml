@@ -1,0 +1,23 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: 'Calendar event chip'
+description: >
+  One single-day event inside a day cell. Titles wrap on whole words only —
+  cells are narrow and a hyphenated "Thanks-giving" is worse than a taller
+  cell, and nothing here is ever truncated.
+group: MCC Components
+props:
+  type: object
+  required:
+    - event
+  properties:
+    event:
+      type: object
+      title: Event
+      properties:
+        title: { type: string }
+        url: { type: string }
+        time: { type: string, description: 'Compact start time, e.g. 6:45p. Empty for all-day events.' }
+        time_label: { type: string, description: 'Full time description, for assistive technology.' }
+        color: { type: string }
+        shape: { type: string }
+        category: { type: string }

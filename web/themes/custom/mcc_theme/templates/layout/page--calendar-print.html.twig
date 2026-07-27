@@ -1,0 +1,14 @@
+{#
+  Page layout for /calendar/print.
+
+  Deliberately bare: the print sheet is a fixed 8.5in × 11in box, and the site
+  header, navigation and footer would either push it onto a second page or have
+  to be hidden again in print CSS. The page's own toolbar carries the way back
+  to the calendar.
+#}
+<div class="layout-container layout-container--bare">
+  <main role="main">
+    <a id="main-content" tabindex="-1"></a>
+    {{ page.content }}
+  </main>
+</div>

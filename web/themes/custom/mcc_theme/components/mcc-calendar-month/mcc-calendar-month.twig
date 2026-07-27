@@ -1,110 +1,72 @@
-{#
-  MCC Calendar Month
-  A server-rendered month grid. Day cells with events are links to their detail
-  panel (works with no JavaScript via :target); calendar.js enhances them into
-  inline toggles. Events are color-coded by Mission Category via data-accent.
-#}
-<div{{ attributes.addClass('mcc-calendar') }} data-mcc-calendar>
+<div{{ attributes.addClass('mcc-calendar', 'mcc-calendar--' ~ density|default('comfortable')) }}>
 
-  <div class="mcc-calendar__bar">
-    <h1 class="mcc-calendar__title">{{ month_label }}</h1>
+  <header class="mcc-calendar__bar">
+    <div class="mcc-calendar__heading">
+      {% if eyebrow %}<p class="mcc-calendar__eyebrow">{{ eyebrow }}</p>{% endif %}
+      <h1 class="mcc-calendar__title">{{ month_label }}</h1>
+    </div>
+
     <nav class="mcc-calendar__nav" aria-label="Calendar month navigation">
-      <a class="mcc-calendar__navbtn" href="{{ nav.prev_url }}" rel="prev" aria-label="Previous month, {{ nav.prev_label }}">
-        <span aria-hidden="true">&lsaquo;</span>
-      </a>
-      <a class="mcc-calendar__today{{ is_current_month ? ' is-disabled' }}" href="{{ nav.today_url }}"
-        {{ is_current_month ? 'aria-current="page" tabindex="-1"' }}>Today</a>
-      <a class="mcc-calendar__navbtn" href="{{ nav.next_url }}" rel="next" aria-label="Next month, {{ nav.next_label }}">
-        <span aria-hidden="true">&rsaquo;</span>
+      <a class="mcc-calendar__round" href="{{ nav.prev_url }}" rel="prev"
+         aria-label="Previous month, {{ nav.prev_label }}"><span aria-hidden="true">&lsaquo;</span></a>
+      <a class="mcc-calendar__pill{{ nav.is_current_month ? ' is-current' : '' }}" href="{{ nav.today_url }}"
+         {{ nav.is_current_month ? 'aria-current="page"' }}>Today</a>
+      <a class="mcc-calendar__round" href="{{ nav.next_url }}" rel="next"
+         aria-label="Next month, {{ nav.next_label }}"><span aria-hidden="true">&rsaquo;</span></a>
+
+      {% if can_add %}
+        <a class="mcc-calendar__pill" href="/node/add/calendar_event" target="_blank" rel="noopener">
+          Add event<span class="visually-hidden"> (opens in a new tab)</span>
+        </a>
+      {% endif %}
+
+      <a class="mcc-calendar__print" href="{{ nav.print_url }}">
+        {# A printer, drawn inline so the button needs no icon library. #}
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+          <rect x="6" y="14" width="12" height="8"/>
+        </svg>
+        Print this month
       </a>
     </nav>
-  </div>
+  </header>
 
   {% if legend is not empty %}
-    <ul class="mcc-calendar__legend">
-      {% for item in legend %}
-        <li class="mcc-calendar__legend-item" data-accent="{{ item.accent }}">
-          <span class="mcc-calendar__legend-dot" aria-hidden="true"></span>{{ item.label }}
-        </li>
-      {% endfor %}
-    </ul>
+    {{ include('mcc_theme:mcc-calendar-legend', { items: legend, variant: 'screen' }, with_context = false) }}
   {% endif %}
 
-  <div class="mcc-calendar__grid">
-    <div class="mcc-calendar__weekdays">
-      {% for wd in weekdays %}
-        <div class="mcc-calendar__weekday"><abbr title="{{ wd }}">{{ wd }}</abbr></div>
-      {% endfor %}
-    </div>
-
-    {% for week in weeks %}
-      <div class="mcc-calendar__week">
-        {% for day in week %}
-          {%- set classes = [
-            'mcc-calendar__day',
-            not day.in_month ? 'is-muted',
-            day.is_today ? 'is-today',
-            day.is_weekend ? 'is-weekend',
-            day.count ? 'has-events',
-          ]|join(' ')|trim -%}
-          {% if day.count %}
-            <a class="{{ classes }}" href="#day-{{ day.date }}" data-day="{{ day.date }}"
-               aria-controls="day-{{ day.date }}"
-               aria-label="{{ day.day }}{{ day.is_today ? ', today' }}, {{ day.count }} event{{ day.count > 1 ? 's' }}">
-              <span class="mcc-calendar__daynum">{{ day.day }}</span>
-              <ul class="mcc-calendar__events">
-                {% for e in day.events %}
-                  <li class="mcc-calendar__event" data-accent="{{ e.accent }}">
-                    <span class="mcc-calendar__event-dot" aria-hidden="true"></span>
-                    <span class="mcc-calendar__event-title">{{ e.title }}</span>
-                    {% if e.chip_time %}<span class="mcc-calendar__event-time">{{ e.chip_time }}</span>{% endif %}
-                  </li>
-                {% endfor %}
-                {% if day.more %}
-                  <li class="mcc-calendar__more">+{{ day.more }} more</li>
-                {% endif %}
-              </ul>
-            </a>
-          {% else %}
-            <div class="{{ classes }}">
-              <span class="mcc-calendar__daynum">{{ day.day }}</span>
+  {# The grid keeps its minimum width and scrolls rather than squeezing cells
+     until titles break mid-word. Below the agenda breakpoint it is replaced
+     outright — see the stylesheet. #}
+  <div class="mcc-calendar__card">
+    <div class="mcc-calendar__scroller">
+      <div class="mcc-calendar__grid" role="table" aria-label="{{ month_label }}">
+        <div class="mcc-calendar__weekdays" role="row">
+          {% for weekday in weekdays %}
+            <div class="mcc-calendar__weekday" role="columnheader">
+              <abbr title="{{ weekday.long }}">{{ weekday.short }}</abbr>
             </div>
-          {% endif %}
+          {% endfor %}
+        </div>
+
+        {% for week in weeks %}
+          {{ include('mcc_theme:mcc-calendar-week', { week: week, can_add: can_add }, with_context = false) }}
         {% endfor %}
       </div>
-    {% endfor %}
-  </div>
-
-  {% if day_details is not empty %}
-    <div class="mcc-calendar__details">
-      {% for d in day_details %}
-        <section class="mcc-calendar__detail" id="day-{{ d.date }}" tabindex="-1" aria-label="Events on {{ d.label }}">
-          <header class="mcc-calendar__detail-head">
-            <h2 class="mcc-calendar__detail-title">{{ d.label }}</h2>
-            <a class="mcc-calendar__detail-close" href="#day-{{ d.date }}-return" data-detail-close aria-label="Close day detail">
-              <span aria-hidden="true">&times;</span>
-            </a>
-          </header>
-          <ul class="mcc-calendar__detail-list">
-            {% for e in d.events %}
-              <li class="mcc-calendar__detail-item" data-accent="{{ e.accent }}">
-                <span class="mcc-calendar__detail-time">{{ e.time_label }}</span>
-                <span class="mcc-calendar__detail-body">
-                  <a class="mcc-calendar__detail-event" href="{{ e.url }}">{{ e.title }}</a>
-                  {% if e.description %}<span class="mcc-calendar__detail-desc">{{ e.description }}</span>{% endif %}
-                </span>
-              </li>
-            {% endfor %}
-          </ul>
-        </section>
-      {% endfor %}
     </div>
-  {% endif %}
-
-  <div class="mcc-calendar__foot">
-    <a class="mcc-calendar__print" href="{{ print_url }}">
-      <span aria-hidden="true">&#9113;</span> Printable list for {{ month_label }}
-    </a>
   </div>
+
+  <div class="mcc-calendar__agenda">
+    {{ include('mcc_theme:mcc-calendar-agenda', {
+      days: agenda|default([]),
+      month_label: month_label,
+      can_add: can_add,
+    }, with_context = false) }}
+  </div>
+
+  {% if footnote %}
+    <p class="mcc-calendar__footnote">{{ footnote }}</p>
+  {% endif %}
 
 </div>

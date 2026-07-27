@@ -1,0 +1,26 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: 'Calendar legend'
+description: >
+  Which marker and colour belongs to which Mission Category. Lists only the
+  categories that actually appear in the month being viewed, so the key always
+  maps to something on the page.
+group: MCC Components
+props:
+  type: object
+  required:
+    - items
+  properties:
+    items:
+      type: array
+      title: Categories
+      items:
+        type: object
+        properties:
+          label: { type: string }
+          color: { type: string }
+          shape: { type: string }
+    variant:
+      type: string
+      title: Variant
+      enum: [screen, print]
+      default: screen

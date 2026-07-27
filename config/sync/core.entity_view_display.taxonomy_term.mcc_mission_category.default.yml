@@ -1,0 +1,27 @@
+uuid: 2f2499a6-8436-4d8b-98af-f28609c1352a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.mcc_mission_category.field_category_color
+    - field.field.taxonomy_term.mcc_mission_category.field_icon
+    - field.field.taxonomy_term.mcc_mission_category.field_marker_shape
+    - taxonomy.vocabulary.mcc_mission_category
+  module:
+    - text
+id: taxonomy_term.mcc_mission_category.default
+targetEntityType: taxonomy_term
+bundle: mcc_mission_category
+mode: default
+content:
+  description:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_category_color: true
+  field_icon: true
+  field_marker_shape: true

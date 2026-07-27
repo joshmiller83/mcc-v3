@@ -1,0 +1,21 @@
+uuid: dafb2def-35ef-4b12-a662-2d135531a06b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_marker_shape
+    - taxonomy.vocabulary.mcc_mission_category
+  module:
+    - options
+id: taxonomy_term.mcc_mission_category.field_marker_shape
+field_name: field_marker_shape
+entity_type: taxonomy_term
+bundle: mcc_mission_category
+label: 'Calendar marker'
+description: 'Small shape shown beside this category’s events. The printed calendar is often photocopied in black and white, so the shape — not the colour — is what tells the categories apart on paper.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

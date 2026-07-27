@@ -1,0 +1,33 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: 'Calendar agenda'
+description: >
+  The month as a day-by-day list, for screens too narrow to carry a seven
+  column grid. Same events, same colours and markers — a phone gets a
+  different shape, not a shorter calendar. Multi-day events repeat on each day
+  they cover, with their full date range shown.
+group: MCC Components
+props:
+  type: object
+  required:
+    - days
+  properties:
+    days:
+      type: array
+      title: Days
+      description: 'In-month days that have something on.'
+      items:
+        type: object
+        properties:
+          date: { type: string }
+          label: { type: string }
+          is_today: { type: boolean }
+          add_url: { type: string }
+          entries: { type: array }
+    month_label:
+      type: string
+      title: 'Month label'
+      default: ''
+    can_add:
+      type: boolean
+      title: 'Show the add-event affordance'
+      default: false

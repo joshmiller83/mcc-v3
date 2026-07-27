@@ -1,0 +1,31 @@
+{#
+  The band's grid placement is computed server-side (see CalendarMonth), so
+  the only layout decision left here is which edges are open.
+#}
+{% set edges = [
+  band.is_start ? 'is-start' : 'is-continued',
+  band.continues ? 'is-continuing' : 'is-ending',
+]|join(' ') %}
+
+<a class="mcc-band mcc-band--{{ variant|default('screen') }} {{ edges }}"
+   href="{{ band.url }}"
+   style="--evt: {{ band.color }}; grid-column: {{ band.column_start }} / span {{ band.span }}; grid-row: {{ band.row }};">
+  {{ include('mcc_theme:mcc-calendar-marker', {
+    color: band.color,
+    shape: band.shape,
+    size: variant == 'print' ? 'print' : 'chip',
+  }, with_context = false) }}
+  <span class="mcc-band__title">{{ band.title }}</span>
+  {% if band.segment_time %}<span class="mcc-band__time">{{ band.segment_time }}</span>{% endif %}
+  <span class="mcc-band__spacer"></span>
+  {% if band.continues %}
+    <span class="mcc-band__more" aria-hidden="true">&rsaquo;&rsaquo;</span>
+  {% endif %}
+  {% if band.is_start %}
+    <span class="visually-hidden">
+      {{- band.category ? band.category ~ '. ' }}{{ band.range }}{{ band.segment_time ? ', ' ~ band.segment_time -}}
+    </span>
+  {% else %}
+    <span class="visually-hidden">continued, {{ band.range }}</span>
+  {% endif %}
+</a>

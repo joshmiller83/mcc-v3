@@ -1,0 +1,108 @@
+/**
+ * Calendar multi-day band.
+ *
+ * The open/closed edges are what make a band read as continuous across a week
+ * boundary: the starting slice keeps its rounded left corners, thick left
+ * border and margin; a continuation slice runs flush to the column edge with
+ * square corners and no left border, so the bar appears to pass under the
+ * week break.
+ */
+
+.mcc-band {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: color-mix(in oklch, var(--evt) 12%, white);
+  border: 1px solid var(--evt);
+  color: var(--text-body);
+  text-decoration: none;
+  transition: filter var(--duration-fast, 120ms) var(--ease-standard, ease);
+}
+
+.mcc-band:hover,
+.mcc-band:focus-visible {
+  filter: brightness(0.97);
+  text-decoration: none;
+}
+
+.mcc-band:focus-visible {
+  outline: 2px solid var(--color-secondary);
+  outline-offset: -2px;
+}
+
+.mcc-band__title {
+  flex: none;
+  font-family: var(--font-body);
+  font-weight: var(--fw-bold);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mcc-band__time,
+.mcc-band__more {
+  flex: none;
+  font-family: var(--font-body);
+  font-weight: var(--fw-bold);
+  color: var(--evt);
+  white-space: nowrap;
+}
+
+.mcc-band__time { opacity: 0.85; }
+.mcc-band__more { opacity: 0.7; }
+.mcc-band__spacer { flex: 1; }
+
+/* -- Screen ------------------------------------------------------------ */
+.mcc-band--screen {
+  gap: 6px;
+  padding: 5px 8px;
+  margin-bottom: 3px;
+  border-radius: 5px;
+}
+
+.mcc-band--screen .mcc-band__title { font-size: 12px; line-height: 1.25; }
+.mcc-band--screen .mcc-band__time,
+.mcc-band--screen .mcc-band__more { font-size: 11px; }
+
+.mcc-band--screen.is-start {
+  margin-left: 5px;
+  border-left-width: 3px;
+}
+.mcc-band--screen.is-ending { margin-right: 5px; }
+
+/* -- Print ------------------------------------------------------------- */
+.mcc-band--print {
+  gap: calc(3 * var(--marker-unit, 1px));
+  padding: 0 calc(3 * var(--marker-unit, 1px));
+  margin-bottom: 1px;
+  border-width: 0.6pt;
+  border-radius: 3px;
+  /* Nunito's descenders clip at line-height 1 in a band this short. */
+  line-height: 1.35;
+}
+
+.mcc-band--print .mcc-band__title { font-size: calc(0.97em); }
+.mcc-band--print .mcc-band__time,
+.mcc-band--print .mcc-band__more { font-size: calc(0.93em); }
+
+.mcc-band--print.is-start {
+  margin-left: 3px;
+  border-left-width: 2pt;
+}
+.mcc-band--print.is-ending { margin-right: 3px; }
+
+/* -- Open edges (shared) ----------------------------------------------- */
+.mcc-band.is-continued {
+  margin-left: 0;
+  border-left-width: 0;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.mcc-band.is-continuing {
+  margin-right: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}

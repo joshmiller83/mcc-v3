@@ -1,20 +1,20 @@
 /**
- * Mission Category accent palette — single source of truth.
+ * Mission Category colour — fallback and contract.
  *
- * Each Mission Category taxonomy term carries a `field_accent_color` whose
- * allowed values are exactly the keys below. Anything that renders a category
- * (the monthly calendar, event cards, the event detail page) sets
- * `data-accent="<key>"` on a wrapper and then reads `--evt`, so a category's
- * colour is defined once here and in one place in the database.
+ * A category's colour is a *field value* on its taxonomy term
+ * (`field_category_color`), not one of a fixed set of names, so it cannot be
+ * enumerated here: anything that renders a category sets `--evt` inline from
+ * the term and everything downstream reads `var(--evt)`. That is what lets an
+ * editor add a category in a brand-new colour without touching CSS.
  *
- * Adding a new category is an editorial action; adding a new *colour* means
- * adding one line here plus one allowed value on the field.
+ * The marker *shape* is a field too (`field_marker_shape`), drawn by the
+ * mcc-calendar-marker component.
+ *
+ * This file only supplies the fallback used when a category has no colour set,
+ * or when an event has no category at all. Keep it in sync with
+ * EventContext::FALLBACK_COLOR, which is what PHP hands to the components.
  */
 
-[data-accent]              { --evt: var(--neutral-400, #9a8b74); }
-[data-accent="forest"]     { --evt: var(--green-700, #2f4833); }
-[data-accent="terracotta"] { --evt: var(--terracotta-500, #ae5b33); }
-[data-accent="walnut"]     { --evt: var(--walnut-600, #6a4a37); }
-[data-accent="brick"]      { --evt: var(--brick-500, oklch(52% 0.15 28)); }
-[data-accent="sage"]       { --evt: var(--green-500, #6f8a6f); }
-[data-accent="sand"]       { --evt: oklch(64% 0.10 72); }
+:root {
+  --evt: #6b6257;
+}

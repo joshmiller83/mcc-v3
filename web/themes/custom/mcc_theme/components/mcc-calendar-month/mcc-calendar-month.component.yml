@@ -1,44 +1,80 @@
 $schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
 name: Calendar Month
 group: MCC Components
-description: 'An accessible, brand-styled monthly calendar grid with per-category color coding, month navigation, and expandable day detail panels.'
+description: >
+  The public month view at /calendar. Every event is shown — there is no
+  "+3 more" and no truncation, because the point of the page is that the church
+  can see its whole month at once. Cells grow to fit; the grid keeps a minimum
+  width and scrolls sideways rather than squeezing titles until they break
+  mid-word, and below that width it hands over to the agenda list.
+
+  Month navigation is plain links carrying ?year= and ?month=, so the page
+  works with JavaScript off and every month is separately cacheable.
 props:
   type: object
+  required:
+    - month_label
+    - weekdays
+    - weeks
   properties:
+    eyebrow:
+      type: string
+      title: Kicker
+      description: 'Small line above the month name.'
+      examples:
+        - 'Church calendar'
     month_label:
       type: string
-      title: Month Label
+      title: Month label
       examples:
         - 'July 2026'
     weekdays:
       type: array
       title: Weekday headings
       items:
-        type: string
+        type: object
+        properties:
+          long: { type: string }
+          short: { type: string }
     weeks:
       type: array
       title: Weeks
-      description: 'A list of weeks, each a list of seven day cells.'
+      description: 'Week rows from CalendarMonth::build(), each with days, bands and a lane count.'
       items:
-        type: array
-        items:
-          type: object
-    day_details:
+        type: object
+    agenda:
       type: array
-      title: Day detail panels
+      title: Agenda days
+      description: 'The same month as a flat day list, used on narrow screens.'
       items:
         type: object
     legend:
       type: array
       title: Category legend
+      description: 'Categories present this month. An empty list hides the legend.'
       items:
         type: object
+    density:
+      type: string
+      title: Cell density
+      enum: [comfortable, compact]
+      default: comfortable
+    footnote:
+      type: string
+      title: Note below the grid
+      default: ''
+    can_add:
+      type: boolean
+      title: Viewer may create events
+      default: false
     nav:
       type: object
       title: Navigation targets
-    is_current_month:
-      type: boolean
-      title: Is the current month
-    print_url:
-      type: string
-      title: Print URL
+      properties:
+        prev_url: { type: string }
+        prev_label: { type: string }
+        next_url: { type: string }
+        next_label: { type: string }
+        today_url: { type: string }
+        print_url: { type: string }
+        is_current_month: { type: boolean }

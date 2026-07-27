@@ -1,0 +1,144 @@
+/**
+ * Calendar week row.
+ *
+ * `--cal-cell-min` and `--cal-list-pad` come from the month component's
+ * density setting.
+ */
+
+.mcc-calweek {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+/* -- Background cells -------------------------------------------------- */
+.mcc-calweek__cell {
+  position: relative;
+  min-height: var(--cal-cell-min, 148px);
+  background: white;
+  border-right: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+/* Warm oatmeal wash on days belonging to the months either side. Mixed in
+   sRGB deliberately: mixing towards `white` in oklch drags the hue to zero and
+   the "beige" comes out pink. */
+.mcc-calweek__cell.is-adjacent {
+  background: color-mix(in srgb, var(--oatmeal) 45%, white);
+}
+
+.mcc-calweek__cell.is-today {
+  background: color-mix(in srgb, var(--terracotta-500) 8%, white);
+}
+
+/* -- Add-an-event affordance ------------------------------------------- */
+.mcc-calweek__add {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  background: white;
+  color: var(--color-primary);
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: var(--fw-bold);
+  line-height: 1;
+  text-decoration: none;
+  opacity: 0;
+  transition: opacity var(--duration-fast, 120ms) var(--ease-standard, ease),
+    background-color var(--duration-fast, 120ms) var(--ease-standard, ease);
+}
+
+.mcc-calweek__cell:hover .mcc-calweek__add,
+.mcc-calweek__add:focus-visible {
+  opacity: 1;
+}
+
+/* A day is three separate grid items — its background cell, its number row and
+   its event list — so "hovering the day" can't be expressed by nesting. Each
+   pair below maps one column's number row (children 8-14) and event list (the
+   last seven children) back onto that column's background cell, so the button
+   appears wherever in the day the pointer is. */
+.mcc-calweek:has(> :nth-child(8):hover) > :nth-child(1) .mcc-calweek__add,
+.mcc-calweek:has(> :nth-last-child(7):hover) > :nth-child(1) .mcc-calweek__add,
+.mcc-calweek:has(> :nth-child(9):hover) > :nth-child(2) .mcc-calweek__add,
+.mcc-calweek:has(> :nth-last-child(6):hover) > :nth-child(2) .mcc-calweek__add,
+.mcc-calweek:has(> :nth-child(10):hover) > :nth-child(3) .mcc-calweek__add,
+.mcc-calweek:has(> :nth-last-child(5):hover) > :nth-child(3) .mcc-calweek__add,
+.mcc-calweek:has(> :nth-child(11):hover) > :nth-child(4) .mcc-calweek__add,
+.mcc-calweek:has(> :nth-last-child(4):hover) > :nth-child(4) .mcc-calweek__add,
+.mcc-calweek:has(> :nth-child(12):hover) > :nth-child(5) .mcc-calweek__add,
+.mcc-calweek:has(> :nth-last-child(3):hover) > :nth-child(5) .mcc-calweek__add,
+.mcc-calweek:has(> :nth-child(13):hover) > :nth-child(6) .mcc-calweek__add,
+.mcc-calweek:has(> :nth-last-child(2):hover) > :nth-child(6) .mcc-calweek__add,
+.mcc-calweek:has(> :nth-child(14):hover) > :nth-child(7) .mcc-calweek__add,
+.mcc-calweek:has(> :nth-last-child(1):hover) > :nth-child(7) .mcc-calweek__add {
+  opacity: 1;
+}
+
+.mcc-calweek__add:hover,
+.mcc-calweek__add:focus-visible {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--text-on-primary);
+  text-decoration: none;
+}
+
+/* Touch devices have no hover to reveal it with, and the toolbar's own
+   "Add event" button covers them. */
+@media (hover: none) {
+  .mcc-calweek__add { display: none; }
+}
+
+/* -- Day number row ---------------------------------------------------- */
+.mcc-calweek__head {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 8px 8px 5px;
+}
+
+/* Keep the "Today" pill clear of the add button's corner. */
+.mcc-calweek__head.has-add { padding-right: 32px; }
+
+.mcc-calweek__daynum {
+  font-family: var(--font-body);
+  font-weight: var(--fw-bold);
+  font-size: 15px;
+  color: var(--text-body);
+}
+
+.mcc-calweek__daynum.is-faint { color: var(--text-faint); }
+
+.mcc-calweek__today {
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--color-secondary);
+  color: white;
+  font-family: var(--font-body);
+  font-weight: var(--fw-bold);
+  font-size: 10px;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+}
+
+/* -- Single-day event list --------------------------------------------- */
+.mcc-calweek__list {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin: 0;
+  padding: var(--cal-list-pad, 0 6px 8px);
+  list-style: none;
+}
