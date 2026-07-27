@@ -1,0 +1,36 @@
+<section{{ attributes.addClass('mcc-person-feature') }}>
+  <div class="mcc-person-feature__photo">
+    {% if photo %}
+      {{ photo }}
+    {% else %}
+      {% include 'mcc_theme:mcc-monogram' with { initials: initials, size: 'feature' } only %}
+    {% endif %}
+  </div>
+
+  <div class="mcc-person-feature__body">
+    {% if eyebrow %}
+      <p class="mcc-person-feature__eyebrow">{{ eyebrow }}</p>
+    {% endif %}
+
+    <h2 class="mcc-person-feature__name">
+      <a href="{{ url }}">{{ name }}</a>
+    </h2>
+
+    {% if role %}
+      <p class="mcc-person-feature__role">{{ role }}</p>
+    {% endif %}
+
+    {% if summary %}
+      <div class="mcc-person-feature__summary">{{ summary }}</div>
+    {% endif %}
+
+    <p class="mcc-person-feature__actions">
+      <a href="{{ url }}" class="mcc-button mcc-button--primary">
+        {{ primary_label|default('Read more'|t) }}
+      </a>
+      {% if contact_url %}
+        <a href="{{ contact_url }}" class="mcc-button mcc-button--outline">{{ 'Get in touch'|t }}</a>
+      {% endif %}
+    </p>
+  </div>
+</section>

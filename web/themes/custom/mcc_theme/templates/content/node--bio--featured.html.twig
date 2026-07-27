@@ -1,0 +1,29 @@
+{#
+/**
+ * @file
+ * The wide card for the leadership group flagged "Feature this group".
+ *
+ * The summary is the person's own biography when they have one and the group's
+ * explainer when they do not — which is the usual case, and the reason this
+ * card is not just a name over empty space.
+ */
+#}
+{# The render array is passed on, not the rendered string, or the component
+   would receive escaped markup — see node--bio--teaser.html.twig. #}
+{% set photo = content.field_bio_pic|render|trim is not empty ? content.field_bio_pic : null %}
+{% set summary = mcc_bio.has_bio ? content.body : mcc_bio.primary.explainer %}
+
+{% include 'mcc_theme:mcc-person-feature' with {
+  attributes: attributes,
+  eyebrow: mcc_bio.primary.label,
+  name: node.label,
+  url: url,
+  role: mcc_bio.role,
+  initials: mcc_bio.initials,
+  primary_label: mcc_bio.has_bio
+    ? 'Read @name\'s story'|t({'@name': mcc_bio.first_name})
+    : 'Read more'|t,
+  contact_url: url ~ '#get-in-touch',
+  photo: photo,
+  summary: summary,
+} only %}

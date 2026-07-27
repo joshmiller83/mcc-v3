@@ -1,0 +1,51 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Ask Band
+description: >
+  The terracotta band closing the leadership listing: "Not sure who to ask?"
+  with a route to the church office.
+
+  It exists because the page's real job is wayfinding, and a directory always
+  leaves someone unsure which name to pick. It is the fallback for that
+  visitor, and the reason the page does not need to publish anyone's direct
+  phone number.
+group: MCC Components
+props:
+  type: object
+  required:
+    - heading
+  properties:
+    heading:
+      type: string
+      title: Heading
+      examples:
+        - 'Not sure who to ask?'
+    body:
+      type: string
+      title: Body
+      default: ''
+      examples:
+        - "Send a note to the church office and we'll pass it to the right person."
+    cta_label:
+      type: string
+      title: Button label
+      default: ''
+      examples:
+        - 'Contact the office'
+    cta_url:
+      type: string
+      title: Button link
+      default: ''
+      examples:
+        - '/contact'
+    phone_label:
+      type: string
+      title: Phone number
+      default: ''
+      examples:
+        - '(765) 325-2772'
+    phone_url:
+      type: string
+      title: Phone link
+      default: ''
+      examples:
+        - 'tel:+17653252772'

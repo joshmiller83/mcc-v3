@@ -1,0 +1,26 @@
+uuid: ec5f1467-0c57-4d5b-b479-fc56036f2e1e
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.mcc_leadership
+  module:
+    - views
+active_version: 7d0ff69067af47df
+versioned_properties:
+  active:
+    settings:
+      default_settings:
+        id: 'views_block:mcc_leadership-group_people'
+        label: 'Leadership: people in a group'
+        label_display: '0'
+        provider: views
+        views_label: ''
+        items_per_page: null
+    fallback_metadata:
+      slot_definitions: null
+label: 'Leadership: people in a group'
+id: block.views_block.mcc_leadership-group_people
+provider: views
+source: block
+source_local_id: 'views_block:mcc_leadership-group_people'

@@ -1,0 +1,152 @@
+/**
+ * Our Leadership listing (views-view--mcc-leadership-groups.html.twig).
+ *
+ * The page runs full-bleed so the header band and the closing band can span
+ * the window; everything else sits inside a --container-max column. The group
+ * sections and cards style themselves — see the mcc-people-grid,
+ * mcc-person-card and mcc-person-feature components.
+ */
+
+.mcc-leadership {
+  background: var(--surface-page);
+}
+
+.mcc-leadership__container {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding-inline: var(--space-6);
+}
+
+/* -- Header band -------------------------------------------------------- */
+
+.mcc-leadership__banner {
+  background: var(--neutral-50);
+  border-bottom: 1px solid var(--border-default);
+  padding-block: var(--space-12) var(--space-10);
+}
+
+.mcc-leadership__breadcrumb {
+  margin-bottom: 20px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.mcc-leadership__breadcrumb ol {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mcc-leadership__breadcrumb li + li::before {
+  content: '/';
+  margin-right: 8px;
+  color: var(--text-faint);
+}
+
+.mcc-leadership__breadcrumb a {
+  color: var(--text-muted);
+  text-decoration: none;
+}
+
+.mcc-leadership__breadcrumb a:hover {
+  color: var(--text-link);
+  text-decoration: underline;
+}
+
+.mcc-leadership__breadcrumb [aria-current='page'] {
+  color: var(--text-body);
+  font-weight: var(--fw-medium);
+}
+
+.mcc-leadership__headings {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--space-10);
+  flex-wrap: wrap;
+}
+
+.mcc-leadership__eyebrow {
+  margin: 0 0 14px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-secondary);
+}
+
+.mcc-leadership__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: var(--fw-regular);
+  font-size: 48px;
+  line-height: 1.1;
+  color: var(--text-body);
+}
+
+.mcc-leadership__intro {
+  max-width: 460px;
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--text-muted);
+  text-wrap: pretty;
+}
+
+.mcc-leadership__intro :is(p, div) {
+  margin: 0;
+}
+
+/* -- Body --------------------------------------------------------------- */
+
+.mcc-leadership__featured {
+  padding-top: var(--space-16);
+}
+
+.mcc-leadership__groups {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-20);
+  padding-block: var(--space-16) var(--space-24);
+}
+
+.mcc-leadership__note {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--text-faint);
+}
+
+@media (max-width: 760px) {
+  .mcc-leadership__banner {
+    padding-block: var(--space-8) var(--space-8);
+  }
+
+  .mcc-leadership__title {
+    font-size: 36px;
+  }
+
+  .mcc-leadership__headings {
+    gap: var(--space-6);
+  }
+
+  .mcc-leadership__intro {
+    max-width: none;
+    font-size: 16px;
+  }
+
+  .mcc-leadership__groups {
+    gap: var(--space-16);
+    padding-block: var(--space-10) var(--space-16);
+  }
+
+  .mcc-leadership__featured {
+    padding-top: var(--space-10);
+  }
+}

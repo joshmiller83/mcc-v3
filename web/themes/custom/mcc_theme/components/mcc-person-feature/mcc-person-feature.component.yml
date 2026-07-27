@@ -1,0 +1,57 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Featured Person
+description: >
+  A wide portrait-and-text card for a leadership group that holds one person —
+  the senior minister. A group of one rendered as a grid of one looks like a
+  mistake, so any term flagged "Feature this group" is drawn this way instead
+  and does not get a section of its own.
+
+  The summary falls back to the group's explainer when the person has written
+  no biography, which is what keeps the card from being a name over white
+  space.
+group: MCC Components
+props:
+  type: object
+  required:
+    - name
+    - url
+  properties:
+    eyebrow:
+      type: string
+      title: Eyebrow
+      description: 'The group name — "Senior minister".'
+      default: ''
+    name:
+      type: string
+      title: Name
+      examples:
+        - 'Rod Nielsen'
+    url:
+      type: string
+      title: Link to the bio page
+      examples:
+        - '/rod-nielsen'
+    role:
+      type: string
+      title: Role
+      default: ''
+    initials:
+      type: string
+      title: Initials
+      default: ''
+    primary_label:
+      type: string
+      title: Primary button label
+      default: ''
+      examples:
+        - "Read Rod's story"
+    contact_url:
+      type: string
+      title: Link to the contact section
+      default: ''
+slots:
+  photo:
+    title: Portrait
+  summary:
+    title: Summary
+    description: 'The biography, or the group explainer when there is none.'

@@ -1,0 +1,90 @@
+uuid: db1afa0a-0058-4d2e-aa22-71c69426f635
+langcode: en
+status: true
+dependencies:
+  theme:
+    - mcc_theme
+active_version: 40d372c7841908dc
+versioned_properties:
+  active:
+    settings:
+      prop_field_definitions:
+        name:
+          required: true
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value:
+            -
+              value: 'Brian Hoffman'
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+        url:
+          required: true
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value:
+            -
+              value: /brian-hoffman
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+        role:
+          required: false
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value:
+            -
+              value: 'Emergency Response Team'
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+        initials:
+          required: false
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value:
+            -
+              value: BH
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+        also_label:
+          required: false
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value:
+            -
+              value: 'Also serves as Trustee'
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+        has_bio:
+          required: false
+          field_type: boolean
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: boolean_checkbox
+          default_value: null
+          expression: ℹ︎boolean␟value
+          derived_schema_metadata: {  }
+    fallback_metadata:
+      slot_definitions:
+        photo:
+          title: Portrait
+          description: 'field_bio_pic rendered through a 3:4 focal-point style. Leave empty to fall back to the monogram.'
+label: 'Person Card'
+id: sdc.mcc_theme.mcc-person-card
+provider: mcc_theme
+source: sdc
+source_local_id: 'mcc_theme:mcc-person-card'

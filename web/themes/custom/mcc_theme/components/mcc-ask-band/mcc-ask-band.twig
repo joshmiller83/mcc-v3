@@ -1,0 +1,28 @@
+<section{{ attributes.addClass('mcc-ask-band') }}>
+  <div class="mcc-ask-band__inner">
+    <div class="mcc-ask-band__text">
+      <h2 class="mcc-ask-band__heading">{{ heading }}</h2>
+      {% if body %}
+        <p class="mcc-ask-band__body">{{ body }}</p>
+      {% endif %}
+    </div>
+
+    {% if cta_url or phone_label %}
+      <div class="mcc-ask-band__actions">
+        {% if cta_url and cta_label %}
+          <a href="{{ cta_url }}" class="mcc-button mcc-button--on-inverse">{{ cta_label }}</a>
+        {% endif %}
+        {% if phone_label %}
+          <p class="mcc-ask-band__phone">
+            {{ 'or call'|t }}
+            {% if phone_url %}
+              <a href="{{ phone_url }}">{{ phone_label }}</a>
+            {% else %}
+              {{ phone_label }}
+            {% endif %}
+          </p>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</section>

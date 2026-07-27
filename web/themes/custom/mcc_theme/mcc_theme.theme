@@ -14,6 +14,8 @@ use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\StringTranslation\ByteSizeMarkup;
 use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
+use Drupal\views\ViewExecutable;
+use Drupal\views\Views;
 
 /**
  * Implements hook_theme_suggestions_page_alter().
@@ -69,14 +71,19 @@ function mcc_theme_preprocess_page(array &$variables): void {
  */
 function mcc_theme_preprocess_node(array &$variables): void {
   $node = $variables['node'];
-  if (!$node instanceof NodeInterface || $node->bundle() !== 'calendar_event') {
+  if (!$node instanceof NodeInterface) {
     return;
   }
-  if (($variables['view_mode'] ?? '') !== 'full') {
+  $view_mode = $variables['view_mode'] ?? '';
+
+  if ($node->bundle() === 'calendar_event' && $view_mode === 'full') {
+    $variables['mcc_event'] = _mcc_theme_event_context($node, $variables);
     return;
   }
 
-  $variables['mcc_event'] = _mcc_theme_event_context($node, $variables);
+  if ($node->bundle() === 'bio') {
+    $variables['mcc_bio'] = _mcc_theme_bio_context($node, $view_mode, $variables);
+  }
 }
 
 /**
@@ -348,6 +355,522 @@ function _mcc_theme_event_neighbours(NodeInterface $node, DrupalDateTime $anchor
     array_slice(array_values($same_day), 0, 5),
     array_slice(array_values($this_week), 0, 6),
   ];
+}
+
+/**
+ * Implements hook_preprocess_views_view().
+ *
+ * The Our Leadership page is a list of *groups*, not of people: the
+ * mcc_leadership_groups view returns the Leadership Structure terms in
+ * vocabulary order, and the mcc_leadership view is embedded once per term to
+ * list that group's members. It is the same shape the old site used, and it is
+ * what makes the page editable without a developer — reorder the terms and the
+ * sections reorder, add a term and a section appears, and somebody who serves
+ * as both a deacon and a trustee is listed under both without any
+ * de-duplication rule.
+ */
+function mcc_theme_preprocess_views_view(array &$variables): void {
+  if ($variables['view']->id() !== 'mcc_leadership_groups') {
+    return;
+  }
+
+  $variables['mcc_leadership'] = _mcc_theme_leadership_listing($variables);
+  $variables['mcc_breadcrumb'] = _mcc_theme_leadership_breadcrumb();
+}
+
+/**
+ * Builds the leadership listing: a featured card, then a section per group.
+ *
+ * Each section carries its own embedded view rather than one query split up
+ * afterwards, so a group's membership, sort order and access checks are all
+ * the view's business and none of them live here.
+ */
+function _mcc_theme_leadership_listing(array &$variables): array {
+  $repository = \Drupal::service('entity.repository');
+  $renderer = \Drupal::service('renderer');
+
+  $featured = NULL;
+  $sections = [];
+  // Names seen per section, to count who ends up listed more than once.
+  $appearances = [];
+
+  foreach ($variables['view']->result as $row) {
+    $term = $row->_entity ?? NULL;
+    if (!$term) {
+      continue;
+    }
+    $term = $repository->getTranslationFromContext($term);
+
+    // A group of one reads as a mistake in a grid, so a term flagged
+    // "Feature this group" is drawn as the wide card above everything else
+    // and gets no section of its own.
+    $is_featured = $term->hasField('field_feature_group')
+      && (bool) $term->get('field_feature_group')->value;
+    $display = $is_featured ? 'group_feature' : 'group_people';
+
+    $people = Views::getView('mcc_leadership');
+    if (!$people) {
+      continue;
+    }
+    $people->setDisplay($display);
+    $people->setArguments([$term->id()]);
+    $people->preExecute();
+    $people->execute();
+
+    // Nobody in the group means no heading and no empty grid.
+    $count = count($people->result);
+    if ($count === 0) {
+      continue;
+    }
+
+    $rendered = _mcc_theme_leadership_cards($people, (int) $term->id());
+    // The view supplied the people; its cache metadata has to be carried over
+    // by hand because the rows are not rendered through the view itself.
+    $renderer->addCacheableDependency($variables, $term);
+    $variables['#cache']['tags'][] = 'node_list:bio';
+
+    if ($is_featured) {
+      $featured = ['term' => $term->label(), 'view' => $rendered];
+      continue;
+    }
+
+    foreach ($people->result as $person_row) {
+      if (isset($person_row->_entity)) {
+        // Counted by name rather than by node: two people share a name here
+        // only because one person has two records, and either way a visitor
+        // sees the same name in two sections.
+        $appearances[$person_row->_entity->label()][(int) $term->id()] = TRUE;
+      }
+    }
+
+    // Built as a render element rather than handed to Twig as data: a
+    // component's slots are filled from #slots, and an {% embed %} in a loop
+    // cannot reach the loop variable — SDC gives a component only its own
+    // declared props and slots, not the surrounding template's context.
+    $sections[] = [
+      '#type' => 'component',
+      '#component' => 'mcc_theme:mcc-people-grid',
+      '#props' => [
+        'heading' => $term->label(),
+        'heading_id' => 'group-' . $term->id(),
+        'count_label' => (string) \Drupal::translation()->formatPlural($count, '1 person', '@count people'),
+      ],
+      '#slots' => [
+        'description' => $term->hasField('description') && !$term->get('description')->isEmpty()
+          ? $term->get('description')->view(['label' => 'hidden'])
+          : [],
+        'cards' => $rendered,
+      ],
+    ];
+  }
+
+  // Somebody who serves in two groups is listed under both, which looks like a
+  // mistake unless the page says so.
+  $in_two_groups = count(array_filter($appearances, fn(array $groups) => count($groups) > 1));
+
+  return [
+    'featured' => $featured,
+    'sections' => $sections,
+    'dual_role_note' => $in_two_groups
+      ? \Drupal::translation()->formatPlural(
+        $in_two_groups,
+        'One person serves in two groups and appears in both lists.',
+        '@count people serve in two groups and appear in both lists.'
+      )
+      : NULL,
+    // Copy for the closing band. Kept alongside the footer's credit line in
+    // this file rather than invented in Twig; the office phone number is the
+    // one the footer menu already publishes.
+    'ask' => [
+      'heading' => t('Not sure who to ask?'),
+      'body' => t("Send a note to the church office and we'll pass it to the right person — usually the same week."),
+      'cta_label' => t('Contact the office'),
+      'cta_url' => _mcc_theme_path_if_routable('/contact'),
+      'phone_label' => '(765) 325-2772',
+      'phone_url' => 'tel:+17653252772',
+    ],
+  ];
+}
+
+/**
+ * Renders an executed group view's people as cards.
+ *
+ * The rows are built here instead of being left to the view's own row plugin
+ * for one reason: a card has to know which section it is sitting in, so that
+ * somebody in two groups can be marked "Also serves as Trustee" — and there is
+ * no safe way to read that from the node at render time. Drupal hands every
+ * view the *same* cached node object, so the last group to touch a
+ * two-group person would win, and the entity render cache would then reuse
+ * that one card in both sections. Passing the group in explicitly and keying
+ * the cache on it fixes both.
+ *
+ * Which view mode a card uses is still the display's setting, so the row
+ * configuration in the Views UI continues to mean what it says.
+ */
+function _mcc_theme_leadership_cards(ViewExecutable $people, int $tid): array {
+  $row_options = $people->getDisplay()->getOption('row');
+  $view_mode = $row_options['options']['view_mode'] ?? 'teaser';
+  $builder = \Drupal::entityTypeManager()->getViewBuilder('node');
+
+  $cards = [];
+  foreach ($people->result as $row) {
+    $person = $row->_entity ?? NULL;
+    if (!$person) {
+      continue;
+    }
+    $card = $builder->view($person, $view_mode);
+    $card['#mcc_leadership_group'] = $tid;
+    if (isset($card['#cache']['keys'])) {
+      $card['#cache']['keys'][] = 'mcc-leadership-group-' . $tid;
+    }
+    $cards[] = $card;
+  }
+
+  return $cards;
+}
+
+/**
+ * Everything the three bio templates render that is not a plain field.
+ *
+ * The card, the featured card and the detail page all read this. What they
+ * share is that almost nothing on a bio page comes from the person's own
+ * prose — three of twenty have written any — so the group's taxonomy term is
+ * doing most of the work, and it is resolved once, here.
+ */
+function _mcc_theme_bio_context(NodeInterface $node, string $view_mode, array &$variables): array {
+  $repository = \Drupal::service('entity.repository');
+  $name = $node->label();
+
+  $terms = [];
+  foreach ($node->get('field_ministry_structure')->referencedEntities() as $term) {
+    if (!$term->access('view')) {
+      continue;
+    }
+    $term = $repository->getTranslationFromContext($term);
+    $terms[$term->id()] = $term;
+    \Drupal::service('renderer')->addCacheableDependency($variables, $term);
+  }
+  // The first group listed on the node is the one the page speaks from: its
+  // singular label is the eyebrow, its explainer is the "what deacons do"
+  // paragraph, and its members are the related band.
+  $primary = $terms ? reset($terms) : NULL;
+
+  $context = [
+    'name' => $name,
+    'first_name' => explode(' ', trim($name))[0],
+    'initials' => _mcc_theme_initials($name),
+    'role' => (string) $node->get('field_role')->value,
+    'has_bio' => _mcc_theme_bio_has_prose($node),
+    'listing_url' => Url::fromRoute('view.mcc_leadership_groups.page_1')->toString(),
+    'url' => $node->toUrl()->toString(),
+    'primary' => NULL,
+    'groups' => [],
+  ];
+
+  if ($primary) {
+    $singular = (string) ($primary->hasField('field_role_singular') ? $primary->get('field_role_singular')->value : '');
+    $context['primary'] = [
+      'tid' => $primary->id(),
+      'label' => $primary->label(),
+      'singular' => $singular,
+      'explainer' => $primary->hasField('description') && !$primary->get('description')->isEmpty()
+        ? $primary->get('description')->view(['label' => 'hidden'])
+        : NULL,
+      // "What deacons do", but "What the senior minister does" for a group
+      // whose name is already singular — which is how a term names itself when
+      // it holds one post rather than a body of people.
+      'explainer_heading' => ($singular !== '' && mb_strtolower($singular) === mb_strtolower($primary->label()))
+        ? t('What the @role does', ['@role' => mb_strtolower($singular)])
+        : t('What @group do', ['@group' => mb_strtolower($primary->label())]),
+      'url' => $context['listing_url'] . '#group-' . $primary->id(),
+    ];
+  }
+
+  foreach ($terms as $tid => $term) {
+    // Compared as integers: $tid is an array key, which PHP has already cast
+    // from the string the entity returns.
+    $is_primary = $primary && $tid === (int) $primary->id();
+
+    // The role says what they do in their main group. In a second group there
+    // is nothing more specific to say than that they serve in it — and for
+    // somebody whose only group is their main one, nothing at all.
+    if ($is_primary) {
+      $note = $context['role'] !== '' ? $context['role'] : '';
+    }
+    else {
+      $note = (string) t('Also serves in this group');
+    }
+
+    $context['groups'][] = [
+      'tid' => $tid,
+      'label' => $term->label(),
+      'singular' => (string) ($term->hasField('field_role_singular') ? $term->get('field_role_singular')->value : $term->label()),
+      'url' => $context['listing_url'] . '#group-' . $tid,
+      'note' => $note,
+    ];
+  }
+
+  if ($view_mode === 'teaser') {
+    $context['also_label'] = _mcc_theme_bio_also_label($terms, $variables);
+  }
+
+  if ($view_mode === 'full') {
+    $context += _mcc_theme_bio_detail_context($node, $primary, $variables);
+  }
+
+  return $context;
+}
+
+/**
+ * "Also serves as Trustee", for a card being listed under one group.
+ *
+ * The same person's card says something different in the deacons section than
+ * it does in the trustees section, so the section has to be passed in — see
+ * _mcc_theme_leadership_cards(). A card rendered anywhere else, such as the
+ * related band on a bio page, has no section and says nothing.
+ */
+function _mcc_theme_bio_also_label(array $terms, array $variables): string {
+  $current = (int) ($variables['elements']['#mcc_leadership_group'] ?? 0);
+  if (!$current || count($terms) < 2 || !isset($terms[$current])) {
+    return '';
+  }
+
+  $others = [];
+  foreach ($terms as $tid => $term) {
+    if ($tid === $current) {
+      continue;
+    }
+    $others[] = $term->hasField('field_role_singular') && $term->get('field_role_singular')->value
+      ? $term->get('field_role_singular')->value
+      : $term->label();
+  }
+
+  return $others ? (string) t('Also serves as @groups', ['@groups' => implode(' & ', $others)]) : '';
+}
+
+/**
+ * The parts only the full bio page needs: topics, contact, related people.
+ */
+function _mcc_theme_bio_detail_context(NodeInterface $node, $primary, array &$variables): array {
+  $topics = [];
+  foreach ($node->get('field_topics') as $item) {
+    $value = trim((string) $item->value);
+    if ($value !== '') {
+      $topics[] = $value;
+    }
+  }
+
+  return [
+    'topics' => $topics,
+    'breadcrumb' => _mcc_theme_leadership_breadcrumb($node->label()),
+    'contact' => _mcc_theme_bio_contact($node),
+    'contact_form' => _mcc_theme_bio_contact_form($node),
+    'office_phone' => '(765) 325-2772',
+    'office_phone_url' => 'tel:+17653252772',
+    'related' => $primary ? _mcc_theme_bio_related_band($node, $primary, $variables) : [],
+  ];
+}
+
+/**
+ * The "others serving as deacons" band, as a ready component.
+ *
+ * Assembled here rather than in Twig for the same reason the listing's
+ * sections are: a component is only given its own props and slots, so an
+ * {% embed %} cannot reach the surrounding template's variables to fill them.
+ */
+function _mcc_theme_bio_related_band(NodeInterface $node, $primary, array &$variables): array {
+  $cards = _mcc_theme_bio_related($node, $primary, $variables);
+  if (!$cards) {
+    return [];
+  }
+
+  return [
+    '#type' => 'component',
+    '#component' => 'mcc_theme:mcc-people-grid',
+    '#props' => [
+      'heading' => (string) t('Others serving as @group', ['@group' => mb_strtolower($primary->label())]),
+      'heading_id' => 'related-people',
+    ],
+    '#slots' => [
+      'cards' => $cards,
+      'aside' => [
+        '#type' => 'link',
+        '#title' => t('See everyone →'),
+        '#url' => Url::fromRoute('view.mcc_leadership_groups.page_1'),
+        '#attributes' => ['class' => ['mcc-actionlink']],
+      ],
+    ],
+  ];
+}
+
+/**
+ * Direct contact details, and only where the person has agreed to publish them.
+ *
+ * These are personal phone numbers and email addresses for named volunteers on
+ * a page anyone can crawl, and nobody consented to publication by having the
+ * value typed into the legacy site years ago. field_publish_contact is off by
+ * default and is meant to be switched on one person at a time, after asking
+ * them. Everyone else gets the message form instead.
+ *
+ * The gate lives here rather than in the view display on purpose: the fields
+ * are left out of every display, so turning a formatter back on in the admin
+ * UI cannot publish them by accident.
+ */
+function _mcc_theme_bio_contact(NodeInterface $node): array {
+  if (!$node->hasField('field_publish_contact') || !$node->get('field_publish_contact')->value) {
+    return [];
+  }
+
+  $lines = [];
+  $phone = trim((string) $node->get('field_phone_number')->value);
+  if ($phone !== '') {
+    $lines[] = [
+      'label' => $phone,
+      'url' => 'tel:' . preg_replace('/[^0-9+]/', '', $phone),
+    ];
+  }
+  $email = trim((string) $node->get('field_email')->value);
+  if ($email !== '') {
+    $lines[] = ['label' => $email, 'url' => 'mailto:' . $email];
+  }
+
+  return $lines;
+}
+
+/**
+ * The shared "message the office" form, told which bio it is being shown on.
+ *
+ * One webform reused across every bio rather than a form per person; the
+ * target is passed as hidden data so the office knows who the message is for.
+ */
+function _mcc_theme_bio_contact_form(NodeInterface $node): array {
+  if (!\Drupal::moduleHandler()->moduleExists('webform')) {
+    return [];
+  }
+  $storage = \Drupal::entityTypeManager()->getStorage('webform');
+  if (!$storage->load('bio_contact')) {
+    return [];
+  }
+
+  $block = \Drupal::service('plugin.manager.block')->createInstance('webform_block', [
+    'webform_id' => 'bio_contact',
+    'default_data' => "person: '" . $node->id() . "'\nperson_name: '" . $node->label() . "'",
+    'redirect' => FALSE,
+    'label_display' => FALSE,
+  ]);
+
+  return $block->build();
+}
+
+/**
+ * Up to four other people in the same group, as cards.
+ *
+ * Deliberately not the embedded group view: that one cannot exclude the person
+ * whose page this is, and the related band is a different question than "who
+ * is in this group".
+ */
+function _mcc_theme_bio_related(NodeInterface $node, $primary, array &$variables): array {
+  $nids = \Drupal::entityQuery('node')
+    ->accessCheck(TRUE)
+    ->condition('type', 'bio')
+    ->condition('status', 1)
+    ->condition('field_ministry_structure', $primary->id())
+    ->condition('nid', $node->id(), '<>')
+    ->sort('title')
+    ->range(0, 4)
+    ->execute();
+
+  if (!$nids) {
+    return [];
+  }
+
+  $builder = \Drupal::entityTypeManager()->getViewBuilder('node');
+  $related = [];
+  foreach (\Drupal::entityTypeManager()->getStorage('node')->loadMultiple($nids) as $other) {
+    $related[] = $builder->view($other, 'teaser');
+    \Drupal::service('renderer')->addCacheableDependency($variables, $other);
+  }
+  // Somebody joining or leaving this group changes the band.
+  $variables['#cache']['tags'][] = 'node_list:bio';
+
+  return $related;
+}
+
+/**
+ * Whether a bio has prose worth giving a heading to.
+ *
+ * One migrated record holds the literal string "<p>-</p>", which is a dash
+ * somebody typed to mean "nothing here" and is not a biography.
+ */
+function _mcc_theme_bio_has_prose(NodeInterface $node): bool {
+  if ($node->get('body')->isEmpty()) {
+    return FALSE;
+  }
+  $text = trim(strip_tags((string) $node->get('body')->value));
+  $text = trim(html_entity_decode($text, ENT_QUOTES | ENT_HTML5), " \t\n\r\0\x0B\u{A0}");
+
+  return $text !== '' && $text !== '-';
+}
+
+/**
+ * A person's initials, capped at two so the monogram stays legible.
+ */
+function _mcc_theme_initials(string $name): string {
+  $initials = '';
+  foreach (preg_split('/\s+/', trim($name), -1, PREG_SPLIT_NO_EMPTY) as $word) {
+    $letter = mb_substr($word, 0, 1);
+    if (preg_match('/\pL/u', $letter)) {
+      $initials .= mb_strtoupper($letter);
+    }
+    if (mb_strlen($initials) === 2) {
+      break;
+    }
+  }
+
+  return $initials;
+}
+
+/**
+ * The trail above both leadership surfaces.
+ *
+ * Built here rather than from the breadcrumb block because a bio's alias sits
+ * at the site root ("/brian-hoffman"), so the path-derived trail would lose
+ * the two steps that tell a visitor where they are.
+ */
+function _mcc_theme_leadership_breadcrumb(?string $current = NULL): array {
+  $trail = [
+    ['label' => t('Home'), 'url' => Url::fromRoute('<front>')->toString()],
+    ['label' => t('Who we are'), 'url' => _mcc_theme_path_if_routable('/who-we-are')],
+  ];
+
+  $listing = ['label' => t('Our leadership'), 'url' => Url::fromRoute('view.mcc_leadership_groups.page_1')->toString()];
+  if ($current === NULL) {
+    // On the listing itself the last crumb is the page, so it is not a link.
+    $trail[] = ['label' => $listing['label'], 'url' => ''];
+    return $trail;
+  }
+
+  $trail[] = $listing;
+  $trail[] = ['label' => $current, 'url' => ''];
+
+  return $trail;
+}
+
+/**
+ * A path if something answers on it, and an empty string if nothing does.
+ *
+ * The leadership pages link to two pages they do not own — "Who we are" and
+ * the contact page. Url::fromUserInput() throws when a path has no route, so
+ * deleting either of those would otherwise take the whole leadership listing
+ * and every bio page down with it. Templates render an empty URL as plain
+ * text, or drop the link entirely.
+ */
+function _mcc_theme_path_if_routable(string $path): string {
+  if (!\Drupal::service('path.validator')->isValid($path)) {
+    return '';
+  }
+
+  return Url::fromUserInput($path)->toString();
 }
 
 /**

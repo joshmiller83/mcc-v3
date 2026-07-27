@@ -1,0 +1,31 @@
+{#
+/**
+ * @file
+ * A person, as a card.
+ *
+ * Used by every group section on Our Leadership and by the "others in this
+ * group" band at the foot of a bio page. `mcc_bio` is built by
+ * _mcc_theme_bio_context() in mcc_theme.theme.
+ *
+ * The photo comes through the teaser view display, so which focal-point style
+ * a portrait uses stays an admin setting rather than a template decision.
+ *
+ * Emptiness is tested on the rendered string but the render array is what gets
+ * passed on: a photo field with nothing usable behind it still arrives as a
+ * non-empty array, so `{% if photo %}` alone would never reach the monogram —
+ * while passing the rendered string instead would hand the component escaped
+ * markup.
+ */
+#}
+{% set photo = content.field_bio_pic|render|trim is not empty ? content.field_bio_pic : null %}
+
+{% include 'mcc_theme:mcc-person-card' with {
+  attributes: attributes,
+  name: node.label,
+  url: url,
+  role: mcc_bio.role,
+  initials: mcc_bio.initials,
+  also_label: mcc_bio.also_label,
+  has_bio: mcc_bio.has_bio,
+  photo: photo,
+} only %}

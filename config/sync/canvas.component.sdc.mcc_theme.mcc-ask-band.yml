@@ -1,0 +1,90 @@
+uuid: f09e9c55-c798-466e-8ac8-fd43129a7666
+langcode: en
+status: true
+dependencies:
+  theme:
+    - mcc_theme
+active_version: 743c65b3518b5f28
+versioned_properties:
+  active:
+    settings:
+      prop_field_definitions:
+        heading:
+          required: true
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value:
+            -
+              value: 'Not sure who to ask?'
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+        body:
+          required: false
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value:
+            -
+              value: "Send a note to the church office and we'll pass it to the right person."
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+        cta_label:
+          required: false
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value:
+            -
+              value: 'Contact the office'
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+        cta_url:
+          required: false
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value:
+            -
+              value: /contact
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+        phone_label:
+          required: false
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value:
+            -
+              value: '(765) 325-2772'
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+        phone_url:
+          required: false
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value:
+            -
+              value: 'tel:+17653252772'
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+    fallback_metadata:
+      slot_definitions: {  }
+label: 'Ask Band'
+id: sdc.mcc_theme.mcc-ask-band
+provider: mcc_theme
+source: sdc
+source_local_id: 'mcc_theme:mcc-ask-band'

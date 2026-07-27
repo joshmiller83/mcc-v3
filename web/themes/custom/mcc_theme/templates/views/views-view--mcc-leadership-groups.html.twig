@@ -1,0 +1,75 @@
+{#
+/**
+ * @file
+ * The Our Leadership page.
+ *
+ * The view returns Leadership Structure *terms*, not people. Each section's
+ * people come from the mcc_leadership view embedded with that term as its
+ * argument — see _mcc_theme_leadership_listing() in mcc_theme.theme. Reordering
+ * the vocabulary reorders this page, and an empty group is dropped rather than
+ * rendered as a heading with nothing under it.
+ *
+ * `rows` is deliberately unused: the section bodies are the embedded views,
+ * which the row fields cannot express. The view still decides which groups
+ * appear and in what order.
+ */
+#}
+{% set listing = mcc_leadership %}
+
+<div{{ attributes.addClass('mcc-leadership') }}>
+
+  <div class="mcc-leadership__banner">
+    <div class="mcc-leadership__container">
+      {% if mcc_breadcrumb %}
+        <nav class="mcc-leadership__breadcrumb" aria-label="{{ 'Breadcrumb'|t }}">
+          <ol>
+            {% for crumb in mcc_breadcrumb %}
+              <li>
+                {% if crumb.url %}
+                  <a href="{{ crumb.url }}">{{ crumb.label }}</a>
+                {% else %}
+                  <span aria-current="page">{{ crumb.label }}</span>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ol>
+        </nav>
+      {% endif %}
+
+      <div class="mcc-leadership__headings">
+        <div>
+          <p class="mcc-leadership__eyebrow">{{ 'Who we are'|t }}</p>
+          <h1 class="mcc-leadership__title">{{ title|default('Our leadership'|t) }}</h1>
+        </div>
+        {% if header %}
+          <div class="mcc-leadership__intro">{{ header }}</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  {% if listing.featured %}
+    <div class="mcc-leadership__container mcc-leadership__featured">
+      {{ listing.featured.view }}
+    </div>
+  {% endif %}
+
+  <div class="mcc-leadership__container mcc-leadership__groups">
+    {% if listing.sections %}
+      {# Each section is already an mcc-people-grid component with its heading,
+         explainer and embedded people view in place. #}
+      {% for section in listing.sections %}
+        {{ section }}
+      {% endfor %}
+
+      {% if listing.dual_role_note %}
+        <p class="mcc-leadership__note">{{ listing.dual_role_note }}</p>
+      {% endif %}
+    {% else %}
+      {{ empty }}
+    {% endif %}
+  </div>
+
+  {% include 'mcc_theme:mcc-ask-band' with listing.ask only %}
+
+</div>

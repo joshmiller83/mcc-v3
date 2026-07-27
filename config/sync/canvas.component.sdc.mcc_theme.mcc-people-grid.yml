@@ -1,0 +1,75 @@
+uuid: 5a5ef956-431c-4c9e-8290-3e66972590dc
+langcode: en
+status: true
+dependencies:
+  module:
+    - options
+  theme:
+    - mcc_theme
+active_version: 1edefbb3a72c4672
+versioned_properties:
+  active:
+    settings:
+      prop_field_definitions:
+        heading:
+          required: false
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value:
+            -
+              value: Deacons
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+        heading_id:
+          required: false
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value:
+            -
+              value: group-deacons
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+        count_label:
+          required: false
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value:
+            -
+              value: '6 people'
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+        heading_level:
+          required: false
+          field_type: list_string
+          field_storage_settings:
+            allowed_values_function: canvas_load_allowed_values_for_component_prop
+          field_instance_settings: {  }
+          field_widget: options_select
+          default_value: null
+          expression: ℹ︎list_string␟value
+          derived_schema_metadata: {  }
+    fallback_metadata:
+      slot_definitions:
+        description:
+          title: Explainer
+          description: 'The term description — what this group actually does.'
+        cards:
+          title: 'Person cards'
+          description: 'The embedded mcc_leadership view for this group.'
+        aside:
+          title: 'Header aside'
+          description: 'Optional right-hand slot in the section header, e.g. a "See everyone" link.'
+label: 'People Grid'
+id: sdc.mcc_theme.mcc-people-grid
+provider: mcc_theme
+source: sdc
+source_local_id: 'mcc_theme:mcc-people-grid'

@@ -1,0 +1,31 @@
+{#
+  The <a> wraps the whole card rather than just the name, so the click target
+  matches the hover affordance. Everything inside it is non-interactive text.
+#}
+<article{{ attributes.addClass('mcc-person-card') }}>
+  <a href="{{ url }}" class="mcc-person-card__link">
+    <div class="mcc-person-card__photo">
+      {% if photo %}
+        {{ photo }}
+      {% else %}
+        {% include 'mcc_theme:mcc-monogram' with { initials: initials, size: 'card' } only %}
+      {% endif %}
+    </div>
+
+    <div class="mcc-person-card__body">
+      <h3 class="mcc-person-card__name">{{ name }}</h3>
+
+      {# Rendered even when empty: the reserved line is what keeps the names #}
+      {# and roles across a row of cards sitting on the same baselines.      #}
+      <p class="mcc-person-card__role">{{ role }}</p>
+
+      {% if also_label %}
+        <p class="mcc-person-card__also">{{ also_label }}</p>
+      {% endif %}
+
+      {% if has_bio %}
+        <p class="mcc-person-card__more">{{ 'Read bio'|t }} <span aria-hidden="true">&rarr;</span></p>
+      {% endif %}
+    </div>
+  </a>
+</article>

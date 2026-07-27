@@ -1,0 +1,26 @@
+uuid: 47eade30-2c40-4bc7-8234-7ea6d64dba35
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.mcc_leadership
+  module:
+    - views
+active_version: c3d33c2965ca4a24
+versioned_properties:
+  active:
+    settings:
+      default_settings:
+        id: 'views_block:mcc_leadership-group_feature'
+        label: 'Leadership: featured person'
+        label_display: '0'
+        provider: views
+        views_label: ''
+        items_per_page: null
+    fallback_metadata:
+      slot_definitions: null
+label: 'Leadership: featured person'
+id: block.views_block.mcc_leadership-group_feature
+provider: views
+source: block
+source_local_id: 'views_block:mcc_leadership-group_feature'

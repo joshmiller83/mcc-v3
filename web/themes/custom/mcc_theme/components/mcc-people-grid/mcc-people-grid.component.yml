@@ -1,0 +1,49 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: People Grid
+description: >
+  One leadership group: a heading, the explainer describing what that group
+  does, a headcount, and the grid of person cards beneath.
+
+  Heading and explainer are the taxonomy term's own name and description, so a
+  group's copy is edited on the term, not here. The same grid without a heading
+  carries the "others in this group" band on a bio page.
+group: MCC Components
+props:
+  type: object
+  properties:
+    heading:
+      type: string
+      title: Group name
+      default: ''
+      examples:
+        - 'Deacons'
+    heading_id:
+      type: string
+      title: Heading id
+      description: 'Ties the section to its heading for screen readers.'
+      default: ''
+      examples:
+        - 'group-deacons'
+    count_label:
+      type: string
+      title: Headcount
+      default: ''
+      examples:
+        - '6 people'
+    heading_level:
+      type: string
+      title: Heading level
+      enum:
+        - h2
+        - h3
+      default: h2
+slots:
+  description:
+    title: Explainer
+    description: 'The term description — what this group actually does.'
+  cards:
+    title: Person cards
+    description: 'The embedded mcc_leadership view for this group.'
+  aside:
+    title: Header aside
+    description: 'Optional right-hand slot in the section header, e.g. a "See everyone" link.'

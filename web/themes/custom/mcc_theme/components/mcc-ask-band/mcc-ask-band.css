@@ -1,0 +1,65 @@
+.mcc-ask-band {
+  background: var(--terracotta-900);
+  color: var(--text-on-inverse);
+  padding: var(--space-16) var(--space-6);
+}
+
+.mcc-ask-band__inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-10);
+  flex-wrap: wrap;
+  max-width: var(--container-max);
+  margin: 0 auto;
+}
+
+.mcc-ask-band__text {
+  max-width: 620px;
+}
+
+.mcc-ask-band__heading {
+  margin: 0 0 10px;
+  font-family: var(--font-display);
+  font-weight: var(--fw-regular);
+  font-size: 30px;
+  line-height: 1.2;
+  color: inherit;
+}
+
+.mcc-ask-band__body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  opacity: 0.9;
+}
+
+.mcc-ask-band__actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.mcc-ask-band__phone {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 15px;
+  opacity: 0.85;
+}
+
+.mcc-ask-band__phone a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+@media (max-width: 760px) {
+  .mcc-ask-band {
+    padding: var(--space-12) var(--space-6);
+  }
+
+  .mcc-ask-band__heading {
+    font-size: 26px;
+  }
+}

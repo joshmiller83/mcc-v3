@@ -1,0 +1,86 @@
+/**
+ * A leadership group: section header, then a grid of person cards.
+ *
+ * Four across on a desktop, stepping down to one on a phone. The grid is
+ * declared on the wrapper rather than on the view's own markup so that the
+ * embedded view stays a plain list of cards.
+ */
+
+.mcc-people-grid__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--space-8);
+  flex-wrap: wrap;
+  padding-bottom: var(--space-5);
+  margin-bottom: var(--space-8);
+  border-bottom: 1px solid var(--border-default);
+}
+
+.mcc-people-grid__heading {
+  margin: 0 0 8px;
+  font-family: var(--font-display);
+  font-weight: var(--fw-regular);
+  font-size: 30px;
+  line-height: 1.2;
+  color: var(--text-body);
+}
+
+.mcc-people-grid__description {
+  max-width: 620px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-muted);
+  text-wrap: pretty;
+}
+
+.mcc-people-grid__description :is(p, ul, ol) {
+  margin: 0;
+}
+
+.mcc-people-grid__count {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--text-faint);
+  white-space: nowrap;
+}
+
+.mcc-people-grid__aside {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: var(--fw-bold);
+}
+
+.mcc-people-grid__cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-8);
+}
+
+@media (max-width: 1100px) {
+  .mcc-people-grid__cards {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 760px) {
+  .mcc-people-grid__cards {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-5);
+  }
+
+  .mcc-people-grid__heading {
+    font-size: 26px;
+  }
+}
+
+@media (max-width: 480px) {
+  .mcc-people-grid__cards {
+    grid-template-columns: 1fr;
+  }
+}

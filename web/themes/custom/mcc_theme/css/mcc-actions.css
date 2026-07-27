@@ -1,0 +1,89 @@
+/**
+ * Buttons for the theme-owned pages.
+ *
+ * caresphere_theme's own `.button` is not reused here: its secondary variant is
+ * square-cornered and every variant carries a 4px bottom border, neither of
+ * which matches this design's flat 10px-radius buttons. Overriding `.button`
+ * globally would change every Canvas-built page on the site, so these are a
+ * separate, explicitly-named class instead. Canvas pages keep the base button.
+ */
+
+.mcc-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 22px;
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: var(--fw-bold);
+  line-height: 1.2;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard);
+}
+
+.mcc-button:hover,
+.mcc-button:focus {
+  text-decoration: none;
+}
+
+.mcc-button:focus-visible {
+  outline: 2px solid var(--color-secondary);
+  outline-offset: 2px;
+}
+
+.mcc-button--primary {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--text-on-primary);
+}
+
+.mcc-button--primary:hover {
+  background: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
+  color: var(--text-on-primary);
+}
+
+.mcc-button--outline {
+  background: transparent;
+  border-color: var(--border-strong);
+  color: var(--text-body);
+}
+
+.mcc-button--outline:hover {
+  background: var(--neutral-50);
+  color: var(--text-body);
+}
+
+/* On the terracotta band, where the page surface is dark. */
+.mcc-button--on-inverse {
+  background: var(--surface-page);
+  border-color: var(--surface-page);
+  color: var(--walnut-900);
+}
+
+.mcc-button--on-inverse:hover {
+  background: var(--white-warm);
+  border-color: var(--white-warm);
+  color: var(--walnut-900);
+}
+
+/* A plain text link that reads as an action — "See everyone →". */
+.mcc-actionlink {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: var(--fw-bold);
+  color: var(--text-link);
+  text-decoration: none;
+}
+
+.mcc-actionlink:hover {
+  color: var(--text-link-hover);
+  text-decoration: underline;
+}

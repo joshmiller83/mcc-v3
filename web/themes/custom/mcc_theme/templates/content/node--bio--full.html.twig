@@ -1,0 +1,146 @@
+{#
+/**
+ * @file
+ * A single person's page.
+ *
+ * Built on the assumption that most of these pages have no biography — three
+ * people in twenty have written one. What carries the rest is the group's
+ * explainer, the "reach out about" topics, and a way to send a message, none
+ * of which depend on the person having written anything. Every section is
+ * wrapped in its own emptiness check so a sparse record still reads as a
+ * finished page rather than a run of empty headings.
+ *
+ * `mcc_bio` is built by _mcc_theme_bio_context() in mcc_theme.theme. Personal
+ * phone numbers and email addresses appear only where the person has agreed to
+ * publish them — see _mcc_theme_bio_contact().
+ */
+#}
+{% set bio = mcc_bio %}
+{% set photo = content.field_bio_pic|render|trim is not empty ? content.field_bio_pic : null %}
+
+<article{{ attributes.addClass('mcc-bio') }}>
+
+  <div class="mcc-bio__breadcrumb-strip">
+    <nav class="mcc-bio__breadcrumb" aria-label="{{ 'Breadcrumb'|t }}">
+      <ol>
+        {% for crumb in bio.breadcrumb %}
+          <li>
+            {% if crumb.url %}
+              <a href="{{ crumb.url }}">{{ crumb.label }}</a>
+            {% else %}
+              <span aria-current="page">{{ crumb.label }}</span>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ol>
+    </nav>
+  </div>
+
+  <div class="mcc-bio__layout">
+
+    <aside class="mcc-bio__rail">
+      <div class="mcc-bio__portrait">
+        {% if photo %}
+          {{ photo }}
+        {% else %}
+          {% include 'mcc_theme:mcc-monogram' with { initials: bio.initials, size: 'detail' } only %}
+        {% endif %}
+      </div>
+
+      {% if bio.groups %}
+        <div class="mcc-bio__serves">
+          <p class="mcc-bio__eyebrow mcc-bio__eyebrow--muted">{{ 'Serves as'|t }}</p>
+          <ul class="mcc-bio__serves-list">
+            {% for group in bio.groups %}
+              <li>
+                <a href="{{ group.url }}" class="mcc-bio__serves-group">{{ group.label }}</a>
+                {% if group.note %}
+                  <span class="mcc-bio__serves-note">{{ group.note }}</span>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+      <a href="{{ bio.listing_url }}" class="mcc-actionlink">
+        <span aria-hidden="true">&larr;</span> {{ 'All leadership'|t }}
+      </a>
+    </aside>
+
+    <div class="mcc-bio__main">
+      {% if bio.primary.singular %}
+        <p class="mcc-bio__eyebrow">{{ bio.primary.singular }}</p>
+      {% endif %}
+
+      <h1 class="mcc-bio__name">{{ node.label }}</h1>
+
+      {% if bio.role %}
+        <p class="mcc-bio__role">{{ bio.role }}</p>
+      {% endif %}
+
+      {% if bio.topics %}
+        <section class="mcc-bio__section">
+          <h2 class="mcc-bio__eyebrow">{{ 'Reach out about'|t }}</h2>
+          <ul class="mcc-bio__topics">
+            {% for topic in bio.topics %}
+              <li class="mcc-bio__topic">{{ topic }}</li>
+            {% endfor %}
+          </ul>
+        </section>
+      {% endif %}
+
+      {% if bio.has_bio %}
+        <section class="mcc-bio__section">
+          <h2 class="mcc-bio__eyebrow">{{ 'About @name'|t({'@name': bio.first_name}) }}</h2>
+          <div class="mcc-bio__prose">{{ content.body }}</div>
+        </section>
+      {% endif %}
+
+      {% if bio.primary.explainer %}
+        <section class="mcc-bio__section">
+          <h2 class="mcc-bio__eyebrow">{{ bio.primary.explainer_heading }}</h2>
+          <div class="mcc-bio__prose">{{ bio.primary.explainer }}</div>
+        </section>
+      {% endif %}
+
+      <section class="mcc-bio__section" id="get-in-touch">
+        <h2 class="mcc-bio__eyebrow">{{ 'Get in touch'|t }}</h2>
+
+        {% if bio.contact %}
+          <ul class="mcc-bio__contact-direct">
+            {% for line in bio.contact %}
+              <li><a href="{{ line.url }}">{{ line.label }}</a></li>
+            {% endfor %}
+          </ul>
+        {% elseif bio.contact_form %}
+          <div class="mcc-bio__contact-form">
+            <p class="mcc-bio__contact-note">
+              {{ 'Messages go to the church office and are passed straight to @name. We don\'t publish personal phone numbers or email addresses.'|t({'@name': bio.first_name}) }}
+            </p>
+            {{ bio.contact_form }}
+            <p class="mcc-bio__contact-fallback">
+              {{ 'Or call the office at'|t }}
+              <a href="{{ bio.office_phone_url }}">{{ bio.office_phone }}</a>
+            </p>
+          </div>
+        {% endif %}
+      </section>
+
+      {% if content.field_attachments|render|trim is not empty %}
+        <section class="mcc-bio__section">
+          <h2 class="mcc-bio__eyebrow">{{ 'Documents'|t }}</h2>
+          <div class="mcc-bio__attachments">{{ content.field_attachments }}</div>
+        </section>
+      {% endif %}
+    </div>
+  </div>
+
+  {# Already an mcc-people-grid component, heading and cards in place. #}
+  {% if bio.related %}
+    <section class="mcc-bio__related">
+      <div class="mcc-bio__related-inner">{{ bio.related }}</div>
+    </section>
+  {% endif %}
+
+</article>

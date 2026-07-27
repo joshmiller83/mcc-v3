@@ -1,0 +1,110 @@
+/**
+ * Person card.
+ *
+ * Geometry is deliberately the same as mcc-event-card's: --surface-card,
+ * a --border-default hairline, --radius-md, and a lift to --shadow-md on
+ * hover. The portrait well is a 3:4 box because the migrated focal points sit
+ * slightly above centre, which a 3:4 crop flatters and a 1:1 crop clips.
+ */
+
+.mcc-person-card {
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition:
+    box-shadow var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard);
+}
+
+.mcc-person-card:hover,
+.mcc-person-card:focus-within {
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-strong);
+}
+
+.mcc-person-card__link {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  color: inherit;
+  text-decoration: none;
+}
+
+.mcc-person-card__link:hover,
+.mcc-person-card__link:focus {
+  color: inherit;
+  text-decoration: none;
+}
+
+.mcc-person-card__link:focus-visible {
+  outline: 2px solid var(--color-secondary);
+  outline-offset: -2px;
+}
+
+.mcc-person-card__photo {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  background: var(--color-primary-subtle);
+  overflow: hidden;
+}
+
+/* The media entity arrives wrapped in several divs, but they are all static,
+   so the absolutely-positioned image still resolves against this well. Do not
+   flatten them with `display: contents` — that also flattens the media label's
+   `.visually-hidden` wrapper, and the word "Image" appears on every card. */
+.mcc-person-card__photo img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mcc-person-card__body {
+  padding: var(--space-5);
+}
+
+.mcc-person-card__name {
+  margin: 0 0 6px;
+  font-family: var(--font-display);
+  font-weight: var(--fw-regular);
+  font-size: 20px;
+  line-height: 1.2;
+  color: var(--text-body);
+}
+
+.mcc-person-card__role {
+  min-height: 20px;
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
+.mcc-person-card__also {
+  margin: 10px 0 0;
+  font-family: var(--font-body);
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--text-faint);
+}
+
+.mcc-person-card__more {
+  margin: 14px 0 0;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: var(--fw-bold);
+  color: var(--text-link);
+}
+
+.mcc-person-card:hover .mcc-person-card__more {
+  color: var(--text-link-hover);
+}
+
+@media (max-width: 480px) {
+  .mcc-person-card__body {
+    padding: var(--space-4);
+  }
+}

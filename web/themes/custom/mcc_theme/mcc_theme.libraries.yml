@@ -7,4 +7,7 @@ global-styling:
       css/tokens/spacing.css: {}
       css/tokens/accents.css: {}
       css/global-overrides.css: {}
+      css/mcc-actions.css: {}
       css/mcc-event-detail.css: {}
+      css/mcc-leadership.css: {}
+      css/mcc-bio-detail.css: {}

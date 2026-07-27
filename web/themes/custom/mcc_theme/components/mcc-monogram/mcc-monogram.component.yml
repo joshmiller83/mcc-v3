@@ -1,0 +1,29 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Monogram
+description: >
+  Stands in for a missing portrait: the person's initials in the display face,
+  on the same pale green well a real photo would sit in.
+
+  Deliberately not a silhouette icon. On a page of nineteen real faces a generic
+  person glyph reads as a broken image, whereas initials read as a person whose
+  photo simply has not been taken yet.
+group: MCC Components
+props:
+  type: object
+  required:
+    - initials
+  properties:
+    initials:
+      type: string
+      title: Initials
+      examples:
+        - 'BH'
+    size:
+      type: string
+      title: Size
+      description: 'Matches the well it fills: a card, the featured card, or the detail page rail.'
+      enum:
+        - card
+        - feature
+        - detail
+      default: card

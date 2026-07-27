@@ -1,0 +1,99 @@
+uuid: 1ebcb52c-35bc-436a-8e9c-693d4949c9a6
+langcode: en
+status: true
+dependencies:
+  theme:
+    - mcc_theme
+active_version: ef3f49e5d1a09207
+versioned_properties:
+  active:
+    settings:
+      prop_field_definitions:
+        eyebrow:
+          required: false
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value: null
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+        name:
+          required: true
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value:
+            -
+              value: 'Rod Nielsen'
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+        url:
+          required: true
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value:
+            -
+              value: /rod-nielsen
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+        role:
+          required: false
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value: null
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+        initials:
+          required: false
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value: null
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+        primary_label:
+          required: false
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value:
+            -
+              value: "Read Rod's story"
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+        contact_url:
+          required: false
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value: null
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+    fallback_metadata:
+      slot_definitions:
+        photo:
+          title: Portrait
+        summary:
+          title: Summary
+          description: 'The biography, or the group explainer when there is none.'
+label: 'Featured Person'
+id: sdc.mcc_theme.mcc-person-feature
+provider: mcc_theme
+source: sdc
+source_local_id: 'mcc_theme:mcc-person-feature'

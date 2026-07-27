@@ -1,0 +1,426 @@
+/**
+ * Bio detail page (node--bio--full.html.twig).
+ *
+ * A sticky portrait-and-groups rail beside a single column of stacked
+ * sections. The sections are separated by hairlines rather than boxed, so that
+ * a page with two of them and a page with five look like the same page — which
+ * matters here, because most people have no biography and no documents.
+ */
+
+.mcc-bio {
+  background: var(--surface-page);
+}
+
+/* -- Breadcrumb strip --------------------------------------------------- */
+
+.mcc-bio__breadcrumb-strip {
+  background: var(--neutral-50);
+  border-bottom: 1px solid var(--border-default);
+  padding: var(--space-5) var(--space-6);
+}
+
+.mcc-bio__breadcrumb {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.mcc-bio__breadcrumb ol {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mcc-bio__breadcrumb li + li::before {
+  content: '/';
+  margin-right: 8px;
+  color: var(--text-faint);
+}
+
+.mcc-bio__breadcrumb a {
+  color: var(--text-muted);
+  text-decoration: none;
+}
+
+.mcc-bio__breadcrumb a:hover {
+  color: var(--text-link);
+  text-decoration: underline;
+}
+
+.mcc-bio__breadcrumb [aria-current='page'] {
+  color: var(--text-body);
+  font-weight: var(--fw-medium);
+}
+
+/* -- Layout ------------------------------------------------------------- */
+
+.mcc-bio__layout {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: var(--space-16);
+  align-items: start;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: var(--space-12) var(--space-6) var(--space-20);
+}
+
+.mcc-bio__rail {
+  position: sticky;
+  top: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.mcc-bio__main {
+  max-width: 680px;
+}
+
+/* -- Rail --------------------------------------------------------------- */
+
+.mcc-bio__portrait {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--color-primary-subtle);
+}
+
+/* See mcc-person-card.css: no `display: contents` here, it would unhide the
+   media field's visually-hidden label. */
+.mcc-bio__portrait img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mcc-bio__serves {
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: var(--space-6);
+}
+
+.mcc-bio__serves-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mcc-bio__serves-group {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: var(--fw-bold);
+  color: var(--text-link);
+  text-decoration: none;
+}
+
+.mcc-bio__serves-group:hover {
+  color: var(--text-link-hover);
+  text-decoration: underline;
+}
+
+.mcc-bio__serves-note {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--text-muted);
+}
+
+/* -- Headings and sections ---------------------------------------------- */
+
+.mcc-bio__eyebrow {
+  margin: 0 0 14px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-secondary);
+}
+
+.mcc-bio__eyebrow--muted {
+  color: var(--text-muted);
+}
+
+.mcc-bio__name {
+  margin: 0 0 14px;
+  font-family: var(--font-display);
+  font-weight: var(--fw-regular);
+  font-size: 52px;
+  line-height: 1.08;
+  color: var(--text-body);
+}
+
+.mcc-bio__role {
+  margin: 0 0 var(--space-10);
+  font-family: var(--font-body);
+  font-size: 20px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.mcc-bio__section {
+  padding: var(--space-8) 0;
+  border-top: 1px solid var(--border-default);
+}
+
+.mcc-bio__section .mcc-bio__eyebrow {
+  margin-bottom: 16px;
+}
+
+.mcc-bio__prose {
+  font-family: var(--font-body);
+  font-size: 18px;
+  line-height: 1.7;
+  color: var(--text-body);
+  text-wrap: pretty;
+}
+
+.mcc-bio__prose :is(p, ul, ol) {
+  margin: 0 0 18px;
+}
+
+.mcc-bio__prose > :last-child,
+.mcc-bio__prose :is(p, ul, ol):last-child {
+  margin-bottom: 0;
+}
+
+/* -- Reach out about ---------------------------------------------------- */
+
+.mcc-bio__topics {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mcc-bio__topic {
+  padding: 8px 16px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.3;
+  color: var(--text-body);
+  background: var(--surface-card);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-pill);
+}
+
+/* -- Get in touch ------------------------------------------------------- */
+
+.mcc-bio__contact-direct {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-body);
+  font-size: 18px;
+  font-weight: var(--fw-bold);
+}
+
+.mcc-bio__contact-form {
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: var(--space-8);
+}
+
+.mcc-bio__contact-note {
+  margin: 0 0 22px;
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--text-muted);
+  text-wrap: pretty;
+}
+
+.mcc-bio__contact-fallback {
+  margin: 16px 0 0;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+/* The office form uses the theme's own field and button shapes rather than
+   webform's defaults, so it matches the rest of the page. */
+.mcc-bio__contact-form .webform-submission-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mcc-bio__contact-form .form-item {
+  margin: 0;
+}
+
+.mcc-bio__contact-form label {
+  display: block;
+  margin-bottom: 6px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: var(--fw-bold);
+  color: var(--text-body);
+}
+
+.mcc-bio__contact-form :is(input[type='text'], input[type='email'], textarea) {
+  width: 100%;
+  padding: 10px 12px;
+  font-family: var(--font-body);
+  font-size: 16px;
+  color: var(--text-body);
+  background: var(--surface-page);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+}
+
+.mcc-bio__contact-form :is(input, textarea):focus-visible {
+  outline: 2px solid var(--color-secondary);
+  outline-offset: 1px;
+}
+
+.mcc-bio__contact-form textarea {
+  resize: vertical;
+}
+
+.mcc-bio__contact-form .description {
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.mcc-bio__contact-form :is(input[type='submit'], button[type='submit']) {
+  align-self: flex-start;
+  padding: 11px 22px;
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: var(--fw-bold);
+  color: var(--text-on-primary);
+  background: var(--color-primary);
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+
+.mcc-bio__contact-form :is(input[type='submit'], button[type='submit']):hover {
+  background: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
+}
+
+/* -- Attachments -------------------------------------------------------- */
+
+.mcc-bio__attachments {
+  font-family: var(--font-body);
+  font-size: 16px;
+}
+
+.mcc-bio__attachments .field__item + .field__item {
+  margin-top: 8px;
+}
+
+/* -- Related band ------------------------------------------------------- */
+
+.mcc-bio__related {
+  background: var(--neutral-50);
+  border-top: 1px solid var(--border-default);
+  padding: var(--space-16) var(--space-6);
+}
+
+.mcc-bio__related-inner {
+  max-width: var(--container-max);
+  margin: 0 auto;
+}
+
+/* The band's heading sits a step below the page's own h1. */
+.mcc-bio__related .mcc-people-grid__heading {
+  font-size: 28px;
+}
+
+/* -- Responsive --------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  .mcc-bio__layout {
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+    padding-top: var(--space-8);
+  }
+
+  /* Un-stick the rail: once it is above the content rather than beside it,
+     sticking would pin the portrait over the text. */
+  .mcc-bio__rail {
+    position: static;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: var(--space-6);
+  }
+
+  .mcc-bio__portrait {
+    width: 220px;
+    flex: none;
+  }
+
+  .mcc-bio__serves {
+    flex: 1;
+    min-width: 240px;
+  }
+
+  .mcc-bio__name {
+    font-size: 40px;
+  }
+
+  .mcc-bio__role {
+    font-size: 18px;
+    margin-bottom: var(--space-6);
+  }
+}
+
+@media (max-width: 560px) {
+  .mcc-bio__layout {
+    padding-inline: var(--space-5);
+  }
+
+  .mcc-bio__rail {
+    flex-direction: column;
+  }
+
+  .mcc-bio__portrait {
+    width: 100%;
+    max-width: 260px;
+  }
+
+  .mcc-bio__name {
+    font-size: 32px;
+  }
+
+  .mcc-bio__prose {
+    font-size: 17px;
+  }
+
+  .mcc-bio__contact-form {
+    padding: var(--space-5);
+  }
+
+  .mcc-bio__related {
+    padding: var(--space-10) var(--space-5);
+  }
+}

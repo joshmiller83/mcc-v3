@@ -1,0 +1,57 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Person Card
+description: >
+  One person in the leadership listing, and in the "others in this group" band
+  at the foot of a bio page. A sibling of mcc-event-card — same surface, same
+  hairline, same radius — with a 3:4 portrait well in place of the date badge.
+
+  The whole card is the link, so the hit target is the card rather than the
+  name. The "Read bio" line only appears for the few people who have written
+  one; it is what tells a visitor which cards lead somewhere richer than a
+  photo and a role.
+group: MCC Components
+props:
+  type: object
+  required:
+    - name
+    - url
+  properties:
+    name:
+      type: string
+      title: Name
+      examples:
+        - 'Brian Hoffman'
+    url:
+      type: string
+      title: Link to the bio page
+      examples:
+        - '/brian-hoffman'
+    role:
+      type: string
+      title: Role
+      description: 'Kept in the markup even when empty so cards in a row stay aligned.'
+      default: ''
+      examples:
+        - 'Emergency Response Team'
+    initials:
+      type: string
+      title: Initials
+      description: 'Shown in place of a missing portrait.'
+      default: ''
+      examples:
+        - 'BH'
+    also_label:
+      type: string
+      title: Other groups
+      description: 'Set when this person also serves in a group other than the section they are being listed under.'
+      default: ''
+      examples:
+        - 'Also serves as Trustee'
+    has_bio:
+      type: boolean
+      title: Has a written biography
+      default: false
+slots:
+  photo:
+    title: Portrait
+    description: 'field_bio_pic rendered through a 3:4 focal-point style. Leave empty to fall back to the monogram.'

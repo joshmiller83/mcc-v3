@@ -1,0 +1,5 @@
+{#
+  Aria-hidden: the initials are decoration standing in for a photo, and the
+  person's name is always rendered next to them in real text.
+#}
+<span{{ attributes.addClass('mcc-monogram', 'mcc-monogram--' ~ (size|default('card'))) }} aria-hidden="true">{{ initials }}</span>
