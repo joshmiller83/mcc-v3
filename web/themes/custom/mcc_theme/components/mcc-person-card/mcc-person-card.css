@@ -42,17 +42,34 @@
   outline-offset: -2px;
 }
 
+/**
+ * The 3:4 portrait well.
+ *
+ * Height comes from padding, not `aspect-ratio`. The well is a column flex
+ * item (see .mcc-person-card__link) whose only content is taken out of flow,
+ * and in that combination some Chrome versions resolve the aspect-ratio height
+ * to zero — the image reports a rendered size of "338 x 0" and the card shows
+ * an empty well. A percentage padding is resolved against the width in every
+ * engine and every layout context, so it cannot collapse. 133.3333% is 4/3.
+ */
 .mcc-person-card__photo {
   position: relative;
-  aspect-ratio: 3 / 4;
+  padding-top: 133.3333%;
   background: var(--color-primary-subtle);
   overflow: hidden;
 }
 
-/* The media entity arrives wrapped in several divs, but they are all static,
-   so the absolutely-positioned image still resolves against this well. Do not
-   flatten them with `display: contents` — that also flattens the media label's
-   `.visually-hidden` wrapper, and the word "Image" appears on every card. */
+/* Everything in the well fills it, whether that is the media entity's wrapper
+   or the monogram. The media arrives wrapped in several static divs, so
+   positioning the outer one gives the image inside a box to resolve against.
+   Do not flatten the wrappers with `display: contents` — that also flattens
+   the media label's `.visually-hidden` wrapper and the word "Image" shows up
+   on every card. */
+.mcc-person-card__photo > * {
+  position: absolute;
+  inset: 0;
+}
+
 .mcc-person-card__photo img {
   position: absolute;
   inset: 0;

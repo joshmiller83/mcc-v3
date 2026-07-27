@@ -84,13 +84,21 @@
 
 /* -- Rail --------------------------------------------------------------- */
 
+/* Height from padding rather than `aspect-ratio` — see mcc-person-card.css for
+   why: this well is a column flex item holding only out-of-flow content, which
+   some Chrome versions collapse to zero height. 133.3333% is 4/3. */
 .mcc-bio__portrait {
   position: relative;
-  aspect-ratio: 3 / 4;
+  padding-top: 133.3333%;
   border: 1px solid var(--border-default);
   border-radius: var(--radius-md);
   overflow: hidden;
   background: var(--color-primary-subtle);
+}
+
+.mcc-bio__portrait > * {
+  position: absolute;
+  inset: 0;
 }
 
 /* See mcc-person-card.css: no `display: contents` here, it would unhide the
