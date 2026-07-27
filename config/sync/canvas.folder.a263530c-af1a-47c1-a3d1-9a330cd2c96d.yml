@@ -3,9 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - canvas.component.sdc.caresphere_theme.content-cards
     - canvas.component.sdc.caresphere_theme.hero-card
-    - canvas.component.sdc.caresphere_theme.newsletter
     - canvas.component.sdc.caresphere_theme.pillar-cards
     - canvas.component.sdc.caresphere_theme.section
     - canvas.component.sdc.caresphere_theme.section-grid
@@ -17,9 +15,7 @@ name: Section
 configEntityTypeId: component
 weight: 0
 items:
-  - sdc.caresphere_theme.content-cards
   - sdc.caresphere_theme.hero-card
-  - sdc.caresphere_theme.newsletter
   - sdc.caresphere_theme.pillar-cards
   - sdc.caresphere_theme.section
   - sdc.caresphere_theme.section-grid
