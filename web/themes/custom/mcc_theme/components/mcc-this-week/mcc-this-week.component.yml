@@ -1,0 +1,58 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: 'This week at MCC'
+description: >
+  The current Sunday-to-Saturday week, rendered with the month grid's own week
+  row so the front page and /calendar can't disagree about what is on. Today's
+  column carries the same tint and "Today" pill it does on the calendar.
+
+  Props come from CalendarMonth::week(); this component only decides how the
+  week is framed — the weekday headings above it, and the swap to the agenda
+  list on screens too narrow for seven columns.
+group: MCC Components
+props:
+  type: object
+  required:
+    - week
+    - weekdays
+  properties:
+    week:
+      type: object
+      title: Week
+      description: 'One week row, as `mcc-calendar-week` takes it.'
+      properties:
+        days: { type: array }
+        bands: { type: array }
+        lane_count: { type: integer }
+        singles_row: { type: integer }
+    weekdays:
+      type: array
+      title: Weekday headings
+      items:
+        type: object
+        properties:
+          long: { type: string }
+          short: { type: string }
+    agenda:
+      type: array
+      title: Agenda days
+      description: 'The same week as a flat day list, used on narrow screens.'
+      items:
+        type: object
+    legend:
+      type: array
+      title: Category legend
+      description: 'Categories on this week. An empty list hides the legend.'
+      items:
+        type: object
+    range_label:
+      type: string
+      title: Week range
+      default: ''
+      examples:
+        - 'July 26 – August 1'
+    calendar_url:
+      type: string
+      title: Link to the full calendar
+      default: ''
+      examples:
+        - '/calendar'

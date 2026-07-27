@@ -1,0 +1,11 @@
+uuid: 62473fbc-1506-42ce-ae03-fa27fc3245a0
+langcode: en
+status: true
+dependencies:
+  config:
+    - canvas.component.block.mcc_this_week
+name: MCC
+configEntityTypeId: component
+weight: 0
+items:
+  - block.mcc_this_week

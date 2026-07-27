@@ -1,0 +1,22 @@
+uuid: 439e9957-72dc-40f5-a73a-09f9b8b67244
+langcode: en
+status: true
+dependencies:
+  module:
+    - mcc_core
+active_version: fca88076705a7791
+versioned_properties:
+  active:
+    settings:
+      default_settings:
+        id: mcc_this_week
+        label: 'This week at MCC'
+        label_display: '0'
+        provider: mcc_core
+    fallback_metadata:
+      slot_definitions: null
+label: 'This week at MCC'
+id: block.mcc_this_week
+provider: mcc_core
+source: block
+source_local_id: mcc_this_week

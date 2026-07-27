@@ -159,6 +159,101 @@ class CalendarMonth {
   }
 
   /**
+   * Builds a single Sunday-to-Saturday week.
+   *
+   * The front page's "This week at MCC" panel is the month grid's own week row,
+   * so it is built from the same collect / segment / lane-pack steps rather
+   * than a parallel query. Recolour a Mission Category and the front page moves
+   * with /calendar in the same breath; derive multi-day bands differently and
+   * both change together or neither does.
+   *
+   * @param \Drupal\Core\Datetime\DrupalDateTime|null $date
+   *   Any day in the week wanted. Defaults to today.
+   * @param array $options
+   *   - busy_threshold: as build().
+   *
+   * @return array
+   *   Keys: week (the `mcc-calendar-week` prop), agenda, weekdays, legend,
+   *   range_label, start, end, has_events, cache_tags.
+   */
+  public function week(?DrupalDateTime $date = NULL, array $options = []): array {
+    $options += ['busy_threshold' => 4];
+    $tz = $this->eventContext->timezone();
+
+    $date = $date ? clone $date : new DrupalDateTime('now', $tz);
+    $start = (clone $date)->setTime(0, 0, 0);
+    // Columns are Sunday-first, matching the month grid.
+    $start->modify('-' . (int) $start->format('w') . ' days');
+    $end = (clone $start)->modify('+6 days')->setTime(23, 59, 59);
+
+    $week_start = $this->dayIndex($start->format('Y-m-d'));
+    $collected = $this->collect($start, $end, $week_start, $week_start + 6, $tz);
+
+    $bands = $this->packLanes($this->segmentsForWeek($collected['runs'], $week_start));
+    $lane_count = $bands ? max(array_column($bands, 'lane')) + 1 : 0;
+
+    $today = (new DrupalDateTime('now', $tz))->format('Y-m-d');
+    $days = [];
+    for ($i = 0; $i < 7; $i++) {
+      $index = $week_start + $i;
+      $ymd = $this->dateFromIndex($index);
+      $day = new DrupalDateTime($ymd . ' 12:00:00', $tz);
+      $events = $collected['singles'][$index] ?? [];
+
+      $days[] = [
+        'column' => $i + 1,
+        'day' => (int) $day->format('j'),
+        'date' => $ymd,
+        'label' => $day->format('l, F j'),
+        // Every day of the week is the subject here. A week straddling a month
+        // boundary must not grey out half of itself the way the month grid
+        // greys the days either side of it.
+        'in_month' => TRUE,
+        'is_today' => $ymd === $today,
+        'blank' => FALSE,
+        'events' => array_values($events),
+        'count' => count($events),
+        'groups' => $this->groupByTime($events),
+        'is_busy' => count($events) >= $options['busy_threshold'],
+        // "Standing" is a statement about a whole month, so a single week has
+        // no basis on which to claim it.
+        'standing_count' => 0,
+      ];
+    }
+
+    $week = [
+      'days' => $days,
+      'bands' => $bands,
+      'lane_count' => $lane_count,
+      'singles_row' => $lane_count + 2,
+    ];
+
+    $legend = $collected['legend'];
+    uasort($legend, fn($a, $b) => [$a['weight'], $a['label']] <=> [$b['weight'], $b['label']]);
+
+    return [
+      'week' => $week,
+      'agenda' => $this->agenda(['weeks' => [$week]]),
+      'weekdays' => $this->weekdays(),
+      'legend' => array_values($legend),
+      'range_label' => $this->rangeLabel($start, $end),
+      'start' => $start->format('Y-m-d'),
+      'end' => $end->format('Y-m-d'),
+      'has_events' => $collected['singles'] !== [] || $collected['runs'] !== [],
+      'cache_tags' => $collected['cache_tags'],
+    ];
+  }
+
+  /**
+   * "July 26 – August 1" — the month is written once when it doesn't change.
+   */
+  protected function rangeLabel(DrupalDateTime $start, DrupalDateTime $end): string {
+    return $start->format('F j') . ' – ' . $end->format(
+      $start->format('F') === $end->format('F') ? 'j' : 'F j'
+    );
+  }
+
+  /**
    * Weekday column headings, long and abbreviated.
    */
   public function weekdays(): array {

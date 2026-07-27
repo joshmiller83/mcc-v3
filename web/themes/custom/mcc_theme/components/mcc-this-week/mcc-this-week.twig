@@ -1,0 +1,55 @@
+{#
+  Deliberately thin: the week row, the chips, the bands and the agenda are all
+  the calendar's own components, included unchanged. Everything this template
+  adds is framing.
+#}
+{# `custom-container` is the base theme's own width/gutter primitive — the same
+   one the section headings above and below this panel sit in, so the panel
+   lines up with them at every breakpoint instead of guessing at a width. #}
+<div{{ attributes.addClass('mcc-thisweek', 'custom-container') }}>
+
+  {% if range_label or calendar_url %}
+    <div class="mcc-thisweek__bar">
+      {% if range_label %}
+        <p class="mcc-thisweek__range">{{ range_label }}</p>
+      {% endif %}
+      {% if calendar_url %}
+        <a class="mcc-thisweek__link" href="{{ calendar_url }}">
+          See the full calendar
+          <span class="mcc-thisweek__chevron" aria-hidden="true">&rsaquo;</span>
+        </a>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  <div class="mcc-thisweek__card">
+    <div class="mcc-thisweek__scroller">
+      <div class="mcc-thisweek__grid" role="table"
+           aria-label="Events for {{ range_label|default('this week') }}">
+        <div class="mcc-thisweek__weekdays" role="row">
+          {% for weekday in weekdays %}
+            <div class="mcc-thisweek__weekday" role="columnheader">
+              <abbr title="{{ weekday.long }}">{{ weekday.short }}</abbr>
+            </div>
+          {% endfor %}
+        </div>
+
+        {{ include('mcc_theme:mcc-calendar-week', { week: week, can_add: false }, with_context = false) }}
+      </div>
+    </div>
+  </div>
+
+  {# Below the grid's breakpoint, the same week one day at a time. #}
+  <div class="mcc-thisweek__agenda">
+    {{ include('mcc_theme:mcc-calendar-agenda', {
+      days: agenda|default([]),
+      month_label: 'this week',
+      can_add: false,
+    }, with_context = false) }}
+  </div>
+
+  {% if legend is not empty %}
+    {{ include('mcc_theme:mcc-calendar-legend', { items: legend, variant: 'screen' }, with_context = false) }}
+  {% endif %}
+
+</div>

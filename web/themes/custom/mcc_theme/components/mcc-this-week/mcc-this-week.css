@@ -1,0 +1,112 @@
+/**
+ * This week at MCC (front page).
+ *
+ * The grid card and weekday header mirror `mcc-calendar-month`'s rather than
+ * reusing its classes: this panel sits inside a page section with its own
+ * width, and one week doesn't need the month's 1180px minimum. The cells
+ * themselves are `mcc-calendar-week`'s, unchanged — only `--cal-cell-min` is
+ * retuned, because a single row can afford to be shorter than a six-row month.
+ */
+
+.mcc-thisweek {
+  --cal-cell-min: 132px;
+  --cal-list-pad: 0 6px 8px;
+  --thisweek-grid-min: 920px;
+
+  font-family: var(--font-body);
+  color: var(--text-body);
+}
+
+/* -- Header bar -------------------------------------------------------- */
+.mcc-thisweek__bar {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4, 1rem);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-3, 0.75rem);
+}
+
+.mcc-thisweek__range {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: var(--fw-bold);
+  font-size: 14px;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-secondary);
+}
+
+.mcc-thisweek__link {
+  font-weight: var(--fw-bold);
+  font-size: 15px;
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.mcc-thisweek__link:hover,
+.mcc-thisweek__link:focus-visible {
+  text-decoration: underline;
+}
+
+.mcc-thisweek__chevron {
+  display: inline-block;
+  margin-left: 4px;
+}
+
+/* -- Grid card --------------------------------------------------------- */
+.mcc-thisweek__card {
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+/* Scroll rather than squeeze, for the same reason the month does: narrower
+   than this and event titles start breaking mid-word. */
+.mcc-thisweek__scroller { overflow-x: auto; }
+.mcc-thisweek__grid { min-width: var(--thisweek-grid-min); }
+
+.mcc-thisweek__weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  background: var(--green-900);
+}
+
+.mcc-thisweek__weekday {
+  padding: 10px 6px;
+  text-align: center;
+  font-family: var(--font-body);
+  font-weight: var(--fw-bold);
+  font-size: 12px;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--text-on-inverse);
+}
+
+.mcc-thisweek__weekday abbr {
+  text-decoration: none;
+  border: 0;
+}
+
+/* The week row is the last thing in the card, so its cells' own bottom
+   hairline would double up with the card border. */
+.mcc-thisweek__grid .mcc-calweek__cell { border-bottom: 0; }
+.mcc-thisweek__grid .mcc-calweek__cell:last-of-type { border-right: 0; }
+
+.mcc-thisweek .mcc-callegend { margin-top: var(--space-5, 1.25rem); }
+
+/* -- Grid / agenda switch ---------------------------------------------- */
+/* 992px is where `custom-container` widens to 960px, the first step at which
+   the seven columns fit without the scroller. Below it the grid would always
+   be dragged sideways, so the agenda takes over instead. */
+.mcc-thisweek__agenda { display: none; }
+
+@media (max-width: 991px) {
+  .mcc-thisweek__card { display: none; }
+  .mcc-thisweek__agenda { display: block; }
+}
+
+@media print {
+  .mcc-thisweek { display: none; }
+}

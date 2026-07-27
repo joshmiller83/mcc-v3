@@ -63,6 +63,14 @@ Two behaviours worth knowing about:
 - **Nothing collapses.** There is no "+3 more" — a day shows every event it has, and the print sheet shrinks its type (server-side estimate, then a client-side fit loop) until the whole month fits on 8.5×11 without paginating or clipping.
 - **Multi-day events are derived, not declared.** An editor just enters the event on each day it happens. `CalendarMonth` collects the days a node claims, splits them into runs of consecutive dates, and renders any run of two or more as a band spanning those columns. A single occurrence long enough to cover several days produces the same band.
 
+### "This week at MCC" on the front page
+
+The front page panel is the calendar, not a summary of it. `CalendarMonth::week()` builds one Sunday-to-Saturday row through the same collect / segment / lane-pack steps `build()` uses, and the `mcc-this-week` component wraps `mcc-calendar-week` unchanged — so a recoloured category, a new marker shape or a differently-derived multi-day band lands on the front page and `/calendar` together. Today's column carries the same tint and "Today" pill it does on the calendar, and below 992px the panel swaps to the same agenda list.
+
+It is exposed as the **`mcc_this_week` block plugin**, which Drupal Canvas offers as a component. Placing it, moving it, or taking it off a page is an editor's job in the Canvas UI, so the block itself has no settings — a placement isn't a code change.
+
+Note that *placement* is content, not config: the front page is a `canvas_page` entity, so `config:export` won't carry the panel to another environment. The block and component deploy with the code; dropping it onto that environment's front page is a one-time edit in Canvas.
+
 ### Comparing against the design reference
 
 `scripts/calendar-compare.mjs` renders the design handoff (`calendar_design.zip`) and the live Drupal pages side by side in headless Chromium, and asserts that the print sheet is exactly one Letter page with nothing clipped.
