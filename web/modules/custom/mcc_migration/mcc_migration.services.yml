@@ -1,0 +1,20 @@
+services:
+  logger.channel.mcc_migration:
+    parent: logger.channel_base
+    arguments: ['mcc_migration']
+
+  mcc_migration.manualcrop_to_focal_point:
+    class: Drupal\mcc_migration\ManualCropToFocalPoint
+    arguments:
+      - '@database'
+      - '@entity_type.manager'
+      - '@file_system'
+      - '@focal_point.manager'
+      - '@logger.channel.mcc_migration'
+
+  mcc_migration.focal_point_subscriber:
+    class: Drupal\mcc_migration\EventSubscriber\FocalPointMigrateSubscriber
+    arguments:
+      - '@mcc_migration.manualcrop_to_focal_point'
+    tags:
+      - { name: event_subscriber }

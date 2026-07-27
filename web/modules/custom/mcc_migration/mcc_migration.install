@@ -1,0 +1,66 @@
+<?php
+
+/**
+ * @file
+ * Install and update hooks for MCC Migration.
+ */
+
+/**
+ * Makes crop entity URI lookups case-sensitive.
+ *
+ * Crop API resolves crops by file URI, and MySQL's default collation on that
+ * column is case-insensitive. The legacy D7 site has 28 groups of filenames
+ * that differ only in case (`featured/VBS.jpg` vs `featured/vbs.jpg`), so those
+ * images collapse onto a single crop entity: they overwrite each other's focal
+ * point, and which one wins at render time is undefined.
+ *
+ * A binary collation makes the column behave the way the Linux filesystem
+ * already does, giving each file its own crop.
+ *
+ * Both the data and revision tables are converted; the entity's own schema
+ * definition does not specify a collation, so Drupal will not revert this.
+ */
+function mcc_migration_ensure_crop_uri_case_sensitive(): array {
+  $database = \Drupal::database();
+  if ($database->driver() !== 'mysql') {
+    return [];
+  }
+
+  $converted = [];
+  foreach (['crop_field_data', 'crop_field_revision'] as $table) {
+    if (!$database->schema()->tableExists($table)) {
+      continue;
+    }
+
+    $collation = $database->query(
+      'SELECT collation_name FROM information_schema.columns WHERE table_schema = DATABASE() AND table_name = :table AND column_name = :column',
+      [':table' => $table, ':column' => 'uri']
+    )->fetchField();
+
+    if ($collation === 'utf8mb4_bin') {
+      continue;
+    }
+
+    $database->query("ALTER TABLE {$table} MODIFY uri VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL");
+    $converted[] = $table;
+  }
+
+  return $converted;
+}
+
+/**
+ * Implements hook_install().
+ */
+function mcc_migration_install() {
+  mcc_migration_ensure_crop_uri_case_sensitive();
+}
+
+/**
+ * Make crop URI lookups case-sensitive so case-variant filenames keep separate focal points.
+ */
+function mcc_migration_update_9001() {
+  $converted = mcc_migration_ensure_crop_uri_case_sensitive();
+  return $converted
+    ? 'Converted to a case-sensitive collation: ' . implode(', ', $converted)
+    : 'Crop URI columns already case-sensitive; nothing to do.';
+}

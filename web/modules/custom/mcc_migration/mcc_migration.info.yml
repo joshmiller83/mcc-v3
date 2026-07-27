@@ -7,3 +7,5 @@ dependencies:
   - drupal:migrate
   - drupal:migrate_drupal
   - migrate_plus:migrate_plus
+  - crop:crop
+  - focal_point:focal_point
