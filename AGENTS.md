@@ -32,6 +32,47 @@ Our site should have a clean, warm, and professional country-church aesthetic:
 - **Build the month grid with the `mcc_core.calendar_month` service.** Both controllers use it, so the screen and print views can't drift apart; multi-day bands are derived there from consecutive days rather than stored on the node. The front page's "This week at MCC" panel goes through the same service (`CalendarMonth::week()`) and renders the calendar's own `mcc-calendar-week` component — don't give it a second way to find or lay out events. A Views display can't produce that shape (positioned day columns, derived bands, lane packing), which is why the panel is a block plugin over the service rather than a view.
 - **Re-run `node scripts/calendar-compare.mjs` before committing.** The print sheet fitting on one page is a hard requirement, and it's easy to break from a distance (a base-theme `p { font-size }` rule was enough to do it once).
 
+## Information architecture, menus and URLs
+
+The site's IA is five flat nav items plus a Get Involved CTA: **I'm New · About · Ministries ·
+Sermons · Calendar**. Missions is *not* a peer of Ministries — missions is a ministry, so it
+lives at `/ministries/missions`. `CONTENT_LOG.md` records every content and structure change
+made outside of code, and is the first thing to read before re-running a migration.
+
+- **One primary menu: `main`.** `mcc_theme_preprocess_page()` reads it. There used to be a
+  second `header-nav` menu that only the theme read, so the menu an editor reaches first at
+  `/admin/structure/menu` did nothing to the page. Don't reintroduce a theme-private nav menu.
+- **Section landing pages are Canvas pages; listings are Views *blocks* embedded in them.** No
+  View owns a route. Canvas discovers `views_block:*` as components automatically —
+  `block.settings.views_block:*` carries `FullyValidatable` in core's schema, which is the gate
+  `BlockComponentDiscovery::checkRequirements()` enforces — so this needs no glue code.
+  Two deliberate exceptions: `/calendar` stays a controller (a Views display cannot produce the
+  month grid), and `/about/leadership` keeps its Views page display because it is a two-view
+  construction with custom templates and per-term render cache keys.
+- **Every bundle has its own pathauto pattern.** The old `menu_path` pattern
+  (`/[node:menu-link:parents:join-path]/[node:title]`) had *empty* selection criteria, so it
+  applied to every bundle and tied each node's URL to its menu placement — adding a menu link
+  silently rewrote aliases. It is deleted. Don't add a pattern without selection criteria.
+- **Setting a `path` field inserts a second alias; it does not update the existing one.** This
+  is true for both nodes and canvas pages, and it bites twice: `redirect.auto_redirect` hooks
+  `redirect_path_alias_update()`, which never fires on an insert, and the stale alias then
+  *shadows* any redirect you add by hand, because redirects are matched only after inbound path
+  processing has resolved the alias. Always delete the old alias first, then write the 301.
+  Pathauto's own `updateEntityAlias()` does update in place and does mint the redirect.
+- **Point redirects at `/node/N` or `/page/N`, never at an alias.** Drupal resolves the
+  canonical alias at request time, so they survive every future slug change.
+- **Canvas validates component inputs strictly.** `items_per_page` must be null or an integer;
+  the string `'none'` fails. `heading` is a rich-text prop needing
+  `['value' => …, 'format' => 'canvas_html_inline']`, not a bare string.
+
+Helper scripts, all idempotent and safe to re-run — which matters, because a migration
+re-import re-applies the flat `/[node:title]` pattern and undoes the slugs:
+
+- `scripts/ia-page-slugs.php` — IA slugs for the D7 utility pages, plus retirements.
+- `scripts/ia-landing-copy.php` / `scripts/ia-landing-links.php` — landing page copy and CTAs.
+- `scripts/canvas-realias.php` — move a Canvas page and 301 its old URL.
+- `scripts/canvas-swap-component.php` — swap a component in a Canvas page's tree.
+
 ## Leadership and bio pages
 
 `/who-we-are/our-leadership` and the `bio` full view are built from the *Leadership Structure* taxonomy — see the "Our Leadership and bio pages" section of `README.md`. When working on them:
