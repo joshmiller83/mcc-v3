@@ -1,0 +1,26 @@
+uuid: eaf141c6-a7e9-4874-a631-364d56b8b0a4
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.mcc_missions
+  module:
+    - views
+active_version: 726f9479462bc650
+versioned_properties:
+  active:
+    settings:
+      default_settings:
+        id: 'views_block:mcc_missions-block_1'
+        label: 'MCC Missions'
+        label_display: '0'
+        provider: views
+        views_label: ''
+        items_per_page: null
+    fallback_metadata:
+      slot_definitions: null
+label: 'MCC Missions'
+id: block.views_block.mcc_missions-block_1
+provider: views
+source: block
+source_local_id: 'views_block:mcc_missions-block_1'

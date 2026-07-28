@@ -8,4 +8,4 @@ description: 'Information about missions and missionaries.'
 help: null
 new_revision: true
 preview_mode: 1
-display_submitted: true
+display_submitted: false
