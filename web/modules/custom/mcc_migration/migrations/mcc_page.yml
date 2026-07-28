@@ -11,7 +11,23 @@ source:
   plugin: d7_node
   node_type: page
 process:
-  nid: nid
+  # D7 nids 8 (Youth), 11 (Worship Service) and 1099 (Youth) are type `page` in
+  # the source but functioned as ministries — D7's main menu had node/8 "Youth"
+  # as a top-level item and its sidebar had node/11 "Worship Service" as a
+  # section head. mcc_calendar_event also does a migration_lookup against
+  # mcc_ministry for them, which used to create ministry stubs at those nids and
+  # made this migration fail with a duplicate-primary-key error.
+  #
+  # 8 and 11 are imported as ministries by mcc_ministry_page instead. 1099 is an
+  # empty duplicate of 8 (NULL body in D7) and is dropped entirely.
+  nid:
+    plugin: skip_on_value
+    source: nid
+    method: row
+    value:
+      - 8
+      - 11
+      - 1099
   title: title
   uid: node_uid
   status: status

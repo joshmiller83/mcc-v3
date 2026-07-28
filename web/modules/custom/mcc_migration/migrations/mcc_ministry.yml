@@ -9,13 +9,38 @@ source:
   plugin: d7_node
   node_type: ministry
 process:
-  nid: nid
+  # D7 nid 1223 is a third, empty "Youth" record (0-character body) that
+  # duplicates node 8, which carries the real 2,881 characters of youth
+  # ministry content and is imported by mcc_ministry_page. Dropping 1223 here
+  # keeps /ministries/youth free for node 8 — otherwise pathauto hands the
+  # clean slug to the empty record and the real one gets /ministries/youth-0.
+  nid:
+    plugin: skip_on_value
+    source: nid
+    method: row
+    value:
+      - 1223
   title: title
   uid: node_uid
   status: status
   created: created
   changed: changed
-  body: body
+
+  # The ministry bundle has no body field — same shape as the page bundle, so
+  # the old `body: body` mapping resolved to NULL and was skipped silently
+  # (EntityContentBase::updateEntity only assigns TypedDataInterface values).
+  # That dropped every ministry description on the floor: 6,480 chars for
+  # Missions, 5,684 for Building & Grounds, 3,687 for C.A.R.E., 3,191 for
+  # Women's. See the matching fix for pages in commit cd4c1d3.
+  field_content/value: body/0/value
+  field_content/format:
+    plugin: static_map
+    source: body/0/format
+    map:
+      filtered_html: content_format
+      full_html: content_format
+    default_value: content_format
+
   field_bio_reference:
     plugin: migration_lookup
     migration: mcc_bio

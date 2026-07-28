@@ -5,6 +5,11 @@ dependencies:
   config:
     - canvas.component.block.system_menu_block.footer
     - canvas.component.sdc.mercury.footer
+    - canvas.component.sdc.mercury.text
+    - filter.format.full_html
+  module:
+    - options
+    - text
   theme:
     - mercury
 _core:
@@ -38,8 +43,8 @@ component_tree:
     component_id: sdc.mercury.text
     component_version: 9c498fd158983544
     inputs:
-      text_size: normal
-      text_color: default
       text:
         value: '@2026 developed by OpenSenselabs'
         format: full_html
+      text_size: normal
+      text_color: default

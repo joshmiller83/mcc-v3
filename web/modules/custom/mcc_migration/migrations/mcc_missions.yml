@@ -15,7 +15,18 @@ process:
   status: status
   created: created
   changed: changed
-  body: body
+
+  # Same bug as mcc_ministry and mcc_page: the missions bundle has no body
+  # field, so `body: body` silently dropped the text. See commit cd4c1d3.
+  field_content/value: body/0/value
+  field_content/format:
+    plugin: static_map
+    source: body/0/format
+    map:
+      filtered_html: content_format
+      full_html: content_format
+    default_value: content_format
+
   field_logo_image:
     plugin: migration_lookup
     migration: mcc_media_image

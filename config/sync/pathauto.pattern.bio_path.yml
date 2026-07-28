@@ -1,0 +1,24 @@
+uuid: a81475a0-4b9a-4fc5-8520-c0666ba6b54c
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.bio
+  module:
+    - node
+id: bio_path
+label: 'Bio path'
+type: 'canonical_entities:node'
+pattern: '/about/leadership/[node:title]'
+selection_criteria:
+  7c8fa542-d1ef-4a6e-b0a2-6dcf98274c37:
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: node
+    bundles:
+      bio: bio
+    uuid: 7c8fa542-d1ef-4a6e-b0a2-6dcf98274c37
+selection_logic: and
+weight: -5
+relationships: {  }

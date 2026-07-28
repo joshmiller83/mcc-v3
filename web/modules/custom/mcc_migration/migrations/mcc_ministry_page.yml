@@ -1,0 +1,62 @@
+# D7 nids 8 (Youth) and 11 (Worship Service) are type `page` in the source, but
+# they were ministries in everything but their bundle: D7's main menu carried
+# node/8 "Youth" as a top-level item, its sidebar carried node/11 "Worship
+# Service" as the section head above Sunday School / Nursery / Kids Worship, and
+# mcc_calendar_event resolves event → ministry references to both of them.
+#
+# They land in the `ministry` bundle so they appear in the mcc_ministries
+# listing alongside the four D7 ministry nodes. mcc_page skips them; this
+# migration is the only thing that claims those two nids.
+id: mcc_ministry_page
+label: 'MCC Ministries (from D7 pages)'
+migration_group: mcc
+migration_dependencies:
+  required:
+    - mcc_user
+    - mcc_taxonomy
+    - mcc_bio
+source:
+  plugin: d7_node
+  node_type: page
+process:
+  # Keep only 8 and 11 — every other D7 page belongs to mcc_page.
+  nid:
+    plugin: skip_on_value
+    source: nid
+    method: row
+    not_equals: true
+    value:
+      - 8
+      - 11
+  title: title
+  uid: node_uid
+  status: status
+  moderation_state:
+    plugin: static_map
+    source: status
+    map:
+      1: published
+      0: draft
+    default_value: draft
+  created: created
+  changed: changed
+
+  # Same field_content mapping as mcc_ministry — the ministry bundle has no
+  # body field. Node 8 carries 2,881 characters of youth ministry content,
+  # node 11 carries the 419-character Sunday morning schedule.
+  field_content/value: body/0/value
+  field_content/format:
+    plugin: static_map
+    source: body/0/format
+    map:
+      filtered_html: content_format
+      full_html: content_format
+    default_value: content_format
+
+  field_bio_reference:
+    plugin: migration_lookup
+    migration: mcc_bio
+    source: field_bio_reference/target_id
+destination:
+  plugin: 'entity:node'
+  default_bundle: ministry

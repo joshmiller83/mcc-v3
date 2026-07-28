@@ -1,0 +1,24 @@
+uuid: a18a332c-5dc7-40da-a643-e0b7e6166ec2
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.calendar_event
+  module:
+    - node
+id: calendar_event_path
+label: 'Calendar event path'
+type: 'canonical_entities:node'
+pattern: '/calendar/[node:field_mission_category:entity:name]/[node:title]'
+selection_criteria:
+  71e1134b-b7ce-4541-bf7a-aa19a21b73a2:
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: node
+    bundles:
+      calendar_event: calendar_event
+    uuid: 71e1134b-b7ce-4541-bf7a-aa19a21b73a2
+selection_logic: and
+weight: -5
+relationships: {  }

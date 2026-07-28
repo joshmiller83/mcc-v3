@@ -1,0 +1,24 @@
+uuid: 54c9c619-d704-4f5a-a0b9-5e0a9469d7be
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.missions
+  module:
+    - node
+id: missions_path
+label: 'Missions path'
+type: 'canonical_entities:node'
+pattern: '/ministries/missions/[node:title]'
+selection_criteria:
+  1ca4674a-4d2a-48d4-bcee-3f6af425ef52:
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: node
+    bundles:
+      missions: missions
+    uuid: 1ca4674a-4d2a-48d4-bcee-3f6af425ef52
+selection_logic: and
+weight: -5
+relationships: {  }
