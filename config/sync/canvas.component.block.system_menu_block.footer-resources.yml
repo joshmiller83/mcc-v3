@@ -1,16 +1,15 @@
 uuid: 1ac0cb14-4620-437d-b55c-bb4159c9e87f
 langcode: en
 status: false
-dependencies:
-  config:
-    - system.menu.footer-resources
-  module:
-    - system
+dependencies: {  }
 _core:
   default_config_hash: sE2MozwO86p9RefKDGUeOI3z_-aDAISUwJu9Q30mG14
-active_version: e8644beb372927d6
+active_version: fallback
 versioned_properties:
   active:
+    settings:
+      last_active_version: e8644beb372927d6
+  e8644beb372927d6:
     settings:
       default_settings:
         id: 'system_menu_block:footer-resources'

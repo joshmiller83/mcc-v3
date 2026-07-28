@@ -45,7 +45,11 @@ function mcc_theme_preprocess_page(array &$variables): void {
   $variables['mcc_header'] = [
     'logo_src' => '/' . $theme_path . '/images/logo-horizontal.svg',
     'logo_alt' => \Drupal::config('system.site')->get('name'),
-    'nav_items' => _mcc_theme_menu_links('header-nav'),
+    // Drupal's own "Main navigation" menu, not a theme-specific one. There
+    // used to be a separate `header-nav` menu that only this theme read, which
+    // meant the menu an editor reaches first at /admin/structure/menu did
+    // nothing to the rendered page.
+    'nav_items' => _mcc_theme_menu_links('main'),
     'cta_buttons' => _mcc_theme_header_cta_links(),
   ];
 
@@ -908,14 +912,18 @@ function _mcc_theme_menu_links(string $menu_name): array {
 }
 
 /**
- * Header CTA buttons: "Give" is outline unless it's the active page,
- * "Plan your visit" is always the primary/filled button — matching the
- * design system's Header.jsx variant logic.
+ * Header CTA buttons.
+ *
+ * The first link in the menu is the filled/primary button; anything after it is
+ * an outline button beside it. This used to key off the literal label "Give",
+ * which broke the moment the CTA became "Get Involved" — position in the menu
+ * is something an editor can actually control from the admin UI, a hardcoded
+ * label is not.
  */
 function _mcc_theme_header_cta_links(): array {
   $links = _mcc_theme_menu_links('header-cta');
-  foreach ($links as &$link) {
-    $link['variant'] = ($link['label'] === 'Give' && !$link['active']) ? 'outline' : 'primary';
+  foreach ($links as $delta => &$link) {
+    $link['variant'] = $delta === 0 ? 'primary' : 'outline';
   }
   return $links;
 }

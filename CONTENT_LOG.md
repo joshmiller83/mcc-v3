@@ -15,6 +15,57 @@ Newest entries at the top. Each entry: what changed, why, and what a re-import w
 
 ## 2026-07-28 — IA rebuild
 
+### Menus rebuilt for the new IA
+
+Primary nav is five flat items plus a Get Involved CTA. Missions is deliberately **not** in the
+top bar — missions is a ministry, so it lives under `/ministries`.
+
+```
+[logo]  I'm New  About  Ministries  Sermons  Calendar        [ Get Involved ]
+```
+
+- **`main`** — the five nav items. `mcc_theme.theme` now reads `main` instead of `header-nav`.
+  There were two competing primary menus: `main` was what `/admin/structure/menu` put in front
+  of an editor, but the theme rendered `header-nav`, so editing the obvious one did nothing.
+- **`header-cta`** — `Give → /donate` became `Get Involved → /get-involved`.
+- **`footer-connect`** — the Events link pointed at `/calendar/print-monthly`, **a 404**
+  (the real routes are `/calendar` and `/calendar/print`). Now `/calendar`, plus Sermons,
+  Ministries, Get Involved, Give and News.
+- **`footer-organization`** — address and service times as `<nolink>` text, plus I'm New and
+  Contact.
+- **`footer-support`** — email and phone. Dropped the `mechanicsburgchristian.com` self-link.
+- **Deleted `header-nav`, `footer`, `footer-programs`, `footer-resources`** — nothing rendered
+  any of them. `footer` held Privacy policy, Terms of service and two duplicate Cookie settings
+  links, all pointing at `/`.
+
+Verified: all nine menu targets return 200, and both header and footer render the new links.
+
+**Not migration-related** — menu links are content (`menu_link_content`), unaffected by a
+re-import.
+
+### Canvas page aliases — `/donate` → `/give`
+
+**Gotcha worth knowing:** setting `path` on a `canvas_page` *inserts* a second `path_alias` row
+instead of updating the existing one. `/page/1` briefly had **both** `/donate` and `/give` live.
+`redirect.auto_redirect` hooks `redirect_path_alias_update()`, which never fires on an insert,
+so no 301 was created — and a live alias shadows a redirect anyway, since redirects are matched
+only after inbound path processing has resolved the alias. Nodes do not behave this way;
+pathauto updates their alias in place and the 301 appears on its own.
+
+`scripts/canvas-realias.php` handles this: delete the stale alias, then write the 301 by hand,
+pointing at `/page/N` rather than the new alias so it survives future slug changes.
+
+Verified: `/donate` → 301 → `/give`.
+
+### New Canvas page — `/im-new` (id 11)
+
+Created as a duplicate of `/get-involved` (id 3), which already carries real MCC copy, so the
+new page starts from MCC structure rather than CareSphere demo content. **Its copy is still
+get-involved's and needs rewriting** — see the outstanding work below.
+
+**A re-import will not touch this.** Canvas pages are not produced by any migration; the D7
+source for the intended copy is node 2 ("I am New Here", 639 chars).
+
 ### Migration: `mcc_page` re-imported with `--update`
 
 Commit `cd4c1d3` fixed `mcc_page.yml` to map D7 `body` into `field_content` (the `page` bundle

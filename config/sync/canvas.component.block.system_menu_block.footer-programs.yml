@@ -1,16 +1,15 @@
 uuid: 953cb53c-743d-4b54-bb28-6d7520287be6
 langcode: en
 status: false
-dependencies:
-  config:
-    - system.menu.footer-programs
-  module:
-    - system
+dependencies: {  }
 _core:
   default_config_hash: 3wDrLZnsVuiRhE_Euj16srCXsN1EnTsEAGsFdj9tyaA
-active_version: 673dfdcdfb7cd857
+active_version: fallback
 versioned_properties:
   active:
+    settings:
+      last_active_version: 673dfdcdfb7cd857
+  673dfdcdfb7cd857:
     settings:
       default_settings:
         id: 'system_menu_block:footer-programs'
