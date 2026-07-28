@@ -134,6 +134,38 @@ construction with a custom template (`views-view--mcc-leadership-groups.html.twi
 per-term render cache keys that AGENTS.md explicitly warns against disturbing. Moving the slug
 achieves the IA goal at near-zero risk. Converting it to Canvas remains possible later.
 
+### Landing page copy and links
+
+`scripts/ia-landing-copy.php` and `scripts/ia-landing-links.php` — both idempotent, both match
+components by uuid. The copy lives in version-controlled scripts rather than only in the
+database so it is reviewable. Source material is the migrated D7 text: node 3 "Who We Are" for
+`/about`, node 29 "Ministries" for `/ministries`.
+
+**Two things found that mattered more than the copy:**
+
+1. **Four "Donate" buttons pointed at `https://easebuzz.in/demo/`** — a third-party payment
+   demo site — across `/about`, `/ministries`, `/give`, `/news` and `/news-story`. Nobody's
+   giving should ever have gone there. All swept.
+2. **The `/give` page carried fabricated donation tiers** — $19/$29/$49 per month with
+   "Supports one family", "Donor recognition", "Event invitations". Deleted outright rather than
+   repointed; that is not how a country church receives giving.
+
+Also repointed `/impact` links (the page is deleted), `/canvas_page/2` (an entity path, not a
+URL), and `/who-we-are/our-leadership`.
+
+**⚠ Outstanding — MCC's real online giving provider is unknown**, so the Give buttons currently
+point at `/contact` with the label "Ask about giving". Change `GIVING_URL` at the top of
+`scripts/ia-landing-links.php` once the real arrangement is known.
+
+Verified clean across all 11 live pages: no "Community Impact Network", no "CareSphere" in
+visible copy, no easebuzz, no invented statistics or testimonials. (The string `caresphere`
+still appears in page source as `data-component-id="caresphere_theme:…"` — that is the base
+theme's name, not content.)
+
+**Still demo copy, lower priority:** `/news` and `/news-story` (nothing links to them but a
+footer entry) and `/im-new`, which still carries the `/get-involved` copy it was cloned from and
+needs D7 node 2's text written into it properly.
+
 ### Sermons section (new)
 
 Built for Alex Jones's archive. **The content model only — no mp3s are loaded yet.**
