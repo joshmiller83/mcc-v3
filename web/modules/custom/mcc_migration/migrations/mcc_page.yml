@@ -20,13 +20,37 @@ process:
   #
   # 8 and 11 are imported as ministries by mcc_ministry_page instead. 1099 is an
   # empty duplicate of 8 (NULL body in D7) and is dropped entirely.
+  #
+  # The rest are pages the new IA supersedes. They are skipped rather than
+  # imported-then-unpublished so that a re-import is deterministic — otherwise
+  # every re-run would republish them, because status comes from the D7 source.
+  # Their content is still in the `legacy` database if it is ever wanted.
+  #
+  #    1  D7 body was "Hello World."; the real front page is Canvas page 9
+  #    2  content belongs to the /im-new Canvas page
+  #   14  Adult Classes      — NULL body in D7, a placeholder never filled in
+  #   15  Childrens Classes  — NULL body in D7, ditto
+  #   16  Teens Classes      — NULL body in D7, ditto
+  #   29  superseded by the /ministries Canvas landing page
+  #   41  superseded by ministry node 40 at /ministries/missions
+  #  189  a page node duplicating bio content
+  #  344  test fixture
   nid:
     plugin: skip_on_value
     source: nid
     method: row
     value:
+      - 1
+      - 2
       - 8
       - 11
+      - 14
+      - 15
+      - 16
+      - 29
+      - 41
+      - 189
+      - 344
       - 1099
   title: title
   uid: node_uid

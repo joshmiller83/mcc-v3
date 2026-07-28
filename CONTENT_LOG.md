@@ -15,6 +15,93 @@ Newest entries at the top. Each entry: what changed, why, and what a re-import w
 
 ## 2026-07-28 — IA rebuild
 
+### Redirects — all of it is the `redirect` module
+
+Everything below creates ordinary **redirect-module entities**, visible and editable by an
+admin at `/admin/config/search/redirect` exactly like a hand-made one. Nothing uses a bespoke
+redirect mechanism. Two things do the work:
+
+- **`redirect.auto_redirect: true`** (already on, `default_status_code: 301`) mints a 301
+  automatically whenever a node's alias is *updated in place* — which is what pathauto does.
+  25 redirects appeared on their own when bio/ministry/missions aliases were regenerated.
+- **Explicit `Redirect::create()`** for the cases auto_redirect cannot see. There are two, and
+  both are the same root cause: **setting a `path` field inserts a second `path_alias` row
+  rather than updating the existing one.** No update means `redirect_path_alias_update()` never
+  fires, and worse, the stale alias stays live and *shadows* any redirect you add by hand,
+  because redirects are matched only after inbound path processing has resolved the alias.
+
+  So the old alias must be deleted first, then the 301 written. Both helper scripts do this and
+  point the redirect at `/node/N` or `/page/N` rather than the new alias, so they survive future
+  slug changes.
+
+Redirect count: **20 → 62**.
+
+### D7 utility pages — IA slugs and retirements
+
+`scripts/ia-page-slugs.php` (idempotent, safe to re-run after any migration re-import — which
+is the point, since `mcc_page` re-applies the flat `/[node:title]` pathauto pattern).
+
+Aliases are pinned with `PathautoState::SKIP` so an ordinary editor save doesn't revert them.
+
+| D7 nid | Page                        | New slug                                     |
+| ------ | --------------------------- | -------------------------------------------- |
+| 3      | Who We Are                  | `/about/who-we-are`                          |
+| 17     | Our Foundational Beliefs    | `/about/beliefs`                             |
+| 18     | About Salvation             | `/about/beliefs/salvation`                   |
+| 19     | About Baptism               | `/about/beliefs/baptism`                     |
+| 20     | About the Church            | `/about/beliefs/the-church`                  |
+| 21     | About Christ                | `/about/beliefs/christ`                      |
+| 22     | About the Bible             | `/about/beliefs/the-bible`                   |
+| 101    | Our History                 | `/about/history`                             |
+| 13     | Sunday School               | `/ministries/worship-service/sunday-school`  |
+| 12     | Nursery                     | `/ministries/worship-service/nursery`        |
+| 10     | Kids Worship                | `/ministries/worship-service/kids-worship`   |
+| 1098   | Prayer & Outreach           | `/ministries/prayer-outreach`                |
+| 1100   | Emergency Response (ERT)    | `/ministries/emergency-response`             |
+
+Sunday School, Nursery and Kids Worship sit under the Worship Service ministry because they are
+Sunday-morning provision, not standalone ministries — which is how D7's own sidebar had them.
+
+**Retired** (unpublished, alias removed, **and skipped in `mcc_page.yml`**):
+
+| D7 nid | Page              | Why                                                            |
+| ------ | ----------------- | -------------------------------------------------------------- |
+| 1      | Home              | D7 body was "Hello World."; the front page is Canvas page 9     |
+| 2      | I am New Here     | content belongs to the `/im-new` Canvas page                    |
+| 14     | Adult Classes     | NULL body in D7 — a placeholder never filled in                 |
+| 15     | Childrens Classes | NULL body in D7 — ditto                                         |
+| 16     | Teens Classes     | NULL body in D7 — ditto                                         |
+| 29     | Ministries        | superseded by the `/ministries` Canvas landing page             |
+| 41     | Our Missions      | superseded by ministry node 40 at `/ministries/missions`        |
+| 189    | Ruth Sinn         | a page node duplicating bio content                             |
+| 344    | Test Secure Page  | test fixture                                                    |
+
+They are **skipped in the migration, not imported-then-unpublished**. Status comes from the D7
+source, so an imported page would be republished on every re-run. Their content remains in the
+`legacy` database if it is ever wanted.
+
+`migrate:import mcc_page --update` → **0 created, 13 updated, 0 failed, 12 ignored.**
+
+### Missions sits under Ministries
+
+Missions is a ministry, so ministry node 40 keeps `/ministries/missions` and stays in the
+ministries listing. The two individual missions are listed on it by the `mcc_missions` Views
+block, placed in the `content` region with a `request_path` visibility condition rather than
+being given a route.
+
+The CareSphere "Impact" page (canvas_page 7) was **deleted** — invented stats and three
+testimonials attributed to people who do not exist.
+
+### Leadership page moved, deliberately not converted to Canvas
+
+`mcc_leadership_groups` keeps its Views **page** display; only its path changed, from
+`/who-we-are/our-leadership` to `/about/leadership`, with a 301 from the old path.
+
+Every other landing page became a Canvas page with a Views block, but this one is a two-view
+construction with a custom template (`views-view--mcc-leadership-groups.html.twig`) and
+per-term render cache keys that AGENTS.md explicitly warns against disturbing. Moving the slug
+achieves the IA goal at near-zero risk. Converting it to Canvas remains possible later.
+
 ### Menus rebuilt for the new IA
 
 Primary nav is five flat items plus a Get Involved CTA. Missions is deliberately **not** in the
