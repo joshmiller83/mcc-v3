@@ -1,0 +1,30 @@
+uuid: f0704574-0226-48de-899b-451a32544aa7
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.mcc_missions
+  module:
+    - system
+    - views
+  theme:
+    - mcc_theme
+id: mcc_theme_missions_list
+theme: mcc_theme
+region: content
+weight: 10
+provider: null
+plugin: 'views_block:mcc_missions-block_1'
+settings:
+  id: 'views_block:mcc_missions-block_1'
+  label: 'Missions we support'
+  label_display: visible
+  provider: views
+  views_label: ''
+  items_per_page: null
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    context_mapping: {  }
+    pages: /ministries/missions

@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.missions.field_content
     - field.field.node.missions.field_logo_image
     - field.field.node.missions.field_missions_website
     - node.type.missions
@@ -12,6 +13,7 @@ dependencies:
     - link
     - media_library
     - path
+    - text
 id: node.missions.default
 targetEntityType: node
 bundle: missions
@@ -22,6 +24,14 @@ content:
     weight: 10
     region: content
     settings: {  }
+    third_party_settings: {  }
+  field_content:
+    type: text_textarea
+    weight: -4
+    region: content
+    settings:
+      rows: 9
+      placeholder: ''
     third_party_settings: {  }
   field_logo_image:
     type: media_library_widget

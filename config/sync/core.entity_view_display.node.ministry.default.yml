@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.node.ministry.field_bio_reference
+    - field.field.node.ministry.field_content
     - field.field.node.ministry.field_ministry_structure
     - field.field.node.ministry.field_mission_tags
     - field.field.node.ministry.field_related_events
@@ -26,6 +27,13 @@ content:
       link: true
     third_party_settings: {  }
     weight: 107
+    region: content
+  field_content:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: -4
     region: content
   field_ministry_structure:
     type: entity_reference_label

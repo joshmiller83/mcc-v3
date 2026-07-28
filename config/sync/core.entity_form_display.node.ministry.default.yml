@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.node.ministry.field_bio_reference
+    - field.field.node.ministry.field_content
     - field.field.node.ministry.field_ministry_structure
     - field.field.node.ministry.field_mission_tags
     - field.field.node.ministry.field_related_events
@@ -35,6 +36,14 @@ content:
       match_operator: CONTAINS
       match_limit: 10
       size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_content:
+    type: text_textarea
+    weight: -4
+    region: content
+    settings:
+      rows: 9
       placeholder: ''
     third_party_settings: {  }
   field_ministry_structure:
