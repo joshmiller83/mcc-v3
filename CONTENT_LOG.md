@@ -34,7 +34,39 @@ redirect mechanism. Two things do the work:
   point the redirect at `/node/N` or `/page/N` rather than the new alias, so they survive future
   slug changes.
 
-Redirect count: **20 → 62**.
+Redirect count: **20 → 977**.
+
+### Legacy D7 URLs — `mcc_redirect` migration
+
+The live D7 site publishes 1,055 aliases, 979 of them node aliases under `content/`. Those are
+what Google has indexed. `auto_redirect` cannot help: nothing was renamed on *this* site, so
+there is no alias update to hook — they have to be created outright.
+
+`mcc_redirect.yml` + `src/Plugin/migrate/source/D7UrlAlias.php` do this with
+`destination: entity:redirect`, so the output is **ordinary redirect-module entities**, editable
+at `/admin/config/search/redirect` like any hand-made one. A migration rather than a script
+because it is re-runnable, rolls back with `migrate:rollback mcc_redirect`, and resolves each
+D7 nid through the existing `mcc_*` migrate maps — so it stays correct if a node lands on a
+different nid in a future re-import.
+
+Redirects point at `/node/N`, never at an alias, so they survive every future slug change.
+
+**979 processed → 915 created, 0 failed, 64 ignored.** The 64 are the retired pages and their
+descendants: `skip_on_empty` drops any row whose nid has no destination on this site, so those
+old URLs 404 rather than pointing somewhere misleading.
+
+Taxonomy (`itunes-category/*`, from a D7 podcast vocabulary that no longer exists) and `users/*`
+aliases are excluded at the source query.
+
+**Two bugs worth remembering if this is ever edited:**
+
+1. **Plugin ID collision.** The source plugin was originally `d7_url_alias`, which is core's
+   own path-module plugin — core's won silently, and the migration happily read
+   `taxonomy/term` rows. It is `mcc_d7_url_alias` now.
+2. **`constants:` must live inside `source:`,** not at the top level of the migration. At the
+   top level it parses without error and resolves to nothing, which produced 904 redirects whose
+   destination URI was a bare nid like `494`, throwing `InvalidArgumentException: The URI '494'
+   is invalid` and 500ing every legacy URL.
 
 ### D7 utility pages — IA slugs and retirements
 

@@ -1,0 +1,80 @@
+# 301s for every URL the D7 site published.
+#
+# The destination is `entity:redirect`, so these are ordinary redirect-module
+# entities — an admin can see, edit and delete them at
+# /admin/config/search/redirect exactly like a hand-made one. This is a loader
+# for that module, not a replacement for it.
+#
+# It has to be a migration rather than the module's own auto_redirect because
+# auto_redirect hooks redirect_path_alias_update(): it fires when an alias on
+# *this* site is renamed. These paths never existed here, so there is no alias
+# update to hook and nothing for it to react to.
+#
+# Being a migration (rather than a one-off script) means it is re-runnable,
+# rolls back with `migrate:rollback mcc_redirect`, and resolves D7 nids through
+# the same migrate maps as everything else — so it stays correct even if a node
+# lands on a different nid in a future re-import.
+id: mcc_redirect
+label: 'MCC Legacy D7 URL redirects'
+migration_group: mcc
+migration_dependencies:
+  required:
+    - mcc_page
+    - mcc_bio
+    - mcc_ministry
+    - mcc_ministry_page
+    - mcc_missions
+    - mcc_calendar_event
+source:
+  plugin: mcc_d7_url_alias
+  # Constants belong to the source, not the top level of the migration — at the
+  # top level they parse without error but resolve to nothing, which silently
+  # produced redirects whose destination URI was a bare nid.
+  constants:
+    internal_prefix: 'internal:/node/'
+    status_code: 301
+    langcode: und
+process:
+  # Resolve the D7 nid to whatever nid it holds on this site. Each lookup is
+  # tried in turn; the first migration that claims the nid wins. no_stub is
+  # essential — without it a miss would create an empty node rather than simply
+  # skipping the redirect.
+  _new_nid:
+    plugin: migration_lookup
+    migration:
+      - mcc_page
+      - mcc_bio
+      - mcc_ministry
+      - mcc_ministry_page
+      - mcc_missions
+      - mcc_calendar_event
+    source: nid
+    no_stub: true
+
+  # Pages deliberately dropped from the new IA (see the skip list in
+  # mcc_page.yml) have no destination, so there is nothing to redirect to.
+  # Those old URLs are left to 404 rather than pointed somewhere misleading.
+  _skip:
+    plugin: skip_on_empty
+    source: '@_new_nid'
+    method: row
+
+  redirect_source/path:
+    plugin: callback
+    callable: ltrim
+    source: alias
+    unpack_source: false
+  redirect_source/query: {  }
+
+  # Point at the system path, never the alias. Drupal resolves the canonical
+  # alias at request time, so these survive every future slug change — which
+  # matters, because the IA work moved most of these nodes at least once.
+  redirect_redirect/uri:
+    plugin: concat
+    source:
+      - constants/internal_prefix
+      - '@_new_nid'
+  status_code: constants/status_code
+  language: constants/langcode
+destination:
+  plugin: 'entity:redirect'
