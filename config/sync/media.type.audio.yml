@@ -1,0 +1,13 @@
+uuid: 7f314317-a807-4ba6-8c93-f78ce914b2da
+langcode: en
+status: true
+dependencies: {  }
+id: audio
+label: Audio
+description: 'An audio file, such as a sermon recording.'
+source: audio_file
+queue_thumbnail_downloads: false
+new_revision: true
+source_configuration:
+  source_field: field_media_audio_file
+field_map: {  }

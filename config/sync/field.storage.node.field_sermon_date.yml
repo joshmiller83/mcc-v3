@@ -1,0 +1,20 @@
+uuid: bbd911b6-da6f-4d17-826b-26d261e0b9fd
+langcode: en
+status: true
+dependencies:
+  module:
+    - datetime
+    - node
+id: node.field_sermon_date
+field_name: field_sermon_date
+entity_type: node
+type: datetime
+settings:
+  datetime_type: date
+module: datetime
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - filter.format.content_format
+    - media.type.audio
     - media.type.document
     - media.type.image
     - media.type.remote_video
@@ -37,6 +38,7 @@ permissions:
   - 'administer menu'
   - 'administer redirects'
   - 'administer url aliases'
+  - 'create audio media'
   - 'create canvas_page'
   - 'create document media'
   - 'create image media'
@@ -45,6 +47,7 @@ permissions:
   - 'create svg_image media'
   - 'create url aliases'
   - 'create video media'
+  - 'delete any audio media'
   - 'delete any document media'
   - 'delete any image media'
   - 'delete any page content'
@@ -53,6 +56,7 @@ permissions:
   - 'delete any video media'
   - 'delete canvas_page'
   - 'delete page revisions'
+  - 'edit any audio media'
   - 'edit any image media'
   - 'edit any page content'
   - 'edit any remote_video media'
@@ -64,6 +68,7 @@ permissions:
   - 'use basic_editorial transition create_new_draft'
   - 'use basic_editorial transition publish'
   - 'use basic_editorial transition unpublish'
+  - 'use media audio bulk upload form'
   - 'use media document bulk upload form'
   - 'use media image bulk upload form'
   - 'use media remote_video bulk upload form'

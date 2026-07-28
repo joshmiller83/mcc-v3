@@ -1,0 +1,19 @@
+uuid: 41904efb-d80e-4356-8bba-11856ba53258
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_sermon_scripture
+    - node.type.sermon
+id: node.sermon.field_sermon_scripture
+field_name: field_sermon_scripture
+entity_type: node
+bundle: sermon
+label: Scripture
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

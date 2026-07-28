@@ -1,0 +1,147 @@
+uuid: 8c958c3c-a010-435c-a83e-e98601562049
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.sermon.field_content
+    - field.field.node.sermon.field_sermon_audio
+    - field.field.node.sermon.field_sermon_date
+    - field.field.node.sermon.field_sermon_scripture
+    - field.field.node.sermon.field_sermon_series
+    - field.field.node.sermon.field_sermon_speaker
+    - node.type.sermon
+  module:
+    - content_moderation
+    - datetime
+    - path
+    - tagify
+    - text
+id: node.sermon.default
+targetEntityType: node
+bundle: sermon
+mode: default
+content:
+  created:
+    type: datetime_timestamp
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_content:
+    type: text_textarea
+    weight: 5
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_sermon_audio:
+    type: tagify_entity_reference_autocomplete_widget
+    weight: 4
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      placeholder: ''
+      suggestions_dropdown: 1
+      show_entity_id: 0
+      show_info_label: 0
+      info_label: ''
+      parent_selection: 1
+    third_party_settings: {  }
+  field_sermon_date:
+    type: datetime_default
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_sermon_scripture:
+    type: string_textfield
+    weight: 2
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_sermon_series:
+    type: tagify_entity_reference_autocomplete_widget
+    weight: 3
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      placeholder: ''
+      suggestions_dropdown: 1
+      show_entity_id: 0
+      show_info_label: 0
+      info_label: ''
+      parent_selection: 1
+    third_party_settings: {  }
+  field_sermon_speaker:
+    type: tagify_entity_reference_autocomplete_widget
+    weight: 1
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      placeholder: ''
+      suggestions_dropdown: 1
+      show_entity_id: 0
+      show_info_label: 0
+      info_label: ''
+      parent_selection: 1
+    third_party_settings: {  }
+  moderation_state:
+    type: moderation_state_default
+    weight: 100
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  simple_sitemap:
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    weight: 120
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  title:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  uid:
+    type: entity_reference_autocomplete
+    weight: 5
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  url_redirects:
+    weight: 50
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  promote: true
+  publish_on: true
+  publish_state: true
+  sticky: true
+  unpublish_on: true
+  unpublish_state: true

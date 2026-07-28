@@ -1,0 +1,26 @@
+uuid: 83d2dd2e-6ee9-4f2f-927e-2777d34afae2
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.mcc_sermons
+  module:
+    - views
+active_version: c811cfbf383cab1b
+versioned_properties:
+  active:
+    settings:
+      default_settings:
+        id: 'views_block:mcc_sermons-block_1'
+        label: 'MCC Sermons'
+        label_display: '0'
+        provider: views
+        views_label: ''
+        items_per_page: null
+    fallback_metadata:
+      slot_definitions: null
+label: 'MCC Sermons'
+id: block.views_block.mcc_sermons-block_1
+provider: views
+source: block
+source_local_id: 'views_block:mcc_sermons-block_1'

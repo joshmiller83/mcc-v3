@@ -1,0 +1,11 @@
+uuid: 5f501e25-6a30-4d4b-856c-339e41debc28
+langcode: en
+status: true
+dependencies: {  }
+name: Sermon
+type: sermon
+description: 'A recorded sermon, with its audio, speaker and scripture.'
+help: null
+new_revision: true
+preview_mode: 1
+display_submitted: false

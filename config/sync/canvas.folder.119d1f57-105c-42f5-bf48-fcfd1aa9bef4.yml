@@ -7,6 +7,7 @@ dependencies:
     - canvas.component.block.views_block.mcc_leadership-group_people
     - canvas.component.block.views_block.mcc_ministries-block_1
     - canvas.component.block.views_block.mcc_missions-block_1
+    - canvas.component.block.views_block.mcc_sermons-block_1
     - canvas.component.block.views_block.recent_pages-block_recent_pages
 _core:
   default_config_hash: 1ulsNmW18h8efxKu26MzfsfcFbEwdpFkLCvQ-dNt2Fk
@@ -18,4 +19,5 @@ items:
   - block.views_block.mcc_leadership-group_people
   - block.views_block.mcc_ministries-block_1
   - block.views_block.mcc_missions-block_1
+  - block.views_block.mcc_sermons-block_1
   - block.views_block.recent_pages-block_recent_pages

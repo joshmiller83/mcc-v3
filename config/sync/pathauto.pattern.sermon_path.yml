@@ -1,0 +1,24 @@
+uuid: feaf5dc9-6670-4935-8b94-e8a0df535fc1
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.sermon
+  module:
+    - node
+id: sermon_path
+label: 'Sermon path'
+type: 'canonical_entities:node'
+pattern: '/sermons/[node:field_sermon_date:date:custom:Y-m-d]-[node:title]'
+selection_criteria:
+  a107c0dc-1bc2-44a9-a028-f2ed9599c1aa:
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: node
+    bundles:
+      sermon: sermon
+    uuid: a107c0dc-1bc2-44a9-a028-f2ed9599c1aa
+selection_logic: and
+weight: -5
+relationships: {  }

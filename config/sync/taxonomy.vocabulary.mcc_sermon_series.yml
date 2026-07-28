@@ -1,0 +1,9 @@
+uuid: 4441ca4f-75f7-462c-9285-caeed62ea18e
+langcode: en
+status: true
+dependencies: {  }
+name: 'Sermon Series'
+vid: mcc_sermon_series
+description: 'Groups sermons that belong to a preaching series.'
+weight: 0
+new_revision: false

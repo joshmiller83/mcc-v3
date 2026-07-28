@@ -1,0 +1,24 @@
+uuid: 469cb66e-2e7e-4ffb-b6b8-4448608b0d49
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_sermon_audio
+    - media.type.audio
+    - node.type.sermon
+id: node.sermon.field_sermon_audio
+field_name: field_sermon_audio
+entity_type: node
+bundle: sermon
+label: Audio
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      audio: audio
+field_type: entity_reference

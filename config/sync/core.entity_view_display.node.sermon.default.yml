@@ -1,0 +1,76 @@
+uuid: e83f6bf1-7800-4409-9600-7dc2fae28d8a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.sermon.field_content
+    - field.field.node.sermon.field_sermon_audio
+    - field.field.node.sermon.field_sermon_date
+    - field.field.node.sermon.field_sermon_scripture
+    - field.field.node.sermon.field_sermon_series
+    - field.field.node.sermon.field_sermon_speaker
+    - node.type.sermon
+  module:
+    - datetime
+    - text
+    - user
+id: node.sermon.default
+targetEntityType: node
+bundle: sermon
+mode: default
+content:
+  field_content:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_sermon_audio:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_sermon_date:
+    type: datetime_default
+    label: inline
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_sermon_scripture:
+    type: string
+    label: inline
+    settings:
+      link_to_entity: false
+      link_rel: canonical
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_sermon_series:
+    type: entity_reference_label
+    label: inline
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_sermon_speaker:
+    type: entity_reference_label
+    label: inline
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden: {  }

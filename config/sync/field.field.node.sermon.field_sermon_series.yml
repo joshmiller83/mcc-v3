@@ -1,0 +1,24 @@
+uuid: 6ae2eed8-ef73-4bad-9d89-e066dc77833b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_sermon_series
+    - node.type.sermon
+    - taxonomy.vocabulary.mcc_sermon_series
+id: node.sermon.field_sermon_series
+field_name: field_sermon_series
+entity_type: node
+bundle: sermon
+label: Series
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      mcc_sermon_series: mcc_sermon_series
+field_type: entity_reference

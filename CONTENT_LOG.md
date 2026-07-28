@@ -134,6 +134,32 @@ construction with a custom template (`views-view--mcc-leadership-groups.html.twi
 per-term render cache keys that AGENTS.md explicitly warns against disturbing. Moving the slug
 achieves the IA goal at near-zero risk. Converting it to Canvas remains possible later.
 
+### Sermons section (new)
+
+Built for Alex Jones's archive. **The content model only — no mp3s are loaded yet.**
+
+- **`audio` media type** — created with core's `audio_file` source, which had no media type on
+  this site (only document, image, remote_video, svg_image, video). Accepts
+  `mp3 m4a wav ogg aac`, max 64 MB. The eight mp3s in the D7 `file_managed` table average about
+  10 MB, so the real archive will be well within that.
+- **`sermon` content type** — `field_sermon_date`, `field_sermon_speaker` (→ `bio`),
+  `field_sermon_scripture`, `field_sermon_series` (→ new `mcc_sermon_series` vocabulary),
+  `field_sermon_audio` (→ `audio` media), and `field_content` for notes, reusing the shared
+  `field_content` storage like every other bundle.
+- **`mcc_sermons` view**, block display only, newest first, 20 per page, with an empty-state
+  message so the page reads properly before any sermons exist.
+- **`/sermons`** is Canvas page 12, purpose-built (heading + listing) rather than cloned from a
+  demo page. The empty `page` node 1601 that was squatting on the slug is unpublished and its
+  alias removed.
+- Slug pattern: `/sermons/[node:field_sermon_date:date:custom:Y-m-d]-[node:title]`, verified as
+  `/sermons/2026-07-19-vine-and-branches`.
+
+**Outstanding:** bulk-loading the back catalogue. `media_library_bulk_upload` is already enabled
+and handles the file side; the metadata pass (date, speaker, scripture, series) depends on how
+the files are named, which we haven't seen.
+
+**A re-import will not touch any of this** — sermons are not produced by any migration.
+
 ### Menus rebuilt for the new IA
 
 Primary nav is five flat items plus a Get Involved CTA. Missions is deliberately **not** in the

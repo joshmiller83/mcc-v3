@@ -75,24 +75,34 @@ do {
   }
 } while ($grew);
 
+$replacement = [
+  'parent_uuid' => $target['parent_uuid'],
+  'slot' => $target['slot'],
+  'uuid' => \Drupal::service('uuid')->generate(),
+  'component_id' => $new_id,
+  'component_version' => $version,
+  'inputs' => $inputs,
+  'label' => NULL,
+];
+
 $kept = [];
+$inserted = FALSE;
 foreach ($items as $item) {
   if (isset($doomed[$item['uuid']])) {
+    // Drop the target itself, but put the replacement in its position. A
+    // root-level target has parent_uuid NULL, which no item's uuid ever
+    // matches — anchoring on the target's own position instead of its parent
+    // handles that case as well as nested ones.
+    if ($item['uuid'] === $target['uuid']) {
+      $kept[] = $replacement;
+      $inserted = TRUE;
+    }
     continue;
   }
   $kept[] = $item;
-  // Slot the replacement in where the target used to sit.
-  if ($item['uuid'] === $target['parent_uuid']) {
-    $kept[] = [
-      'parent_uuid' => $target['parent_uuid'],
-      'slot' => $target['slot'],
-      'uuid' => \Drupal::service('uuid')->generate(),
-      'component_id' => $new_id,
-      'component_version' => $version,
-      'inputs' => $inputs,
-      'label' => NULL,
-    ];
-  }
+}
+if (!$inserted) {
+  $kept[] = $replacement;
 }
 
 $page->set('components', $kept);
