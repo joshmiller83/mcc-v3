@@ -82,6 +82,29 @@ node scripts/calendar-compare.mjs 2026-11     # a specific month
 
 It writes screenshots plus `compare.html` and `report.md` to the gitignored `.calendar-compare/`, and exits non-zero if the print assertions fail — so it doubles as a regression check after any calendar change.
 
+### Reviewing a landing page for Claude Design handoff
+
+`scripts/im-new-review.mjs` captures any route in headless Chromium (desktop + mobile), auto-enables local Twig debug comments, runs a readability/visual-quality audit, and writes a handoff HTML file with Canvas component metadata plus Twig template hints. It defaults to `/get-involved`; pass `--path` for anything else.
+
+```bash
+node scripts/im-new-review.mjs
+node scripts/im-new-review.mjs --path /im-new
+node scripts/im-new-review.mjs --base http://127.0.0.1 --path /about --out .im-new-review
+```
+
+Two caveats worth knowing, both fixed in the probe but easy to reintroduce:
+
+- **Colours are normalised through a canvas, not parsed with a regex.** The design tokens are `color-mix(in oklch, …)`, which `getComputedStyle` returns verbatim — matching only `rgb()` made every brand background unreadable, so the walk-up fell through to white and scored light-on-dark text against white.
+- **Line length is only measured on text that actually wraps,** and visually-hidden skip links are excluded from tap targets. Otherwise nav labels, eyebrows and a correct 1×1 skip link all report as defects.
+
+Output lands in gitignored `.im-new-review/`, including:
+
+- `claude-design-handoff-im-new.html` (pass this to Claude Design)
+- `drupal-im-new-desktop.png` and `drupal-im-new-mobile.png`
+- `im-new-source.html` (raw source with Twig debug comments when available)
+- `component-map.json` and `audit.json`
+- `report.md`
+
 ## Our Leadership and bio pages
 
 `/who-we-are/our-leadership` lists the people who lead the church, and each of them has a page of their own. Both are driven by the *Leadership Structure* taxonomy rather than by anything hardcoded.

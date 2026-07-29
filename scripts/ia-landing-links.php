@@ -32,7 +32,10 @@ const LINKS = [
     '51b1ce01-8dc2-446c-86f8-ba6d23bba54a' => ['/about/history', 'Our history'],
     '04613a26-f4f1-43dd-a0a5-90e06557c75c' => ['/about/beliefs', 'What we believe'],
     '5531b61a-1760-49bb-b39b-e6c41c3d68ce' => ['/ministries', 'Our ministries'],
-    '2ebef10f-4ec2-4a90-8fe7-6c424286cfb8' => ['/im-new', "I'm new"],
+    // Was "I'm new" -> /im-new; that page is now Get Involved. Label left alone
+    // deliberately — /about carries two other "Get involved" CTAs, so whether
+    // this third one stays is an editorial call, not a mechanical one.
+    '2ebef10f-4ec2-4a90-8fe7-6c424286cfb8' => ['/get-involved', "I'm new"],
     '740b2187-f69b-4c8b-979f-18d01919a488' => ['/about/leadership', 'Our leadership'],
     'a0df5edc-d3ab-4c93-a07f-4e97ae6a57cb' => ['/about/leadership', 'Meet our leaders'],
     'c49eaeb8-0e35-4e51-ad6b-bc08feb0e37c' => ['/give', 'Give'],
@@ -46,7 +49,7 @@ const LINKS = [
     '9af1c0b0-b70d-4f5a-84a3-ffbafff19a06' => ['/get-involved', 'Get involved'],
   ],
 
-  // /im-new
+  // /get-involved
   11 => [
     '6ddbd8aa-88d4-4460-a813-f296fc180308' => ['/ministries', 'Browse ministries'],
     '767bd10a-1fbb-4133-b370-28c7118787ff' => ['/about/leadership', 'Meet our leaders'],

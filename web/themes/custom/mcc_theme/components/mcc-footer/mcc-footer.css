@@ -20,12 +20,32 @@ footer[role="contentinfo"] {
   gap: 2rem;
 }
 
+/* `min-width: 180px` plus an unbreakable 31-character email address gave this
+   row a minimum content width larger than a tablet viewport, so the whole
+   document scrolled sideways between roughly 700px and 940px. The footer is in
+   the page template, so that was every page. Columns now fold instead. */
 .mcc-footer__col {
   display: flex;
   flex-direction: column;
   gap: 0.625rem;
-  min-width: 180px;
+  min-width: 0;
   flex: 1 1 180px;
+}
+
+.mcc-footer__link {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 56.25rem) {
+  .mcc-footer__col {
+    flex-basis: 40%;
+  }
+}
+
+@media (max-width: 37.5rem) {
+  .mcc-footer__col {
+    flex-basis: 100%;
+  }
 }
 
 .mcc-footer__col--logo {
@@ -54,6 +74,18 @@ footer[role="contentinfo"] {
   opacity: 0.9;
   font-size: var(--text-body-md);
   text-decoration: none;
+}
+
+/* Only the real links get the 44px minimum — the address, service times,
+   email and phone share this class as plain <span>s and must not be turned
+   into targets. The column gap stays: Visit mixes both kinds, so zeroing it
+   would run the address and service times together. Pulling the anchors'
+   extra height back into negative margin keeps the rhythm even. */
+a.mcc-footer__link {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  margin-block: calc(var(--space-2) * -1);
 }
 
 a.mcc-footer__link:hover {

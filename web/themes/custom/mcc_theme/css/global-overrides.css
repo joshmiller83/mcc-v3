@@ -349,3 +349,66 @@ div[data-component-id="caresphere_theme:section-intro"]:nth-last-of-type(1) .sec
    (components/mcc-footer/mcc-footer.css) and the newsletter band in
    mcc-newsletter-band — both theme-owned, see mcc_theme.theme +
    templates/layout/page.html.twig. */
+
+/* --- CARD-ICON: suppress the link-to-nowhere overlay ---------------------
+   card-icon.twig computes `has_url` as the *string* 'yes' or 'no', then tests
+   it with `{% if has_url %}` — and 'no' is truthy in Twig, so the full-bleed
+   overlay anchor renders on every icon card whether or not a URL was set.
+   With no href it resolves to the current page, so a click anywhere on the
+   card silently reloads it, and it sits above the card's real CTA. Until the
+   component is fixed upstream, take the empty ones out of the layout and the
+   accessibility tree entirely. */
+.card-icon__link:not([href]),
+.card-icon__link[href=""] {
+  display: none;
+}
+
+/* --- ACCORDION ----------------------------------------------------------
+   Used on /im-new and /get-involved only. Two real defects: the trigger is
+   only as tall as its text (27px, well under the 44px minimum) because the
+   padding sits on the header row around it, and `.accordion__close` is a
+   second redundant control for the same action, reachable only by mouse
+   (tabindex="-1"). Move the padding onto the trigger so the whole row is the
+   hit target, drop the close button, and give the trigger its own +/-
+   affordance. */
+.accordion__header {
+  padding: 0;
+  gap: 0;
+}
+
+.accordion__trigger {
+  min-height: 60px;
+  padding: var(--space-4) var(--space-6);
+  gap: var(--space-4);
+  justify-content: space-between;
+  font-family: var(--font-body);
+}
+
+.accordion__close {
+  display: none !important;
+}
+
+.accordion__trigger::after {
+  content: "";
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-primary-subtle);
+  /* A plus sign drawn from two bars; the vertical one is hidden when open. */
+  background-image: linear-gradient(currentColor, currentColor),
+    linear-gradient(currentColor, currentColor);
+  background-size: 12px 2px, 2px 12px;
+  background-position: center, center;
+  background-repeat: no-repeat;
+  transition: transform var(--duration-fast) var(--ease-standard);
+}
+
+.accordion__item--open .accordion__trigger::after {
+  background-size: 12px 2px, 0 0;
+}
+
+.accordion__answer {
+  /* At full container width these run to ~97 characters. */
+  max-width: 66ch;
+}

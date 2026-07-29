@@ -39,6 +39,22 @@ Sermons · Calendar**. Missions is *not* a peer of Ministries — missions is a 
 lives at `/ministries/missions`. `CONTENT_LOG.md` records every content and structure change
 made outside of code, and is the first thing to read before re-running a migration.
 
+**I'm New and Get Involved are two different jobs, and were once the same page.** Canvas pages
+3 and 11 held identical content under two names, and page 11's `h1` was "Get Involved at MCC" —
+it was Get Involved content wearing the wrong label. Page 11 became `/get-involved`, page 3 was
+retired (`scripts/ia-get-involved-merge.php`), and a real `/im-new` was built for first-time
+visitors: service times, what a Sunday looks like, kids, and how to find the building
+(`scripts/ia-im-new-page.php`). Keep them distinct — I'm New is for someone who has never
+walked in, Get Involved is for someone deciding where to serve.
+
+- **Don't put unverified specifics on `/im-new`.** Everything on it traces to something already
+  on the site (the footer menus carry the address, times, phone; the ministry nodes establish
+  the nursery, Kids Worship, Sunday School and youth; the recurring calendar event establishes
+  the Facebook Live stream). Parking, which door to use, how long the service runs and the
+  communion practice are **not** recorded anywhere and are not safe to invent about a real
+  congregation — `ia-im-new-page.php` has a commented `PARKING` constant for when the church
+  confirms.
+
 - **One primary menu: `main`.** `mcc_theme_preprocess_page()` reads it. There used to be a
   second `header-nav` menu that only the theme read, so the menu an editor reaches first at
   `/admin/structure/menu` did nothing to the page. Don't reintroduce a theme-private nav menu.

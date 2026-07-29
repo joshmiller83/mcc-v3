@@ -95,7 +95,7 @@ const SLUGS = [
  */
 const RETIRED = [
   1   => 'D7 body was "Hello World."; the real front page is Canvas page 9',
-  2   => 'content moved to the /im-new Canvas page',
+  2   => 'content moved to the /get-involved Canvas page',
   14  => 'NULL body in D7 — a placeholder never filled in',
   15  => 'NULL body in D7 — a placeholder never filled in',
   16  => 'NULL body in D7 — a placeholder never filled in',
