@@ -145,8 +145,11 @@ DDEV project config lives in `.ddev/config.yaml`. Use `.ddev/config.local.yaml` 
 ## Workflow
 
 - Small, incremental commits — don't batch unrelated changes together.
-- Push after each commit rather than letting work pile up unpushed.
-- Work directly on `main` for now. This is early-stage and low-complexity enough that feature branches would just add overhead; revisit this once multiple people or longer-running changes are involved.
+- **Push every commit to `main` on GitHub.** Don't let work sit committed-but-unpushed — a push
+  to `main` is what triggers the deploy pipeline (see [Deploys](#deploys)), so unpushed work is
+  invisible to it. Work directly on `main` for now. This is early-stage and low-complexity
+  enough that feature branches would just add overhead; revisit this once multiple people or
+  longer-running changes are involved.
 - Keep this file and `README.md` up to date whenever an architectural decision is made (new tooling, new environment setup, etc.) — update them as part of finishing the work, not as an afterthought.
 
 ## Tooling reference
@@ -172,25 +175,48 @@ Before asking the user to log in to a CLI interactively, check whether a token i
 
 ## Deploys
 
-Pushing to `main` on GitHub triggers `.github/workflows/deploy-pantheon.yml`, which pushes the
-same commit (source only — no `vendor/`, no `web/core`) to the **mcc2026** Pantheon sandbox
-site's git remote. Pantheon's own Integrated Composer build step (`build_step: true` in
-`pantheon.upstream.yml`) then runs `composer install` server-side and deploys the result to the
-`dev` environment. There's no separate manual deploy step to remember — just make sure what you
-push is something you'd want built and deployed. mcc2026 is a sandbox for testing this
-migration/rebuild; it is not the church's production site.
+Every push to `main` on GitHub deploys to the **mcc2026** Pantheon sandbox automatically, in two
+stages:
 
-Gotchas discovered getting this working (2026-07-29), worth knowing if the pipeline ever needs
-touching again:
+1. **GitHub Actions** (`.github/workflows/deploy-pantheon.yml`) pushes that commit — source
+   only, no `vendor/`, no `web/core` — to the mcc2026 site's git remote (`main` locally →
+   `master` on Pantheon; see gotchas below for why).
+2. **Pantheon's Integrated Composer** (`build_step: true` in `pantheon.upstream.yml`) then runs
+   `composer install` server-side and deploys the result to the `dev` environment.
+
+There's no manual deploy step — pushing to `main` *is* the deploy. mcc2026 is a sandbox for
+testing this migration/rebuild; it is not the church's production site.
+
+**Tracking a deploy after pushing:**
+
+```sh
+# 1. GitHub Actions — did the push reach Pantheon?
+gh run list --repo joshmiller83/mcc-v3 --workflow=deploy-pantheon.yml -L 3
+gh run watch <run-id> --repo joshmiller83/mcc-v3 --exit-status   # follow one to completion
+
+# 2. Pantheon build — did composer install / the site build succeed?
+ddev exec terminus workflow:list mcc2026 --format=table | head -6   # look for "Sync code on dev"
+
+# 3. If the build succeeded but the site still errors, the plugin/service cache is probably
+#    stale (see gotcha below) — rebuild it and recheck:
+ddev exec terminus remote:drush mcc2026.dev -- cache:rebuild
+curl -s -o /dev/null -w "%{http_code}\n" https://dev-mcc2026.pantheonsite.io/
+```
+
+A GitHub Actions run typically finishes in ~15s (it's just a git push); the Pantheon build
+that follows is the slow part — 2-4 minutes for `composer install` across this project's
+dependency tree. Check step 1 first since it fails fast; only move to step 2 once it's green.
+
+**Gotchas, worth knowing if the pipeline ever needs touching again:**
 
 - **Pantheon's `dev` environment tracks the `master` branch, not `main`**, even on a freshly
   created site whose own repo defaults to `main` (`origin/HEAD -> origin/main`). Pushing to
   `main` succeeds silently but Pantheon's pre-receive hook prints "Skipping code sync, no
   Multidev environments were found for branch main" and never builds. Always push
-  `<local-branch>:master`.
+  `<local-branch>:master` — the CI workflow already does this.
 - **The target environment must be in git connection mode**, not sftp, or the push is flatly
   rejected ("pre-receive hook declined"). `terminus connection:set mcc2026.dev git` before
-  pushing code; the CI workflow assumes this is already set (it doesn't set it itself).
+  pushing code by hand; the CI workflow assumes this is already set (it doesn't set it itself).
 - **`pantheon.upstream.yml` is upstream-owned — don't edit it.** It ships with the Drupal CMS
   core upstream scaffold and defaults `php_version` to whatever that upstream's maintainers
   pinned (8.3 as of this writing). Site-level overrides belong in `pantheon.yml` instead (see
@@ -200,10 +226,10 @@ touching again:
   from Composer (composer.lock resolved under one PHP version can lock packages that require a
   newer minimum than the other environment provides).
 - **After any deploy that adds/removes modules or plugins, rebuild cache on the remote
-  environment**: `ddev exec terminus remote:drush mcc2026.dev -- cache:rebuild`. A build can
-  succeed while the site still 500s with `PluginNotFoundException` because Drupal's plugin
-  discovery cache in the database is stale from before the new code landed — this isn't a build
-  failure, just a cache that needs an explicit kick.
+  environment** (see step 3 above). A build can succeed while the site still 500s with
+  `PluginNotFoundException` because Drupal's plugin discovery cache in the database is stale
+  from before the new code landed — this isn't a build failure, just a cache that needs an
+  explicit kick.
 - `web/sites/default/settings.php` and `services.yml` are committed (not ddev-generated-only)
   specifically so Pantheon has something to boot from — don't re-gitignore them. The
   `IS_DDEV_PROJECT`-guarded block in `settings.php` is ddev-only; anything that must also apply
