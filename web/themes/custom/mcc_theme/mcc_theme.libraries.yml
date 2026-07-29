@@ -11,3 +11,4 @@ global-styling:
       css/mcc-event-detail.css: {}
       css/mcc-leadership.css: {}
       css/mcc-bio-detail.css: {}
+      css/mcc-landing-bands.css: {}

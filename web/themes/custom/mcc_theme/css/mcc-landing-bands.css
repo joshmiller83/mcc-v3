@@ -1,0 +1,334 @@
+/**
+ * @file
+ * Band styling for the two Canvas landing pages built on the section /
+ * section-intro / card-icon / accordion vocabulary: /get-involved and /im-new.
+ *
+ * Keyed to the `section_id` each band declares (see
+ * scripts/get-involved-structure.php and scripts/ia-im-new-page.php) rather
+ * than to the `bg-*` classes the section SDC emits. mcc_theme remaps
+ * caresphere's --background/--foreground onto a light palette in
+ * global-overrides.css, which quietly swaps what `bg-white` and `bg-black`
+ * render as, and all of this site's Canvas pages are built against the current
+ * behaviour — repointing those classes is a site-wide job, not a page-level
+ * one. Selectors list both pages' ids so the two stay in step; only the card
+ * glyphs at the bottom are per-page.
+ *
+ * Band rhythm on both pages: two dark bands top and bottom framing the light
+ * ones, which is the design system's "at most one or two background colours
+ * per page".
+ */
+
+/* -----------------------------------------------------------------------
+   Bands
+   ----------------------------------------------------------------------- */
+
+/* global-overrides.css gives every section-grid `margin-bottom: 5.5rem`,
+   which dates from when these components were all top-level siblings and had
+   to space themselves. Inside a padded section that 88px stacks on the band's
+   own 80px, leaving 167px of empty band under the cards and the FAQ. Take it
+   back and spend a little of it above the grid instead, where the intro and
+   the first row are currently 1px apart. */
+#get-involved-serve .section-grid,
+#get-involved-faq .section-grid,
+#im-new-sunday .section-grid,
+#im-new-faq .section-grid {
+  margin-top: var(--space-12) !important;
+  margin-bottom: 0 !important;
+}
+
+#get-involved-hero,
+#im-new-hero {
+  background-color: var(--green-900);
+}
+
+#get-involved-serve,
+#get-involved-faq,
+#im-new-sunday,
+#im-new-faq {
+  background-color: var(--surface-page);
+}
+
+#get-involved-ministry,
+#im-new-expect {
+  background-color: var(--neutral-50);
+  border-block: 1px solid var(--border-subtle);
+}
+
+#get-involved-contact,
+#im-new-visit {
+  background-color: var(--terracotta-900);
+}
+
+/* `.bg-black` sets `color: var(--foreground) !important` on every text element
+   inside it, which on this theme's light palette is near-black — so the hero's
+   own `--text-light` intro loses to it and the whole band goes dark-on-dark.
+   ID specificity is what it takes to win that back. */
+#get-involved-hero :is(h1, h2, h3, p, span, li, a, button),
+#im-new-hero :is(h1, h2, h3, p, span, li, a, button) {
+  color: var(--text-on-inverse) !important;
+}
+
+#get-involved-contact :is(h1, h2, h3, p, span, li),
+#im-new-visit :is(h1, h2, h3, p, span, li) {
+  color: var(--text-on-inverse);
+}
+
+/* Eyebrows: 13px bold uppercase with the brand's tracking, terracotta on the
+   light bands and plain white on the dark ones. They currently render as
+   ordinary sentence-case body text. */
+#get-involved-hero .section-intro__tagline,
+#im-new-hero .section-intro__tagline,
+#get-involved-serve .section-intro__tagline,
+#get-involved-faq .section-intro__tagline,
+#im-new-sunday .section-intro__tagline,
+#im-new-faq .section-intro__tagline,
+#get-involved-ministry .section-intro__tagline,
+#im-new-expect .section-intro__tagline,
+#get-involved-contact .section-intro__tagline,
+#im-new-visit .section-intro__tagline {
+  font-size: var(--text-caption);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+}
+
+#get-involved-serve .section-intro__tagline,
+#get-involved-faq .section-intro__tagline,
+#im-new-sunday .section-intro__tagline,
+#im-new-faq .section-intro__tagline,
+#get-involved-ministry .section-intro__tagline,
+#im-new-expect .section-intro__tagline {
+  color: var(--color-secondary);
+}
+
+#get-involved-serve .section-intro__heading,
+#get-involved-faq .section-intro__heading,
+#im-new-sunday .section-intro__heading,
+#im-new-faq .section-intro__heading,
+#get-involved-ministry .section-intro__heading,
+#im-new-expect .section-intro__heading {
+  color: var(--color-primary);
+}
+
+#get-involved-serve .section-intro__description,
+#get-involved-faq .section-intro__description,
+#im-new-sunday .section-intro__description,
+#im-new-faq .section-intro__description,
+#get-involved-ministry .section-intro__description,
+#im-new-expect .section-intro__description {
+  color: var(--text-body);
+}
+
+/* A green primary button on the terracotta band reads as a clash; the closing
+   CTA is the one place white-on-terracotta is the right call. */
+#get-involved-contact .button--primary,
+#im-new-visit .button--primary {
+  background: var(--white);
+  border-color: var(--white);
+  color: var(--terracotta-900);
+}
+
+#get-involved-contact .button--primary:hover,
+#im-new-visit .button--primary:hover {
+  background: var(--oatmeal);
+  border-color: var(--oatmeal);
+}
+
+/* -----------------------------------------------------------------------
+   Serve cards
+   ----------------------------------------------------------------------- */
+
+/* Equal-height cards with their CTAs on a common baseline. The grid column
+   does stretch, but Canvas puts the card inside its own wrapper element, and
+   without passing the height down through it the shortest card (Support
+   Missions, a two-line description against the others' three) sits centred in
+   a column 24px taller than itself, so its CTA misses the shared baseline. */
+#get-involved-serve .section-grid,
+#im-new-sunday .section-grid {
+  align-items: stretch;
+}
+
+#get-involved-serve .section-grid__col,
+#im-new-sunday .section-grid__col,
+#get-involved-serve .section-grid__col > *,
+#im-new-sunday .section-grid__col > * {
+  display: flex;
+  flex-direction: column;
+}
+
+#get-involved-serve .section-grid__col > *,
+#im-new-sunday .section-grid__col > * {
+  flex: 1 1 auto;
+}
+
+#get-involved-serve .card-icon,
+#im-new-sunday .card-icon {
+  width: 100%;
+  height: 100%;
+  align-items: stretch !important;
+  justify-content: flex-start !important;
+}
+
+#get-involved-serve .card-icon__inner,
+#im-new-sunday .card-icon__inner,
+#get-involved-serve .card-icon__content,
+#im-new-sunday .card-icon__content,
+#get-involved-serve .card-icon__content-block,
+#im-new-sunday .card-icon__content-block {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  width: 100%;
+}
+
+/* `.section-layout--align-center * { justify-content: center !important }`
+   reaches into the card's own flex columns. Once a card is stretched to the
+   row height that centres its heading in the leftover space, so three cards
+   with different amounts of copy put their headings at three different
+   heights. Only visible when the cards differ — on a row where every card has
+   the same shape it hides. */
+#get-involved-serve .card-icon__inner,
+#get-involved-serve .card-icon__content,
+#get-involved-serve .card-icon__content-block,
+#im-new-sunday .card-icon__inner,
+#im-new-sunday .card-icon__content,
+#im-new-sunday .card-icon__content-block {
+  justify-content: flex-start !important;
+}
+
+#get-involved-serve .card-icon__actions,
+#im-new-sunday .card-icon__actions {
+  margin-top: auto;
+  padding-top: var(--space-5);
+}
+
+#get-involved-serve .card-icon__actions .button--link,
+#im-new-sunday .card-icon__actions .button--link {
+  /* 24px on its own. */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+}
+
+/* All three cards fall through card-icon.twig's keyword test to the same
+   generic globe. The component only takes a bespoke icon as an uploaded media
+   entity, so swap the glyph here with a mask instead of putting three SVGs
+   into the media library for one page. */
+#get-involved-serve .card-icon__badge-icon svg,
+#im-new-sunday .card-icon__badge-icon svg {
+  display: none;
+}
+
+#get-involved-serve .card-icon__badge-icon::after,
+#im-new-sunday .card-icon__badge-icon::after {
+  content: "";
+  width: 26px;
+  height: 26px;
+  background-color: currentColor;
+  -webkit-mask: var(--card-glyph) center / contain no-repeat;
+  mask: var(--card-glyph) center / contain no-repeat;
+}
+
+#get-involved-serve .section-grid__col:nth-child(1) .card-icon__badge-icon {
+  --card-glyph: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2024%2024'%20fill%3D'none'%20stroke%3D'black'%20stroke-width%3D'2'%20stroke-linecap%3D'round'%20stroke-linejoin%3D'round'%3E%3Cpath%20d%3D'M11%2014h2a2%202%200%201%200%200-4h-3c-.6%200-1.1.2-1.4.6L3%2016'%2F%3E%3Cpath%20d%3D'm7%2020%201.6-1.4c.3-.4.8-.6%201.4-.6h4c1.1%200%202.1-.4%202.8-1.2l4.6-4.4a2%202%200%200%200-2.75-2.91l-4.2%203.9'%2F%3E%3Cpath%20d%3D'm2%2015%206%206'%2F%3E%3Cpath%20d%3D'M19.5%208.5c.7-.7%201.5-1.6%201.5-2.7A2.73%202.73%200%200%200%2016%204a2.78%202.78%200%200%200-5%201.8c0%201.2.8%202%201.5%202.8L16%2012Z'%2F%3E%3C%2Fsvg%3E");
+}
+
+#get-involved-serve .section-grid__col:nth-child(2) .card-icon__badge-icon {
+  --card-glyph: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2024%2024'%20fill%3D'none'%20stroke%3D'black'%20stroke-width%3D'2'%20stroke-linecap%3D'round'%20stroke-linejoin%3D'round'%3E%3Cpath%20d%3D'M19%2014c1.49-1.46%203-3.21%203-5.5A5.5%205.5%200%200%200%2016.5%203c-1.76%200-3%20.5-4.5%202-1.5-1.5-2.74-2-4.5-2A5.5%205.5%200%200%200%202%208.5c0%202.3%201.5%204.05%203%205.5l7%207Z'%2F%3E%3Cpath%20d%3D'M12%205%209.04%207.96a2.17%202.17%200%200%200%200%203.08c.82.82%202.13.85%203%20.07l2.07-1.9a2.82%202.82%200%200%201%203.79%200l2.96%202.66'%2F%3E%3Cpath%20d%3D'm18%2015-2-2'%2F%3E%3Cpath%20d%3D'm15%2018-2-2'%2F%3E%3C%2Fsvg%3E");
+}
+
+#get-involved-serve .section-grid__col:nth-child(3) .card-icon__badge-icon {
+  --card-glyph: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2024%2024'%20fill%3D'none'%20stroke%3D'black'%20stroke-width%3D'2'%20stroke-linecap%3D'round'%20stroke-linejoin%3D'round'%3E%3Ccircle%20cx%3D'12'%20cy%3D'12'%20r%3D'10'%2F%3E%3Cpath%20d%3D'M12%202a14.5%2014.5%200%200%200%200%2020%2014.5%2014.5%200%200%200%200-20'%2F%3E%3Cpath%20d%3D'M2%2012h20'%2F%3E%3C%2Fsvg%3E");
+}
+
+/* /im-new: Sunday School, worship, children. */
+#im-new-sunday .section-grid__col:nth-child(1) .card-icon__badge-icon {
+  --card-glyph: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2024%2024'%20fill%3D'none'%20stroke%3D'black'%20stroke-width%3D'2'%20stroke-linecap%3D'round'%20stroke-linejoin%3D'round'%3E%3Cpath%20d%3D'M12%207v14'%2F%3E%3Cpath%20d%3D'M3%2018a1%201%200%200%201-1-1V4a1%201%200%200%201%201-1h5a4%204%200%200%201%204%204%204%204%200%200%201%204-4h5a1%201%200%200%201%201%201v13a1%201%200%200%201-1%201h-6a3%203%200%200%200-3%203%203%203%200%200%200-3-3z'%2F%3E%3C%2Fsvg%3E");
+}
+
+#im-new-sunday .section-grid__col:nth-child(2) .card-icon__badge-icon {
+  --card-glyph: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2024%2024'%20fill%3D'none'%20stroke%3D'black'%20stroke-width%3D'2'%20stroke-linecap%3D'round'%20stroke-linejoin%3D'round'%3E%3Cpath%20d%3D'M9%2018V5l12-2v13'%2F%3E%3Ccircle%20cx%3D'6'%20cy%3D'18'%20r%3D'3'%2F%3E%3Ccircle%20cx%3D'18'%20cy%3D'16'%20r%3D'3'%2F%3E%3C%2Fsvg%3E");
+}
+
+#im-new-sunday .section-grid__col:nth-child(3) .card-icon__badge-icon {
+  --card-glyph: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2024%2024'%20fill%3D'none'%20stroke%3D'black'%20stroke-width%3D'2'%20stroke-linecap%3D'round'%20stroke-linejoin%3D'round'%3E%3Cpath%20d%3D'M9%2012h.01'%2F%3E%3Cpath%20d%3D'M15%2012h.01'%2F%3E%3Cpath%20d%3D'M10%2016c.5.3%201.2.5%202%20.5s1.5-.2%202-.5'%2F%3E%3Cpath%20d%3D'M19%206.3a9%209%200%200%201%201.8%203.9%202%202%200%200%201%200%203.6%209%209%200%200%201-17.6%200%202%202%200%200%201%200-3.6A9%209%200%200%201%2012%203c2%200%203.5%201.1%203.5%202.5s-.9%202.5-2%202.5c-.8%200-1.5-.4-1.5-1'%2F%3E%3C%2Fsvg%3E");
+}
+
+/* -----------------------------------------------------------------------
+   FAQ
+   ----------------------------------------------------------------------- */
+
+/* The band is centre-aligned for its intro, and caresphere enforces that with
+   `.section-layout--align-center * { text-align: center !important }` — which
+   reaches into the accordion and centres the questions and answers too. */
+#get-involved-faq .accordion__item,
+#im-new-faq .accordion__item,
+#get-involved-faq .accordion__item *,
+#im-new-faq .accordion__item * {
+  text-align: left !important;
+}
+
+#get-involved-faq .accordion__trigger,
+#im-new-faq .accordion__trigger {
+  justify-content: space-between !important;
+}
+
+/* One bordered stack rather than four separate floating cards. */
+#get-involved-faq .section-grid__col,
+#im-new-faq .section-grid__col {
+  max-width: 820px;
+  margin-inline: auto;
+  width: 100%;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--surface-card);
+}
+
+#get-involved-faq .accordion__item,
+#im-new-faq .accordion__item {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+}
+
+#get-involved-faq .accordion__item + .accordion__item,
+#im-new-faq .accordion__item + .accordion__item {
+  margin-top: 0;
+  border-top: 1px solid var(--border-subtle);
+}
+
+/* -----------------------------------------------------------------------
+   Responsive
+   ----------------------------------------------------------------------- */
+
+/* caresphere goes straight from one column to three at 62rem. Land on two in
+   between so the cards are not full-width paragraphs on a tablet. */
+@media (min-width: 37.5rem) and (max-width: 61.99rem) {
+  #get-involved-serve .section-grid--layout-3_column,
+  #im-new-sunday .section-grid--layout-3_column {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 43.75rem) {
+  #get-involved-hero .section-intro__heading--h1,
+  #im-new-hero .section-intro__heading--h1 {
+    font-size: 38px;
+  }
+
+  #get-involved-hero,
+  #im-new-hero,
+  #get-involved-serve,
+  #get-involved-faq,
+  #im-new-sunday,
+  #im-new-faq,
+  #get-involved-ministry,
+  #im-new-expect,
+  #get-involved-contact,
+  #im-new-visit {
+    padding-top: var(--space-12) !important;
+    padding-bottom: var(--space-12) !important;
+  }
+}
