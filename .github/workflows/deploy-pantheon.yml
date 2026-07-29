@@ -9,18 +9,20 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
       - name: Set up Pantheon deploy key
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.PANTHEON_SSH_PRIVATE_KEY }}
-
-      - name: Trust Pantheon's git hosts
         run: |
           mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          echo "${{ secrets.PANTHEON_SSH_PRIVATE_KEY }}" > ~/.ssh/pantheon_deploy_key
+          chmod 600 ~/.ssh/pantheon_deploy_key
+          eval "$(ssh-agent -s)"
+          echo "SSH_AUTH_SOCK=$SSH_AUTH_SOCK" >> "$GITHUB_ENV"
+          echo "SSH_AGENT_PID=$SSH_AGENT_PID" >> "$GITHUB_ENV"
+          ssh-add ~/.ssh/pantheon_deploy_key
           cat >> ~/.ssh/config <<'EOF'
           Host *.drush.in
             StrictHostKeyChecking accept-new
@@ -36,3 +38,9 @@ jobs:
         run: |
           git remote add pantheon ssh://codeserver.dev.3e7034de-9912-4c4f-8856-5492a6770559@codeserver.dev.3e7034de-9912-4c4f-8856-5492a6770559.drush.in:2222/~/repository.git
           git push pantheon HEAD:master
+
+      - name: Clean up deploy key
+        if: always()
+        run: |
+          rm -f ~/.ssh/pantheon_deploy_key
+          ssh-agent -k || true
