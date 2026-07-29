@@ -154,7 +154,11 @@ DDEV project config lives in `.ddev/config.yaml`. Use `.ddev/config.local.yaml` 
 - `ddev drush <command>` — Drush, for site administration, config import/export, cache rebuilds, etc.
 - `ddev composer <command>` — Composer, for adding/updating modules, themes, and dependencies.
 - `node scripts/calendar-compare.mjs [YYYY-MM …]` — renders the `calendar_design.zip` reference and the live `/calendar` and `/calendar/print` pages in headless Chromium and diffs them side by side. It also asserts the print sheet is one Letter page with nothing clipped, and exits non-zero when it isn't. Run it after any change to the calendar components, `CalendarMonth`, or the print CSS. Runs on the Codespace host (no ddev); output lands in the gitignored `.calendar-compare/`.
-- `ddev exec terminus <command>` — Terminus, giving access to the Pantheon `dev`, `test`, and `live` environments of the legacy site (`mcc-church` on Pantheon) that we're migrating content from. Treat `test` and `live` with care — these are real environments, not scratch space. Prefer read-only Terminus commands (checking status, logs, backups) unless a change to those environments has been explicitly requested. Terminus is installed inside the ddev `web` container, not on the Codespace host — `ddev terminus` (without `exec`) is not a valid command.
+- `ddev exec terminus <command>` — Terminus, giving access both to the Pantheon `dev`, `test`, and `live` environments of the legacy site (`mcc-church` on Pantheon) that we're migrating content from, and to the **mcc2026** sandbox (this rebuild's `dev` environment only — it has no test/live). Treat `mcc-church` `test`/`live` with care — these are real environments, not scratch space. Prefer read-only Terminus commands on them unless a change has been explicitly requested. Terminus is installed inside the ddev `web` container, not on the Codespace host — `ddev terminus` (without `exec`) is not a valid command.
+- `ddev exec terminus remote:drush <site>.<env> -- <command>` — run drush against a remote Pantheon environment over SSH without a manual `ssh` session. Useful for `status`, `cache:rebuild`, `watchdog:show`, `sql:query`, etc. Arbitrary shell commands over that same SSH channel are rejected ("exec request failed on channel 0") — only specific allowed commands (drush, git, sql-cli, rsync/sftp) work.
+- Creating a new Pantheon site (`terminus site:create <name> <label> <upstream-machine-name> --org=mcc`) requires `--org` — this account's sites live under the **mcc** organization (`terminus org:list` shows it, though it has been seen to report empty on a stale/first call in a session; retry before assuming there's no org). `terminus upstream:list` shows available upstreams; this project's composer.json matches `drupal-cms-composer-managed`.
+- SSH access to Pantheon (git clone/push, `remote:drush`, rsync) needs a key registered to the account via `terminus ssh-key:add`. A fresh Codespace's container has no keys in `~/.ssh` — generate one before first use. **Pantheon rejects ed25519 keys** ("SSH keys of type 'ed25519' are not yet supported") — use `ssh-keygen -t rsa -b 4096`.
+- Importing a DB dump into a remote environment without uploading it first: `zcat dump.sql.gz | ssh -p 2222 <env>.<site-id>@appserver.<env>.<site-id>.drush.in drush sql-cli` (get the exact host/user from `terminus connection:info <site>.<env>`). Syncing `web/sites/default/files`: `rsync -rlz --ipv4 -e 'ssh -p 2222' web/sites/default/files/ <env>.<site-id>@appserver.<env>.<site-id>.drush.in:files/`.
 
 ## Secrets & tokens
 
@@ -162,11 +166,48 @@ Before asking the user to log in to a CLI interactively, check whether a token i
 
 - Run `env | grep -iE "token|key|secret"` on the Codespace host to see what's already available (e.g. `PANTHEON_MACHINE_TOKEN`, `GITHUB_TOKEN`). Codespaces secrets land as host-level environment variables, not inside the ddev containers, so they need to be passed through explicitly, e.g. `ddev exec "terminus auth:login --machine-token=$PANTHEON_MACHINE_TOKEN"`.
 - Never echo a token's value into a command you type out or into chat — reference it via its env var name so the literal value never appears in the transcript.
+- **`ddev exec` reconstructs and prints the full expanded command line (including argv) when the command fails.** Passing a secret as a command-line argument — even referenced via `$VAR` — risks that value being echoed verbatim into the error output the moment anything goes wrong (seen firsthand: a failed `ddev exec bash -c '...' _ "$TOKEN"` printed the literal token in the tool output). Pipe secrets via stdin instead: `ddev exec bash -c 'terminus auth:login --machine-token="$(cat)"' <<< "$TOKEN"`.
 - Only fall back to asking the user for a token/login if nothing suitable turns up in the environment.
+- The Codespace's ambient `GITHUB_TOKEN` (what `gh` auths with by default) can push code and open PRs but returns 403 on `gh secret set` / `gh secret list` — managing a repo's Actions secrets needs a user-supplied fine-grained PAT scoped to that repo with "Secrets: Read and write".
 
 ## Deploys
 
-Pushing to GitHub triggers the Pantheon build process automatically. There's no separate manual deploy step to remember — just make sure what you push is something you'd want built and deployed.
+Pushing to `main` on GitHub triggers `.github/workflows/deploy-pantheon.yml`, which pushes the
+same commit (source only — no `vendor/`, no `web/core`) to the **mcc2026** Pantheon sandbox
+site's git remote. Pantheon's own Integrated Composer build step (`build_step: true` in
+`pantheon.upstream.yml`) then runs `composer install` server-side and deploys the result to the
+`dev` environment. There's no separate manual deploy step to remember — just make sure what you
+push is something you'd want built and deployed. mcc2026 is a sandbox for testing this
+migration/rebuild; it is not the church's production site.
+
+Gotchas discovered getting this working (2026-07-29), worth knowing if the pipeline ever needs
+touching again:
+
+- **Pantheon's `dev` environment tracks the `master` branch, not `main`**, even on a freshly
+  created site whose own repo defaults to `main` (`origin/HEAD -> origin/main`). Pushing to
+  `main` succeeds silently but Pantheon's pre-receive hook prints "Skipping code sync, no
+  Multidev environments were found for branch main" and never builds. Always push
+  `<local-branch>:master`.
+- **The target environment must be in git connection mode**, not sftp, or the push is flatly
+  rejected ("pre-receive hook declined"). `terminus connection:set mcc2026.dev git` before
+  pushing code; the CI workflow assumes this is already set (it doesn't set it itself).
+- **`pantheon.upstream.yml` is upstream-owned — don't edit it.** It ships with the Drupal CMS
+  core upstream scaffold and defaults `php_version` to whatever that upstream's maintainers
+  pinned (8.3 as of this writing). Site-level overrides belong in `pantheon.yml` instead (see
+  the one at the repo root, which pins `php_version: 8.4` to match `.ddev/config.yaml`'s
+  `php_version`). If you ever bump ddev's PHP version, check whether `pantheon.yml` needs to
+  follow — a mismatch fails the Pantheon build with an unsatisfiable-platform-requirement error
+  from Composer (composer.lock resolved under one PHP version can lock packages that require a
+  newer minimum than the other environment provides).
+- **After any deploy that adds/removes modules or plugins, rebuild cache on the remote
+  environment**: `ddev exec terminus remote:drush mcc2026.dev -- cache:rebuild`. A build can
+  succeed while the site still 500s with `PluginNotFoundException` because Drupal's plugin
+  discovery cache in the database is stale from before the new code landed — this isn't a build
+  failure, just a cache that needs an explicit kick.
+- `web/sites/default/settings.php` and `services.yml` are committed (not ddev-generated-only)
+  specifically so Pantheon has something to boot from — don't re-gitignore them. The
+  `IS_DDEV_PROJECT`-guarded block in `settings.php` is ddev-only; anything that must also apply
+  on Pantheon (like `config_sync_directory`) needs to sit outside that guard.
 
 ## References
 
