@@ -62,69 +62,24 @@ body {
    (components/mcc-header/mcc-header.css) — see mcc_theme.theme +
    templates/layout/page.html.twig. */
 
-/* --- GENEROUS COMPONENT VERTICAL SPACING --- */
-div[data-component-id="caresphere_theme:hero-card"] {
-  margin-bottom: 5.5rem !important;
-}
-
-div[data-component-id="caresphere_theme:section-intro"] {
-  margin-top: 5rem !important;
-  margin-bottom: 2.25rem !important;
-}
-
+/* --- COMPONENT VERTICAL SPACING ---
+   Only section-grid and hero-card are addressable this way. Of the components
+   these pages use, only section, section-grid and hero-card print
+   `{{ attributes }}` in their Twig, and `data-component-id` rides on those
+   attributes — so a rule keyed to a button, section-intro, stat-card, text or
+   image selector never matches anything. Several such rules used to live in
+   this file, including the one that was supposed to paint the front page's
+   closing CTA band green; they are gone rather than fixed, because every one
+   of these pages now gets its rhythm from the `section` band it sits in (see
+   mcc-landing-bands.css). Don't reintroduce a data-component-id selector
+   without checking the component actually emits one. */
 div[data-component-id="caresphere_theme:section-grid"] {
-  margin-bottom: 5.5rem !important;
+  margin-bottom: 0;
 }
 
-/* --- 1. HERO SECTION: full-bleed, matching HomeScreen.jsx's hero
-   (background: var(--green-900), edge-to-edge, no card framing) --- */
-.hero-card {
-  background: var(--green-900);
-  color: var(--text-on-inverse);
-  padding: 4.5rem 1.5rem;
-  margin-bottom: 5.5rem;
-  position: relative;
-  overflow: hidden;
-  width: 100vw;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
-  box-sizing: border-box;
-}
-
-/* caresphere_theme's generic .custom-container utility (base.css) caps this
-   element at max-width 1312px and forces its own side padding with !important —
-   both defeat the full-bleed .hero-card rules above (100vw + negative margins),
-   leaving the hero boxed and flush-left. Neutralize it on the hero only so the
-   section bleeds edge-to-edge; .hero-card owns the side gutter (1.5rem). */
-.hero-card.custom-container {
-  max-width: none;
-  padding-inline: 1.5rem !important;
-}
-
-.hero-card__card {
-  max-width: var(--container-max);
-  margin: 0 auto;
-  /* Drop caresphere_theme's inner card padding (32px mobile / 64px desktop):
-     superfluous now that the full-bleed .hero-card frames the section and the
-     card is already max-width capped and centered. */
-  padding: 0 !important;
-}
-
-.hero-card__card {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 2.5rem;
-  align-items: center;
-}
-
-@media (min-width: 48rem) {
-  .hero-card__card {
-    grid-template-columns: 1.1fr 0.9fr;
-  }
-}
-
+/* --- HERO ---
+   The green band, the padding and the full bleed now belong to the `section`
+   the hero-card sits inside, so what is left here is only the type. */
 .hero-card__subtitle-badge {
   font-family: var(--font-sans, 'Nunito', sans-serif);
   font-size: 0.8rem;
@@ -181,58 +136,82 @@ div[data-component-id="caresphere_theme:section-grid"] {
   border: 1.5px solid rgba(255, 255, 255, 0.4);
 }
 
-/* --- 2. DEEP ROOTS & STATS SECTION --- */
-.mcc-section--stats {
-  background-color: #f3ede2;
-  padding: 5rem 2.5rem;
-  border-radius: var(--radius-lg, 16px);
-  margin-bottom: 5.5rem;
+/* --- BUTTONS ---
+   caresphere's button variants carry two things that are not this brand:
+   `border-radius: 0` on both secondary variants (the design system puts every
+   button on --radius-md, and nothing else on the site is square), and a
+   1.5px --destructive (brick red) border with a 4px bottom edge on
+   .button--primary, which read as a red outline around the green CTAs. */
+.button {
+  border-radius: var(--radius-md);
+  /* caresphere's padding lands these at 42px, just under the 44px minimum the
+     design system asks for. */
+  min-height: 44px;
+  align-items: center;
 }
 
+.button--primary {
+  border: 1.5px solid var(--color-primary);
+}
+
+.button--primary:hover {
+  background: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
+}
+
+.button--secondary-dark,
+.button--secondary-white {
+  border-width: 1.5px;
+  border-radius: var(--radius-md);
+}
+
+/* --- STAT CARDS ---
+   Was a block of hardcoded hex (#ffffff, #2f4833, #1e4d2b, #52514e) that
+   restated the palette instead of reading it, so these cards did not follow
+   the tokens the rest of the site does — the "white" was pure white against
+   every other surface's warm cream, and the numerals were green where the
+   design system puts them on --color-secondary. */
 .stat-card {
-  background: #ffffff !important;
+  background: var(--surface-card) !important;
   padding: 2rem 1.5rem !important;
-  border-radius: var(--radius-lg, 16px) !important;
-  border: 1px solid var(--border, #e9e3d5) !important;
-  box-shadow: var(--shadow-sm) !important;
+  border-radius: var(--radius-md) !important;
+  border: 1px solid var(--border-default) !important;
   display: flex !important;
   flex-direction: column !important;
   justify-content: center !important;
 }
 
 .stat-card__value {
-  font-family: var(--font-display, 'Calistoga', serif) !important;
-  font-size: 3rem !important;
-  font-weight: 700 !important;
-  color: #2f4833 !important;
+  font-family: var(--font-display) !important;
+  font-size: 2.75rem !important;
+  color: var(--color-secondary) !important;
   line-height: 1 !important;
   margin-bottom: 0.5rem !important;
 }
 
 .stat-card__label {
-  font-family: var(--font-sans, 'Nunito', sans-serif) !important;
-  font-size: 1.1rem !important;
-  font-weight: 700 !important;
-  color: #1e4d2b !important;
+  font-family: var(--font-sans) !important;
+  font-size: 1rem !important;
+  font-weight: var(--fw-bold) !important;
+  color: var(--text-body) !important;
   margin-bottom: 0.5rem !important;
 }
 
 .stat-card__description {
-  font-family: var(--font-sans, 'Nunito', sans-serif) !important;
+  font-family: var(--font-sans) !important;
   font-size: 0.925rem !important;
-  color: #52514e !important;
+  color: var(--text-muted) !important;
   margin: 0 !important;
   line-height: 1.5 !important;
 }
 
-/* --- 3. MINISTRIES ("WAYS WE SERVE TOGETHER") SECTION --- */
+/* --- ICON CARDS --- */
 .card-icon {
-  background: #ffffff !important;
-  border: 1px solid var(--border, #e9e3d5) !important;
-  border-radius: var(--radius-lg, 16px) !important;
+  background: var(--surface-card) !important;
+  border: 1px solid var(--border-default) !important;
+  border-radius: var(--radius-md) !important;
   padding: 2.25rem 1.75rem !important;
   text-align: center !important;
-  box-shadow: var(--shadow-sm) !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
@@ -242,8 +221,8 @@ div[data-component-id="caresphere_theme:section-grid"] {
   width: 56px !important;
   height: 56px !important;
   border-radius: 50% !important;
-  background-color: #e6eee8 !important;
-  color: #2f4833 !important;
+  background-color: var(--color-primary-subtle) !important;
+  color: var(--color-primary) !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -252,97 +231,46 @@ div[data-component-id="caresphere_theme:section-grid"] {
 
 .card-icon__heading,
 .card-icon h3 {
-  font-family: var(--font-display, 'Calistoga', serif) !important;
+  font-family: var(--font-display) !important;
   font-size: 1.35rem !important;
-  color: #1e4d2b !important;
+  color: var(--color-primary) !important;
   margin: 0.5rem 0 0.5rem !important;
 }
 
 .card-icon__description,
 .card-icon p {
-  color: #2f342d !important;
+  color: var(--text-muted) !important;
   font-size: 0.95rem !important;
   line-height: 1.55 !important;
 }
 
-/* Center section buttons */
-div[data-component-id="caresphere_theme:button"] {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-}
-
-div[data-component-id="caresphere_theme:button"] a {
-  display: inline-flex;
-  margin: 1.5rem auto;
-}
-
-/* --- 4. UPCOMING AT MCC SECTION --- */
-.mcc-section--events {
-  background-color: #f9f7f2;
-  padding: 5rem 2.5rem;
-  border-radius: var(--radius-lg, 16px);
-  margin-bottom: 5.5rem;
-}
-
-/* --- 5. MISSION STATEMENT QUOTE BANNER --- */
-.blockquote-wrapper,
-blockquote,
-.mcc-section--mission {
-  background-color: #312219 !important;
-  color: #e9e3d5 !important;
-  padding: 5.5rem 2.5rem !important;
-  text-align: center !important;
-  border-radius: var(--radius-lg, 16px) !important;
-  margin-top: 5.5rem !important;
-  margin-bottom: 5.5rem !important;
-  box-sizing: border-box;
-}
-
-.blockquote-wrapper blockquote,
+/* --- BLOCKQUOTE ---
+   This used to be a bare `blockquote` selector painting a dark brown banner
+   with `!important`, so *every* blockquote anywhere on the site — a pull quote
+   in a bio, a verse in a news story — became a full-width brown block with
+   5.5rem of padding. It existed to style one component on one page: the front
+   page's mission band, which is now a `section` band (#home-mission) like
+   every other band on the site. Scope any future blockquote styling to the
+   component, never to the element. */
+.blockquote-wrapper blockquote p,
 blockquote p {
-  font-family: var(--font-display, 'Calistoga', serif) !important;
-  font-size: 1.85rem !important;
-  font-style: italic !important;
-  color: #e9e3d5 !important;
-  max-width: 800px !important;
-  margin: 0 auto 1.25rem !important;
-  line-height: 1.45 !important;
+  font-family: var(--font-display);
+  font-size: 1.85rem;
+  font-style: italic;
+  max-width: 800px;
+  margin: 0 auto 1.25rem;
+  line-height: 1.45;
 }
 
 .blockquote-wrapper cite,
 blockquote cite {
-  font-family: var(--font-sans, 'Nunito', sans-serif) !important;
-  font-size: 0.85rem !important;
-  font-weight: 800 !important;
-  letter-spacing: 0.12em !important;
-  text-transform: uppercase !important;
-  color: rgba(233, 227, 213, 0.75) !important;
-  font-style: normal !important;
-}
-
-/* --- 6. WE'D LOVE TO MEET YOU (VISIT CTA BANNER) --- */
-div[data-component-id="caresphere_theme:section-intro"]:nth-last-of-type(1) {
-  background-color: var(--green-900) !important;
-  color: var(--text-on-inverse) !important;
-  padding: 4.5rem 2.5rem 2rem !important;
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0 !important;
-  text-align: center !important;
-  margin-bottom: 0 !important;
-  margin-top: 5.5rem !important;
-}
-
-div[data-component-id="caresphere_theme:section-intro"]:nth-last-of-type(1) h2,
-div[data-component-id="caresphere_theme:section-intro"]:nth-last-of-type(1) .section-intro__heading {
-  font-family: var(--font-display) !important;
-  font-size: 2.75rem !important;
-  color: var(--text-on-inverse) !important;
-}
-
-div[data-component-id="caresphere_theme:section-intro"]:nth-last-of-type(1) p,
-div[data-component-id="caresphere_theme:section-intro"]:nth-last-of-type(1) .section-intro__description {
-  color: rgba(255, 255, 255, 0.9) !important;
-  font-size: 1.15rem !important;
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: var(--fw-heavy);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  opacity: 0.75;
+  font-style: normal;
 }
 
 /* Footer markup/styling now lives entirely in the mcc-footer SDC

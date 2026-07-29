@@ -42,6 +42,13 @@
   font-size: 15px;
   color: var(--color-primary);
   text-decoration: none;
+  /* Was 22px tall — half the 44px minimum. The bar aligns on `baseline`, so
+     grow the hit area downward with padding rather than centring the text in
+     a 44px box, which would drop it off the range label's baseline. */
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-block: calc(var(--space-3, 0.75rem) * -1);
 }
 
 .mcc-thisweek__link:hover,

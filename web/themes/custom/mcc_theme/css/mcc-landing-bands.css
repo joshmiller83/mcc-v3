@@ -1,8 +1,8 @@
 /**
  * @file
  * Band styling for the Canvas landing pages built on the section /
- * section-intro / card-icon / accordion vocabulary: /get-involved, /im-new,
- * and /ministries.
+ * section-intro / card-icon / accordion vocabulary: the front page,
+ * /get-involved, /im-new, and /ministries.
  *
  * Keyed to the `section_id` each band declares (see
  * scripts/get-involved-structure.php, scripts/ia-im-new-page.php and
@@ -42,7 +42,9 @@
 
 #get-involved-hero,
 #im-new-hero,
-#ministries-hero {
+#ministries-hero,
+#home-hero,
+#home-cta {
   background-color: var(--green-900);
 }
 
@@ -53,19 +55,27 @@
 #ministries-intro,
 #ministries-listing,
 #ministries-verse,
-#ministries-pillars {
+#ministries-pillars,
+#home-impact,
+#home-events,
+/* The photo covers this band, but `bg-white` resolves to --foreground here
+   (near-black) under mcc_theme's palette remap, so any letterboxing at an
+   unusual aspect ratio would show as a black edge rather than page colour. */
+#home-closing-photo {
   background-color: var(--surface-page);
 }
 
 #get-involved-ministry,
-#im-new-expect {
+#im-new-expect,
+#home-ministries {
   background-color: var(--neutral-50);
   border-block: 1px solid var(--border-subtle);
 }
 
 #get-involved-contact,
 #im-new-visit,
-#ministries-cta {
+#ministries-cta,
+#home-mission {
   background-color: var(--terracotta-900);
 }
 
@@ -75,13 +85,17 @@
    ID specificity is what it takes to win that back. */
 #get-involved-hero :is(h1, h2, h3, p, span, li, a, button),
 #im-new-hero :is(h1, h2, h3, p, span, li, a, button),
-#ministries-hero :is(h1, h2, h3, p, span, li, a, button) {
+#ministries-hero :is(h1, h2, h3, p, span, li, a, button),
+#home-hero :is(h1, h2, h3, p, span, li, a, button),
+#home-cta :is(h1, h2, h3, p, span, li, a, button) {
   color: var(--text-on-inverse) !important;
 }
 
 #get-involved-contact :is(h1, h2, h3, p, span, li),
 #im-new-visit :is(h1, h2, h3, p, span, li),
-#ministries-cta :is(h1, h2, h3, p, span, li) {
+#ministries-cta :is(h1, h2, h3, p, span, li),
+/* bg-dark-gray carries no text-colour rule of its own, unlike bg-black. */
+#home-mission :is(h1, h2, h3, p, span, li, cite, blockquote) {
   color: var(--text-on-inverse);
 }
 
@@ -100,7 +114,10 @@
 #get-involved-contact .section-intro__tagline,
 #im-new-visit .section-intro__tagline,
 #ministries-intro .section-intro__tagline,
-#ministries-verse .section-intro__tagline {
+#ministries-verse .section-intro__tagline,
+#home-impact .section-intro__tagline,
+#home-ministries .section-intro__tagline,
+#home-events .section-intro__tagline {
   font-size: var(--text-caption);
   font-weight: var(--fw-bold);
   letter-spacing: var(--tracking-eyebrow);
@@ -114,7 +131,10 @@
 #get-involved-ministry .section-intro__tagline,
 #im-new-expect .section-intro__tagline,
 #ministries-intro .section-intro__tagline,
-#ministries-verse .section-intro__tagline {
+#ministries-verse .section-intro__tagline,
+#home-impact .section-intro__tagline,
+#home-ministries .section-intro__tagline,
+#home-events .section-intro__tagline {
   color: var(--color-secondary);
 }
 
@@ -125,7 +145,10 @@
 #get-involved-ministry .section-intro__heading,
 #im-new-expect .section-intro__heading,
 #ministries-intro .section-intro__heading,
-#ministries-verse .section-intro__heading {
+#ministries-verse .section-intro__heading,
+#home-impact .section-intro__heading,
+#home-ministries .section-intro__heading,
+#home-events .section-intro__heading {
   color: var(--color-primary);
 }
 
@@ -136,7 +159,10 @@
 #get-involved-ministry .section-intro__description,
 #im-new-expect .section-intro__description,
 #ministries-intro .section-intro__description,
-#ministries-verse .section-intro__description {
+#ministries-verse .section-intro__description,
+#home-impact .section-intro__description,
+#home-ministries .section-intro__description,
+#home-events .section-intro__description {
   color: var(--text-body);
 }
 
@@ -155,6 +181,166 @@
 #ministries-cta .button--primary:hover {
   background: var(--oatmeal);
   border-color: var(--oatmeal);
+}
+
+/* Same problem one band over: --color-primary *is* the green these bands are
+   painted with, so a primary button on a green band is green on green. On the
+   dark green bands the filled button is terracotta — which is what the hero's
+   own CTA has always done, via .hero-card__actions. */
+#home-hero .button--primary,
+#home-cta .button--primary,
+#get-involved-hero .button--primary,
+#im-new-hero .button--primary,
+#ministries-hero .button--primary {
+  background: var(--color-secondary);
+  border-color: var(--color-secondary);
+  color: var(--text-on-primary);
+}
+
+#home-hero .button--primary:hover,
+#home-cta .button--primary:hover,
+#get-involved-hero .button--primary:hover,
+#im-new-hero .button--primary:hover,
+#ministries-hero .button--primary:hover {
+  background: var(--color-secondary-hover);
+  border-color: var(--color-secondary-hover);
+}
+
+/* -----------------------------------------------------------------------
+   Front page
+   -----------------------------------------------------------------------
+   The front page is the only one of these four with a photographic hero and
+   a mosaic band, so the rules below are the ones that genuinely belong to it
+   alone. Everything above is shared with its three siblings.
+   ----------------------------------------------------------------------- */
+
+/* Hero. The photo is the section's own background_image; `section` already
+   renders it under a `.section-layout__overlay`, which ships as flat black at
+   0.72. Repaint that as the design's green scrim so the left side stays dark
+   enough for white text while the right stays open enough to read as a photo.
+   Keep the scrim if the image is ever swapped — the contrast depends on it. */
+#home-hero .section-layout__overlay {
+  background: linear-gradient(
+    115deg,
+    color-mix(in oklab, var(--green-950) 92%, transparent) 0%,
+    color-mix(in oklab, var(--green-900) 60%, transparent) 45%,
+    color-mix(in oklab, var(--green-900) 30%, transparent) 100%
+  );
+  opacity: 1;
+}
+
+/* .hero-card carries its own opaque green and a 100vw full-bleed trick from
+   the days when it *was* the band. Inside a section that now supplies both,
+   the colour hides the photo and the negative margins overflow the band. */
+#home-hero .hero-card,
+#home-hero .hero-card.custom-container {
+  background: transparent;
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  left: auto;
+  right: auto;
+  padding-inline: var(--space-6) !important;
+}
+
+/* One populated column, so let it use the width the design gives it (620px)
+   rather than the two-column grid's 1.1fr. */
+#home-hero .hero-card__card {
+  display: block;
+  min-height: 620px;
+  padding-block: var(--space-24) !important;
+}
+
+#home-hero .hero-card__column--left {
+  max-width: 620px;
+  align-items: flex-start;
+}
+
+#home-hero .hero-card__description {
+  max-width: 480px;
+}
+
+/* Impact mosaic. Each column stacks two cells; making the column a two-row
+   grid is what puts the photos and the stat cards on shared rows instead of
+   letting each column find its own heights. */
+#home-impact .section-grid__col {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: var(--space-6);
+  align-content: stretch;
+}
+
+#home-impact .section-grid__col > * {
+  min-height: 220px;
+}
+
+/* The image SDC wraps its picture in a figure > div that owns the aspect
+   ratio. In a fixed-height grid row the ratio fights the row, so drop it and
+   let the cell decide. */
+#home-impact .section-grid__col figure,
+#home-impact .section-grid__col figure > div {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+}
+
+#home-impact .section-grid__col figure > div {
+  aspect-ratio: auto;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+#home-impact .section-grid__col figure img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* The history paragraph shares the mosaic with three stat cards; without the
+   card treatment it reads as text that fell out of the grid. */
+#home-impact .text-ck-editor {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: var(--space-8);
+}
+
+/* Closing photo: a full-bleed band, no padding, fixed height. */
+#home-closing-photo {
+  padding: 0;
+}
+
+#home-closing-photo figure {
+  width: 100%;
+  margin: 0;
+}
+
+#home-closing-photo figure > div {
+  aspect-ratio: auto;
+  height: 420px;
+  border-radius: 0;
+  overflow: hidden;
+}
+
+#home-closing-photo figure img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* The "See all ministries" / "See the full calendar" buttons sit directly in
+   their band, after the grid. A bare <a class="button"> is a flex item of the
+   section, and the intro/grid above it are both full width, so it already
+   wraps onto its own row and the band's centring places it — it just must not
+   be allowed to stretch across that row. */
+#home-ministries > .button,
+#home-events > .button {
+  flex: 0 0 auto;
+  align-self: center;
+  margin-top: var(--space-10);
 }
 
 /* -----------------------------------------------------------------------
