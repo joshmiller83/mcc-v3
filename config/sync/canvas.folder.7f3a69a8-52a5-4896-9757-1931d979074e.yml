@@ -7,10 +7,13 @@ dependencies:
     - canvas.component.sdc.mcc_theme.mcc-event-card
     - canvas.component.sdc.mcc_theme.mcc-events-grid
     - canvas.component.sdc.mcc_theme.mcc-monogram
+    - canvas.component.sdc.mcc_theme.mcc-page-body
     - canvas.component.sdc.mcc_theme.mcc-people-grid
     - canvas.component.sdc.mcc_theme.mcc-person-card
     - canvas.component.sdc.mcc_theme.mcc-person-feature
     - canvas.component.sdc.mcc_theme.mcc-photo-placeholder
+    - canvas.component.sdc.mcc_theme.mcc-section-prevnext
+    - canvas.component.sdc.mcc_theme.mcc-section-related
 name: 'MCC Components'
 configEntityTypeId: component
 weight: 0
@@ -19,7 +22,10 @@ items:
   - sdc.mcc_theme.mcc-event-card
   - sdc.mcc_theme.mcc-events-grid
   - sdc.mcc_theme.mcc-monogram
+  - sdc.mcc_theme.mcc-page-body
   - sdc.mcc_theme.mcc-people-grid
   - sdc.mcc_theme.mcc-person-card
   - sdc.mcc_theme.mcc-person-feature
   - sdc.mcc_theme.mcc-photo-placeholder
+  - sdc.mcc_theme.mcc-section-prevnext
+  - sdc.mcc_theme.mcc-section-related

@@ -1,0 +1,50 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Page Body
+group: MCC Components
+description: >
+  The `page` bundle's full-view content template body. Renders plain (a title,
+  the SEO description as a dek, and the body text) unless `section_nav` is on,
+  in which case it switches to the level-3 layout: a green title band and a
+  two-column grid with a sticky "On this page" sidebar built client-side from
+  the body's own `<h2>`s. One component with a prop switch rather than two
+  content templates, because content templates are shared by every node of a
+  bundle+view mode — see AGENTS.md and scripts/about-*.php for why the About
+  children opt in via `field_section_nav` instead of the bundle changing
+  wholesale (Kids Worship, Nursery, Sunday School and the rest stay on the
+  plain branch).
+props:
+  type: object
+  required:
+    - title
+  properties:
+    title:
+      type: string
+      title: Title
+      examples:
+        - "Our history"
+    lede:
+      type: string
+      title: Dek
+      description: "Shown under the title. Sourced from the page's own SEO description field."
+    body:
+      type: string
+      title: Body
+      description: "Already-processed field_content markup."
+    section_nav:
+      type: boolean
+      title: Use the level-3 sidebar layout
+      default: false
+slots:
+  breadcrumb:
+    title: Breadcrumb
+    description: "The site breadcrumb block."
+  related:
+    title: Elsewhere-in-section links
+    description: "Sidebar sibling list. Only rendered when section_nav is on — see SectionRelatedBlock."
+  footer:
+    title: Prev / next footer
+    description: "Full-width row below the layout. Only rendered when section_nav is on — see SectionPrevNextBlock."
+libraryOverrides:
+  dependencies:
+    - core/drupal
+    - core/once

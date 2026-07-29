@@ -1,0 +1,29 @@
+.mcc-section-related__heading {
+  font-size: var(--text-caption);
+  font-weight: var(--fw-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-eyebrow);
+  color: var(--text-muted);
+  margin: 0 0 var(--space-4);
+}
+
+.mcc-section-related__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.mcc-section-related__link {
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  font-family: var(--font-body);
+  font-size: var(--text-body-md);
+  color: var(--text-link);
+  text-decoration: none;
+}
+
+.mcc-section-related__link:hover {
+  color: var(--text-link-hover);
+  text-decoration: underline;
+}

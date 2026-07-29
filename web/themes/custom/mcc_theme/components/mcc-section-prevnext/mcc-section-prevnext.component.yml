@@ -1,0 +1,14 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Section Prev / Next
+group: MCC Components
+description: >
+  The level-3 page's closing prev/next row. Props come from
+  SectionPrevNextBlock; either side can be absent (the family's first page
+  has no prev, the last has no next).
+props:
+  type: object
+  properties:
+    prev_label: { type: string, title: 'Previous label' }
+    prev_url: { type: string, title: 'Previous URL' }
+    next_label: { type: string, title: 'Next label' }
+    next_url: { type: string, title: 'Next URL' }

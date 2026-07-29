@@ -1,0 +1,21 @@
+uuid: 5ad3af96-99b6-4fee-b18a-26e3f14255e5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_section_nav
+    - node.type.page
+id: node.page.field_section_nav
+field_name: field_section_nav
+entity_type: node
+bundle: page
+label: 'Use section-navigation layout'
+description: 'Turns on the level-3 title band and sticky sidebar section navigation. Leave off for a plain page.'
+required: false
+translatable: null
+default_value: {  }
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

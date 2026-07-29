@@ -1,0 +1,22 @@
+uuid: 1b509f06-c894-4abf-a1d8-52014ba9db5e
+langcode: en
+status: true
+dependencies:
+  module:
+    - mcc_core
+active_version: 42c38c97da9fccf2
+versioned_properties:
+  active:
+    settings:
+      default_settings:
+        id: mcc_section_prevnext
+        label: 'Section prev/next'
+        label_display: '0'
+        provider: mcc_core
+    fallback_metadata:
+      slot_definitions: null
+label: 'Section prev/next'
+id: block.mcc_section_prevnext
+provider: mcc_core
+source: block
+source_local_id: mcc_section_prevnext

@@ -1,0 +1,27 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Section Related Links
+group: MCC Components
+description: >
+  The level-3 sidebar's "Elsewhere in [section]" list — sibling pages, minus
+  the current one. Props come from SectionRelatedBlock, which knows the
+  family a node belongs to; this component only lays the list out. Three flat
+  optional slots rather than one repeating list: Canvas can't offer a
+  repeating prop as an authorable field (no field type/widget maps to an
+  array-of-objects shape), and a block-fed component never needs the UI form
+  anyway — a fixed handful of link props is what mcc-section-prevnext already
+  does for the same reason.
+props:
+  type: object
+  properties:
+    heading:
+      type: string
+      title: Heading
+      default: 'Elsewhere'
+      examples:
+        - 'Elsewhere in About'
+    link_1_label: { type: string, title: 'Link 1 label' }
+    link_1_url: { type: string, title: 'Link 1 URL' }
+    link_2_label: { type: string, title: 'Link 2 label' }
+    link_2_url: { type: string, title: 'Link 2 URL' }
+    link_3_label: { type: string, title: 'Link 3 label' }
+    link_3_url: { type: string, title: 'Link 3 URL' }

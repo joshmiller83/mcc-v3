@@ -1,0 +1,44 @@
+{% if section_nav %}
+  <div{{ attributes.addClass('mcc-page') }} data-mcc-section-nav>
+
+    <div class="mcc-page__band">
+      <div class="mcc-page__band-inner custom-container">
+        <div class="mcc-page__breadcrumb">{{ breadcrumb }}</div>
+        <h1 class="mcc-page__title">{{ title }}</h1>
+        {% if lede %}
+          <p class="mcc-page__lede">{{ lede }}</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="mcc-page__layout custom-container">
+      <aside class="mcc-page__sidebar" data-mcc-toc-sidebar hidden>
+        <details class="mcc-page__toc-disclosure" open>
+          <summary class="mcc-page__sidebar-label">On this page</summary>
+          <nav class="mcc-page__toc" data-mcc-toc aria-label="On this page"></nav>
+        </details>
+        {% if related %}
+          <div class="mcc-page__sidebar-related">{{ related }}</div>
+        {% endif %}
+      </aside>
+
+      <div class="mcc-page__body" data-mcc-toc-content>
+        {{ body }}
+      </div>
+    </div>
+
+    {% if footer %}
+      <div class="mcc-page__footer custom-container">{{ footer }}</div>
+    {% endif %}
+
+  </div>
+{% else %}
+  <div{{ attributes.addClass('mcc-page', 'mcc-page--plain') }}>
+    <div class="mcc-page__plain-inner custom-container">
+      <h1 class="mcc-page__title mcc-page__title--plain">{{ title }}</h1>
+      <div class="mcc-page__body mcc-page__body--plain">
+        {{ body }}
+      </div>
+    </div>
+  </div>
+{% endif %}

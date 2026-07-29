@@ -1,0 +1,10 @@
+{% if link_1_url or link_2_url or link_3_url %}
+  <div{{ attributes.addClass('mcc-section-related') }}>
+    <p class="mcc-section-related__heading">{{ heading }}</p>
+    <nav class="mcc-section-related__list" aria-label="{{ heading }}">
+      {% if link_1_url %}<a class="mcc-section-related__link" href="{{ link_1_url }}">{{ link_1_label }}</a>{% endif %}
+      {% if link_2_url %}<a class="mcc-section-related__link" href="{{ link_2_url }}">{{ link_2_label }}</a>{% endif %}
+      {% if link_3_url %}<a class="mcc-section-related__link" href="{{ link_3_url }}">{{ link_3_label }}</a>{% endif %}
+    </nav>
+  </div>
+{% endif %}

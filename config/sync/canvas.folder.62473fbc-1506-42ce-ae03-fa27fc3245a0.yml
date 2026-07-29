@@ -3,9 +3,13 @@ langcode: en
 status: true
 dependencies:
   config:
+    - canvas.component.block.mcc_section_prevnext
+    - canvas.component.block.mcc_section_related
     - canvas.component.block.mcc_this_week
 name: MCC
 configEntityTypeId: component
 weight: 0
 items:
+  - block.mcc_section_prevnext
+  - block.mcc_section_related
   - block.mcc_this_week

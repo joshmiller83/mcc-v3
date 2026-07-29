@@ -8,6 +8,7 @@ dependencies:
     - field.field.node.page.field_content
     - field.field.node.page.field_description
     - field.field.node.page.field_featured_image
+    - field.field.node.page.field_section_nav
     - field.field.node.page.field_tags
     - node.type.page
   module:
@@ -73,4 +74,5 @@ content:
     region: content
 hidden:
   field_description: true
+  field_section_nav: true
   links: true

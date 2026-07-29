@@ -8,9 +8,9 @@ dependencies:
     - field.field.node.page.field_content
     - field.field.node.page.field_description
     - field.field.node.page.field_featured_image
+    - field.field.node.page.field_section_nav
     - field.field.node.page.field_tags
     - node.type.page
-    - workflows.workflow.basic_editorial
   module:
     - content_moderation
     - media_library
@@ -69,6 +69,13 @@ content:
     region: content
     settings:
       media_types: {  }
+    third_party_settings: {  }
+  field_section_nav:
+    type: boolean_checkbox
+    weight: 30
+    region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   field_tags:
     type: entity_reference_autocomplete

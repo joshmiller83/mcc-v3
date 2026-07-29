@@ -1,0 +1,320 @@
+/**
+ * The `page` bundle's content-template body — see mcc-page-body.twig for the
+ * plain/section-nav branch this pairs with.
+ */
+
+/* ---------------------------------------------------------------------
+   Shared body typography — both branches print raw WYSIWYG markup from
+   field_content, so the element selectors (not classes) carry the voice.
+   --------------------------------------------------------------------- */
+.mcc-page__body h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-display-md);
+  line-height: var(--lh-display-md);
+  color: var(--text-body);
+  margin: var(--space-16) 0 var(--space-4);
+}
+
+.mcc-page__body h3 {
+  font-family: var(--font-display);
+  font-size: var(--text-heading-lg);
+  line-height: var(--lh-heading-lg);
+  color: var(--text-body);
+  margin: var(--space-10) 0 var(--space-3);
+}
+
+.mcc-page__body > *:first-child,
+.mcc-page__body h2:first-child {
+  margin-top: 0;
+}
+
+.mcc-page__body p {
+  font-family: var(--font-body);
+  font-size: var(--text-body-lg);
+  line-height: var(--lh-body-lg);
+  color: var(--text-body);
+  max-width: 66ch;
+  text-wrap: pretty;
+  margin: 0 0 var(--space-4);
+}
+
+.mcc-page__body ul,
+.mcc-page__body ol {
+  margin: 0 0 var(--space-4);
+  padding-left: var(--space-6);
+  max-width: 66ch;
+}
+
+.mcc-page__body li {
+  font-family: var(--font-body);
+  font-size: var(--text-body-lg);
+  line-height: var(--lh-body-lg);
+  color: var(--text-body);
+  margin-bottom: var(--space-2);
+}
+
+.mcc-page__body a {
+  color: var(--text-link);
+}
+
+.mcc-page__body a:hover {
+  color: var(--text-link-hover);
+}
+
+.mcc-page__body blockquote {
+  border-left: 3px solid var(--color-secondary);
+  padding-left: var(--space-6);
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: var(--text-body-lg);
+  line-height: var(--lh-body-lg);
+  color: var(--text-muted);
+  max-width: 60ch;
+  margin: var(--space-8) 0;
+}
+
+.mcc-page__body table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md, 10px);
+  overflow: hidden;
+  background: var(--surface-card);
+  margin: var(--space-8) 0;
+}
+
+.mcc-page__body th,
+.mcc-page__body td {
+  padding: var(--space-4) var(--space-6);
+  border-top: 1px solid var(--border-subtle);
+  text-align: left;
+  font-family: var(--font-body);
+  font-size: var(--text-body-md);
+  line-height: var(--lh-body-md);
+  color: var(--text-body);
+}
+
+.mcc-page__body tr:first-child th,
+.mcc-page__body tr:first-child td {
+  border-top: none;
+}
+
+.mcc-page__body td:first-child,
+.mcc-page__body th:first-child {
+  font-family: var(--font-display);
+  font-size: var(--text-heading-md);
+  color: var(--color-primary);
+  white-space: nowrap;
+  width: 1%;
+}
+
+.mcc-page__body figure {
+  margin: var(--space-8) 0;
+}
+
+.mcc-page__body figure img,
+.mcc-page__body drupal-media img {
+  width: 100%;
+  border-radius: var(--radius-md, 10px);
+}
+
+.mcc-page__body figcaption {
+  font-family: var(--font-body);
+  font-size: var(--text-body-sm);
+  line-height: var(--lh-body-sm);
+  color: var(--text-muted);
+  margin-top: var(--space-2);
+}
+
+/* ---------------------------------------------------------------------
+   Plain branch — every `page` node without field_section_nav on.
+   --------------------------------------------------------------------- */
+.mcc-page--plain .mcc-page__plain-inner {
+  padding: var(--space-12) var(--space-6);
+}
+
+.mcc-page__title--plain {
+  font-family: var(--font-display);
+  font-size: var(--text-display-lg);
+  line-height: var(--lh-display-lg);
+  color: var(--text-body);
+  margin: 0 0 var(--space-8);
+}
+
+/* ---------------------------------------------------------------------
+   Level-3 branch — title band.
+   --------------------------------------------------------------------- */
+.mcc-page__band {
+  background: var(--green-900);
+}
+
+.mcc-page__band-inner {
+  padding: var(--space-12) var(--space-6) var(--space-16);
+}
+
+.mcc-page__breadcrumb {
+  margin-bottom: var(--space-4);
+  font-size: var(--text-body-sm);
+}
+
+.mcc-page__breadcrumb .breadcrumb,
+.mcc-page__breadcrumb nav {
+  margin: 0;
+  padding: 0;
+}
+
+.mcc-page__breadcrumb .breadcrumb__link,
+.mcc-page__breadcrumb .breadcrumb__current {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.mcc-page__breadcrumb .breadcrumb__current {
+  color: var(--text-on-inverse);
+  font-weight: var(--fw-bold);
+}
+
+.mcc-page__breadcrumb .breadcrumb__separator {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.mcc-page__title {
+  font-family: var(--font-display);
+  font-size: var(--text-display-lg);
+  line-height: var(--lh-display-lg);
+  color: var(--text-on-inverse);
+  max-width: 760px;
+  margin: 0 0 var(--space-4);
+}
+
+.mcc-page__lede {
+  font-family: var(--font-body);
+  font-size: var(--text-body-lg);
+  line-height: var(--lh-body-lg);
+  color: rgba(255, 255, 255, 0.9);
+  max-width: 640px;
+  margin: 0;
+}
+
+/* ---------------------------------------------------------------------
+   Level-3 branch — two-column layout.
+   --------------------------------------------------------------------- */
+.mcc-page__layout {
+  display: grid;
+  grid-template-columns: 248px 1fr;
+  gap: var(--space-16);
+  align-items: start;
+  padding: var(--space-16) var(--space-6) var(--space-24);
+}
+
+/* No sidebar to show — either JS hasn't run yet, or mcc-page-body.js found
+   fewer than two headings and left it hidden (see /about/who-we-are). A
+   fixed two-column grid still reserves the first track for a hidden child,
+   so the body sits in a narrow right-hand column with a blank gutter beside
+   it unless the layout collapses to one column. */
+.mcc-page__layout:has(.mcc-page__sidebar[hidden]) {
+  grid-template-columns: 1fr;
+}
+
+.mcc-page__sidebar {
+  position: sticky;
+  top: 96px;
+}
+
+.mcc-page__toc-disclosure summary {
+  list-style: none;
+  cursor: default;
+  font-size: var(--text-caption);
+  font-weight: var(--fw-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-eyebrow);
+  color: var(--text-muted);
+  margin-bottom: var(--space-4);
+}
+
+.mcc-page__toc-disclosure summary::-webkit-details-marker {
+  display: none;
+}
+
+.mcc-page__toc {
+  display: flex;
+  flex-direction: column;
+  border-left: 2px solid var(--border-default);
+}
+
+.mcc-page__toc-link {
+  padding: 11px 0 11px 16px;
+  margin-left: -2px;
+  border-left: 2px solid transparent;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  font-family: var(--font-body);
+  font-size: var(--text-body-md);
+  line-height: 1.4;
+  color: var(--text-muted);
+  font-weight: var(--fw-regular);
+  text-decoration: none;
+  transition: color 150ms cubic-bezier(.4, 0, .2, 1), border-color 150ms cubic-bezier(.4, 0, .2, 1);
+}
+
+.mcc-page__toc-link:hover {
+  color: var(--color-primary);
+}
+
+.mcc-page__toc-link.is-active {
+  color: var(--color-primary);
+  font-weight: var(--fw-bold);
+  border-left-color: var(--color-primary);
+}
+
+.mcc-page__sidebar-related {
+  margin-top: var(--space-8);
+  padding-top: var(--space-8);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.mcc-page__footer {
+  padding: 0 var(--space-6) var(--space-16);
+}
+
+.mcc-page__body {
+  min-width: 0;
+}
+
+.mcc-page__body h2 {
+  scroll-margin-top: 96px;
+}
+
+/* ---------------------------------------------------------------------
+   Responsive.
+   --------------------------------------------------------------------- */
+@media (max-width: 1023px) {
+  .mcc-page__layout {
+    grid-template-columns: 1fr;
+  }
+
+  .mcc-page__sidebar {
+    position: static;
+  }
+
+  .mcc-page__toc-disclosure summary {
+    cursor: pointer;
+  }
+}
+
+@media (max-width: 767px) {
+  .mcc-page__title,
+  .mcc-page__title--plain {
+    font-size: 2.125rem;
+  }
+
+  .mcc-page__body h2 {
+    font-size: 1.625rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mcc-page__toc-link {
+    transition: none;
+  }
+}

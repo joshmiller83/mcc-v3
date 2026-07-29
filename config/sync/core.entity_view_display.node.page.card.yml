@@ -9,6 +9,7 @@ dependencies:
     - field.field.node.page.field_content
     - field.field.node.page.field_description
     - field.field.node.page.field_featured_image
+    - field.field.node.page.field_section_nav
     - field.field.node.page.field_tags
     - node.type.page
   module:
@@ -41,5 +42,6 @@ hidden:
   field_attachments: true
   field_bio_reference: true
   field_content: true
+  field_section_nav: true
   field_tags: true
   links: true

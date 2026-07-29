@@ -1,0 +1,68 @@
+uuid: 84eb8d98-e6fc-4e24-95e5-9ebe9770627d
+langcode: en
+status: true
+dependencies:
+  theme:
+    - mcc_theme
+active_version: 3af7ccd8c67cc197
+versioned_properties:
+  active:
+    settings:
+      prop_field_definitions:
+        title:
+          required: true
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value:
+            -
+              value: 'Our history'
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+        lede:
+          required: false
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value: null
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+        body:
+          required: false
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value: null
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+        section_nav:
+          required: false
+          field_type: boolean
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: boolean_checkbox
+          default_value: null
+          expression: ℹ︎boolean␟value
+          derived_schema_metadata: {  }
+    fallback_metadata:
+      slot_definitions:
+        breadcrumb:
+          title: Breadcrumb
+          description: 'The site breadcrumb block.'
+        related:
+          title: 'Elsewhere-in-section links'
+          description: 'Sidebar sibling list. Only rendered when section_nav is on — see SectionRelatedBlock.'
+        footer:
+          title: 'Prev / next footer'
+          description: 'Full-width row below the layout. Only rendered when section_nav is on — see SectionPrevNextBlock.'
+label: 'Page Body'
+id: sdc.mcc_theme.mcc-page-body
+provider: mcc_theme
+source: sdc
+source_local_id: 'mcc_theme:mcc-page-body'

@@ -1,0 +1,16 @@
+{% if prev_url or next_url %}
+  <div{{ attributes.addClass('mcc-section-prevnext') }}>
+    {% if prev_url %}
+      <a class="mcc-section-prevnext__link mcc-section-prevnext__link--prev" href="{{ prev_url }}">
+        <span aria-hidden="true">&larr;</span> {{ prev_label }}
+      </a>
+    {% else %}
+      <span></span>
+    {% endif %}
+    {% if next_url %}
+      <a class="mcc-section-prevnext__link mcc-section-prevnext__link--next" href="{{ next_url }}">
+        {{ next_label }} <span aria-hidden="true">&rarr;</span>
+      </a>
+    {% endif %}
+  </div>
+{% endif %}

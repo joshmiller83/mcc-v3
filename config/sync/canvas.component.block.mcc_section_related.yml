@@ -1,0 +1,22 @@
+uuid: 5e2e51e9-1f3d-42a6-ab86-9a4522f7ae89
+langcode: en
+status: true
+dependencies:
+  module:
+    - mcc_core
+active_version: 2e60fea7c547df6d
+versioned_properties:
+  active:
+    settings:
+      default_settings:
+        id: mcc_section_related
+        label: 'Section related links'
+        label_display: '0'
+        provider: mcc_core
+    fallback_metadata:
+      slot_definitions: null
+label: 'Section related links'
+id: block.mcc_section_related
+provider: mcc_core
+source: block
+source_local_id: mcc_section_related
