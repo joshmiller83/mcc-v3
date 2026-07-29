@@ -13,6 +13,10 @@
         "drupal": {
             "type": "composer",
             "url": "https://packages.drupal.org/8"
+        },
+        "upstream-configuration": {
+            "type": "path",
+            "url": "upstream-configuration"
         }
     },
     "require": {
@@ -76,6 +80,7 @@
         "drupal/menu_link_attributes": "^1.6.0",
         "drupal/mercury": "^1.0.5",
         "drupal/metatag": "^2.2.0",
+        "drupal/pantheon_advanced_page_cache": "^2.3.1",
         "drupal/migrate_plus": "^6.0",
         "drupal/migrate_tools": "^6.1",
         "drupal/modeler_api": "^1.0.7",
@@ -104,7 +109,9 @@
         "drupal/views_infinite_scroll": "^2.0.3",
         "drupal/webform": "^6.3.0-beta8",
         "drupal/yoast_seo": "^2.2.0",
-        "league/commonmark": "^2.4"
+        "league/commonmark": "^2.4",
+        "pantheon-systems/drupal-integrations": "^11.1",
+        "pantheon-upstreams/upstream-configuration": "dev-main"
     },
     "require-dev": {
         "drush/drush": "^13.7"
