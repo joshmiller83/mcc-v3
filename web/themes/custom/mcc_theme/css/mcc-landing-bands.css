@@ -1,21 +1,25 @@
 /**
  * @file
- * Band styling for the two Canvas landing pages built on the section /
- * section-intro / card-icon / accordion vocabulary: /get-involved and /im-new.
+ * Band styling for the Canvas landing pages built on the section /
+ * section-intro / card-icon / accordion vocabulary: /get-involved, /im-new,
+ * and /ministries.
  *
  * Keyed to the `section_id` each band declares (see
- * scripts/get-involved-structure.php and scripts/ia-im-new-page.php) rather
- * than to the `bg-*` classes the section SDC emits. mcc_theme remaps
- * caresphere's --background/--foreground onto a light palette in
- * global-overrides.css, which quietly swaps what `bg-white` and `bg-black`
- * render as, and all of this site's Canvas pages are built against the current
- * behaviour — repointing those classes is a site-wide job, not a page-level
- * one. Selectors list both pages' ids so the two stay in step; only the card
- * glyphs at the bottom are per-page.
+ * scripts/get-involved-structure.php, scripts/ia-im-new-page.php and
+ * scripts/ministries-structure.php) rather than to the `bg-*` classes the
+ * section SDC emits. mcc_theme remaps caresphere's --background/--foreground
+ * onto a light palette in global-overrides.css, which quietly swaps what
+ * `bg-white` and `bg-black` render as, and all of this site's Canvas pages
+ * are built against the current behaviour — repointing those classes is a
+ * site-wide job, not a page-level one. Selectors list every page's ids so
+ * they stay in step; only the card glyphs at the bottom are per-page (and
+ * /ministries has none — its cards use no icon).
  *
- * Band rhythm on both pages: two dark bands top and bottom framing the light
- * ones, which is the design system's "at most one or two background colours
- * per page".
+ * Band rhythm on all three pages: two dark bands top and bottom framing the
+ * light ones, which is the design system's "at most one or two background
+ * colours per page". /ministries' hero and closing CTA are its two dark
+ * bands; ministries-intro/-listing/-verse/-pillars are the light ones in
+ * between.
  */
 
 /* -----------------------------------------------------------------------
@@ -37,14 +41,19 @@
 }
 
 #get-involved-hero,
-#im-new-hero {
+#im-new-hero,
+#ministries-hero {
   background-color: var(--green-900);
 }
 
 #get-involved-serve,
 #get-involved-faq,
 #im-new-sunday,
-#im-new-faq {
+#im-new-faq,
+#ministries-intro,
+#ministries-listing,
+#ministries-verse,
+#ministries-pillars {
   background-color: var(--surface-page);
 }
 
@@ -55,7 +64,8 @@
 }
 
 #get-involved-contact,
-#im-new-visit {
+#im-new-visit,
+#ministries-cta {
   background-color: var(--terracotta-900);
 }
 
@@ -64,12 +74,14 @@
    own `--text-light` intro loses to it and the whole band goes dark-on-dark.
    ID specificity is what it takes to win that back. */
 #get-involved-hero :is(h1, h2, h3, p, span, li, a, button),
-#im-new-hero :is(h1, h2, h3, p, span, li, a, button) {
+#im-new-hero :is(h1, h2, h3, p, span, li, a, button),
+#ministries-hero :is(h1, h2, h3, p, span, li, a, button) {
   color: var(--text-on-inverse) !important;
 }
 
 #get-involved-contact :is(h1, h2, h3, p, span, li),
-#im-new-visit :is(h1, h2, h3, p, span, li) {
+#im-new-visit :is(h1, h2, h3, p, span, li),
+#ministries-cta :is(h1, h2, h3, p, span, li) {
   color: var(--text-on-inverse);
 }
 
@@ -78,6 +90,7 @@
    ordinary sentence-case body text. */
 #get-involved-hero .section-intro__tagline,
 #im-new-hero .section-intro__tagline,
+#ministries-hero .section-intro__tagline,
 #get-involved-serve .section-intro__tagline,
 #get-involved-faq .section-intro__tagline,
 #im-new-sunday .section-intro__tagline,
@@ -85,7 +98,9 @@
 #get-involved-ministry .section-intro__tagline,
 #im-new-expect .section-intro__tagline,
 #get-involved-contact .section-intro__tagline,
-#im-new-visit .section-intro__tagline {
+#im-new-visit .section-intro__tagline,
+#ministries-intro .section-intro__tagline,
+#ministries-verse .section-intro__tagline {
   font-size: var(--text-caption);
   font-weight: var(--fw-bold);
   letter-spacing: var(--tracking-eyebrow);
@@ -97,7 +112,9 @@
 #im-new-sunday .section-intro__tagline,
 #im-new-faq .section-intro__tagline,
 #get-involved-ministry .section-intro__tagline,
-#im-new-expect .section-intro__tagline {
+#im-new-expect .section-intro__tagline,
+#ministries-intro .section-intro__tagline,
+#ministries-verse .section-intro__tagline {
   color: var(--color-secondary);
 }
 
@@ -106,7 +123,9 @@
 #im-new-sunday .section-intro__heading,
 #im-new-faq .section-intro__heading,
 #get-involved-ministry .section-intro__heading,
-#im-new-expect .section-intro__heading {
+#im-new-expect .section-intro__heading,
+#ministries-intro .section-intro__heading,
+#ministries-verse .section-intro__heading {
   color: var(--color-primary);
 }
 
@@ -115,21 +134,25 @@
 #im-new-sunday .section-intro__description,
 #im-new-faq .section-intro__description,
 #get-involved-ministry .section-intro__description,
-#im-new-expect .section-intro__description {
+#im-new-expect .section-intro__description,
+#ministries-intro .section-intro__description,
+#ministries-verse .section-intro__description {
   color: var(--text-body);
 }
 
 /* A green primary button on the terracotta band reads as a clash; the closing
    CTA is the one place white-on-terracotta is the right call. */
 #get-involved-contact .button--primary,
-#im-new-visit .button--primary {
+#im-new-visit .button--primary,
+#ministries-cta .button--primary {
   background: var(--white);
   border-color: var(--white);
   color: var(--terracotta-900);
 }
 
 #get-involved-contact .button--primary:hover,
-#im-new-visit .button--primary:hover {
+#im-new-visit .button--primary:hover,
+#ministries-cta .button--primary:hover {
   background: var(--oatmeal);
   border-color: var(--oatmeal);
 }
@@ -203,7 +226,8 @@
 }
 
 #get-involved-serve .card-icon__actions .button--link,
-#im-new-sunday .card-icon__actions .button--link {
+#im-new-sunday .card-icon__actions .button--link,
+#ministries-pillars .pillar-cards__actions .button--link {
   /* 24px on its own. */
   display: inline-flex;
   align-items: center;
