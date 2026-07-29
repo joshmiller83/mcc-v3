@@ -58,6 +58,27 @@ walked in, Get Involved is for someone deciding where to serve.
 - **One primary menu: `main`.** `mcc_theme_preprocess_page()` reads it. There used to be a
   second `header-nav` menu that only the theme read, so the menu an editor reaches first at
   `/admin/structure/menu` did nothing to the page. Don't reintroduce a theme-private nav menu.
+- **Every band on a Canvas page is a `section` component carrying a `section_id`.**
+  The band's background and vertical padding come from that section, and its colour
+  is applied in `mcc_theme/css/mcc-landing-bands.css`, keyed to the id. The front
+  page, `/get-involved`, `/im-new` and `/ministries` all work this way. Don't paint a
+  band with the `backgroundcolor` prop's `bg-*` classes: `mcc_theme` remaps
+  caresphere's `--background`/`--foreground` onto a light palette, so `bg-white`
+  resolves to *near-black* and `bg-black` to oatmeal. Ten Canvas pages rely on the
+  current behaviour, so repointing those classes is a site-wide job, not a page one.
+- **Only `section`, `section-grid` and `hero-card` emit `data-component-id`.** That
+  attribute rides on `{{ attributes }}`, and most caresphere components — `button`,
+  `section-intro`, `stat-card`, `card-icon`, `text`, `image`, `blockquote` — never
+  print it. A rule like `div[data-component-id="caresphere_theme:button"]` is dead
+  CSS that looks alive. A block of exactly these accumulated in
+  `global-overrides.css` and silently did nothing, including the rule that was
+  supposed to paint the front page's closing CTA band. Check the component's Twig
+  before writing such a selector.
+- **Derive colours with `color-mix(in oklab, …)`, never `in oklch`.** Both of this
+  brand's base colours are warm and low-chroma, and oklch's polar hue interpolation
+  drifts them badly: oatmeal mixed with white resolved to a pale pink, and oatmeal
+  mixed with walnut resolved to rose (`--neutral-100` was `#dbc9c1` instead of
+  `#d5ccbe`). The whole neutral ramp and `--white-warm` are oklab for this reason.
 - **Section landing pages are Canvas pages; listings are Views *blocks* embedded in them.** No
   View owns a route. Canvas discovers `views_block:*` as components automatically —
   `block.settings.views_block:*` carries `FullyValidatable` in core's schema, which is the gate
@@ -88,6 +109,24 @@ re-import re-applies the flat `/[node:title]` pattern and undoes the slugs:
 - `scripts/ia-landing-copy.php` / `scripts/ia-landing-links.php` — landing page copy and CTAs.
 - `scripts/canvas-realias.php` — move a Canvas page and 301 its old URL.
 - `scripts/canvas-swap-component.php` — swap a component in a Canvas page's tree.
+- `scripts/homepage-structure.php` — the front page's band tree plus the four
+  photo-slot media entities.
+
+**Content lives in the database; only code is deployed by git.** A push to `main`
+deploys code to mcc2026, and does *nothing* to that environment's Canvas trees, media
+or menus. So a content change has to be expressed as an idempotent script here and
+then run against each environment:
+
+```sh
+ddev drush php:script scripts/<name>.php                              # local
+ddev exec terminus remote:drush mcc2026.dev -- php:script scripts/<name>.php
+```
+
+Write these so re-running is a no-op: declare the whole desired tree, look media up
+by name before creating it, and never assume the previous run's state. That is what
+makes them safe to re-run after a migration re-import, which otherwise undoes them.
+Ship any image a script needs inside the theme (`mcc_theme/images/…`) so it travels
+with the code, and have the script copy it into the files directory.
 
 ## Leadership and bio pages
 
