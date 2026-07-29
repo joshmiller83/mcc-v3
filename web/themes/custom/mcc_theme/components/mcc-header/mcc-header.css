@@ -2,19 +2,85 @@
   display: flex;
   align-items: center;
   text-decoration: none;
+  /* 40px tall on its own, which is under the 44px minimum tap target. Grow the
+     anchor rather than the artwork. */
+  min-height: 44px;
+  /* The logo is ~275px wide in a space-between row; it has to be the element
+     that gives when the nav and CTA refuse to shrink (see below), or the CTA
+     spills past the right gutter with no scrollbar to make it obvious. */
+  flex: 0 1 auto;
+  min-width: 0;
 }
 
 .mcc-header-logo__img {
   height: 40px;
   width: auto;
+  max-width: 100%;
   display: block;
 }
 
+/* Nav links measure 22-28px tall because the anchor is only as tall as its
+   text. Make the whole row the hit target and take the height back out of the
+   header's own padding so the bar does not grow. */
+.region-header .header-inner {
+  gap: var(--space-4);
+  padding-block: var(--space-2);
+}
+
+.region-header .menu--level-1 {
+  gap: var(--space-1);
+}
+
+.region-header .menu__link {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 10px;
+  /* Without this the links shrink below their content width and break
+     mid-phrase ("I'm / New"). */
+  white-space: nowrap;
+}
+
+.region-header .header-inner > nav,
+.mcc-header-cta {
+  flex: none;
+}
+
+/* Keep the active underline, but draw it inside the box so it does not add to
+   the link's height now that the link is a fixed 44px flex row. */
 .region-header .menu__link.is-active {
   color: var(--color-primary);
   font-weight: var(--fw-bold);
-  border-bottom: 2px solid var(--color-primary);
-  padding-bottom: 4px;
+  border-bottom: 0;
+  padding-bottom: 0;
+  box-shadow: inset 0 -2px 0 var(--color-primary);
+}
+
+/* The hamburger is a 24px icon in a zero-padding button. */
+.region-header .mobile-menu-toggle {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+/* caresphere switches the desktop nav on at 768px, but five nav items plus the
+   CTA and a 275px logo do not fit a 768-940px row: the CTA ends up flush to
+   the viewport edge while every other section keeps its gutter, and nothing
+   scrolls so it is easy to miss. Collapse into the existing toggle instead. */
+@media (min-width: 768px) and (max-width: 939.98px) {
+  /* Tag qualifier is load-bearing: caresphere's own desktop rule is
+     `.region-header .header-inner > nav { display: block }`, identical
+     specificity, and its stylesheet wins on order — without the extra weight
+     here the nav and the hamburger both show and the toggle overhangs the
+     right edge. Still below the .mobile-menu-open rule, so opening works. */
+  header.region-header .header-inner > nav {
+    display: none;
+  }
+
+  .region-header .mobile-menu-toggle {
+    display: flex;
+    min-width: 44px;
+    min-height: 44px;
+  }
 }
 
 .mcc-header-cta {
@@ -35,6 +101,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  /* Was 39px tall. */
+  min-height: 44px;
   padding: 0.5rem 1.25rem;
   border-radius: var(--radius-md);
   font-family: var(--font-body);
