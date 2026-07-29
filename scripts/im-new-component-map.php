@@ -13,7 +13,12 @@
 // worked because the default was the page being audited.
 [$alias] = array_slice($extra ?? [], 0, 1) + ['/get-involved'];
 $alias_manager = \Drupal::service('path_alias.manager');
-$path = $alias_manager->getPathByAlias($alias);
+// '/' is not an alias — it is whatever system.site points at. Resolve it first
+// so the front page can be audited by the URL a visitor actually types.
+$lookup = $alias === '/'
+  ? \Drupal::config('system.site')->get('page.front')
+  : $alias;
+$path = $alias_manager->getPathByAlias($lookup);
 
 if (!preg_match('#^/page/(\d+)$#', $path, $matches)) {
   fwrite(STDERR, "Alias $alias does not resolve to /page/N (got $path).\n");
@@ -67,6 +72,10 @@ foreach ($page->get('components') as $item) {
     'position' => $position++,
     'uuid' => $value['uuid'] ?? '',
     'component_id' => $value['component_id'] ?? '',
+    // Without the parent/slot pair a flat tree and a nested one serialise
+    // identically here, which is the failure mode recorded in AGENTS.md.
+    'parent_uuid' => $value['parent_uuid'] ?? NULL,
+    'slot' => $value['slot'] ?? NULL,
     'input_keys' => array_keys($inputs),
     'summary' => $summary,
   ];

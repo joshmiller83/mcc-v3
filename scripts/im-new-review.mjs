@@ -223,6 +223,29 @@ class Page {
     await sleep(settle);
   }
 
+  /**
+   * Walks the page top to bottom so `loading="lazy"` images actually fetch.
+   *
+   * `captureBeyondViewport` paints the full page but does not scroll it, so a
+   * lazy image below the fold is still in flight when the shot is taken — the
+   * closing photo on the front page came out as an empty dark band this way,
+   * which reads as a broken image rather than a slow one.
+   */
+  async settleLazyImages() {
+    await this.evaluate(`(async () => {
+      const step = window.innerHeight;
+      for (let y = 0; y < document.body.scrollHeight; y += step) {
+        window.scrollTo(0, y);
+        await new Promise((r) => setTimeout(r, 120));
+      }
+      window.scrollTo(0, 0);
+      await Promise.all([...document.images]
+        .map((img) => img.complete ? null : img.decode().catch(() => null)));
+      return true;
+    })()`);
+    await sleep(400);
+  }
+
   async screenshot(file, { fullPage = false } = {}) {
     const { data } = await this.call('Page.captureScreenshot', {
       format: 'png',
@@ -664,12 +687,14 @@ async function main() {
 
     const desktop = await Page.open(cdp, { width: 1440, height: 1200, scale: 2 });
     await desktop.goto(url);
+    await desktop.settleLazyImages();
     const desktopPng = 'drupal-im-new-desktop.png';
     await desktop.screenshot(path.join(out, desktopPng), { fullPage: true });
     const audit = await desktop.evaluate(AUDIT_PROBE);
 
     const mobile = await Page.open(cdp, { width: 430, height: 1200, scale: 2 });
     await mobile.goto(url);
+    await mobile.settleLazyImages();
     const mobilePng = 'drupal-im-new-mobile.png';
     await mobile.screenshot(path.join(out, mobilePng), { fullPage: true });
 
