@@ -5,6 +5,6 @@ dependencies: {  }
 _core:
   default_config_hash: fLZ8Y6ebKDIOQ0zQwyNHxmGP5ViZDPQQUnIG1H9_VSI
 id: footer-organization
-label: 'Footer Visit'
-description: ''
+label: Visit
+description: 'Footer column 1 — where and when to find us. The menu name is the column heading.'
 locked: false

@@ -1,0 +1,22 @@
+mcc_theme.settings:
+  type: theme_settings
+  label: 'MCC Theme settings'
+  mapping:
+    footer_wordmark:
+      type: text
+      label: 'Footer brand wordmark, one line per line'
+    footer_tagline:
+      type: label
+      label: 'Footer tagline'
+    footer_newsletter_heading:
+      type: label
+      label: 'Footer newsletter heading'
+    footer_newsletter_description:
+      type: label
+      label: 'Footer newsletter supporting line'
+    footer_credit_line:
+      type: label
+      label: 'Footer legal line, left'
+    footer_contact_line:
+      type: label
+      label: 'Footer legal line, right'

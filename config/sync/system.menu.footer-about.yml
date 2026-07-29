@@ -1,0 +1,8 @@
+uuid: 0b846efd-857d-4e13-a967-a0f5cb8afafc
+langcode: en
+status: true
+dependencies: {  }
+id: footer-about
+label: About
+description: 'Footer column 4 — who the church is. The menu name is the column heading.'
+locked: false

@@ -58,6 +58,30 @@ walked in, Get Involved is for someone deciding where to serve.
 - **One primary menu: `main`.** `mcc_theme_preprocess_page()` reads it. There used to be a
   second `header-nav` menu that only the theme read, so the menu an editor reaches first at
   `/admin/structure/menu` did nothing to the page. Don't reintroduce a theme-private nav menu.
+- **Four footer menus, one per footer column**, in this order: `footer-organization` (Visit),
+  `footer-ministries`, `footer-connect`, `footer-about` — the order is the only part in code
+  (`MCC_FOOTER_COLUMN_MENUS`). **The column heading is the menu's own label**, so renaming
+  "Visit" at `/admin/structure/menu` renames the column; the page carries a
+  `config:system.menu.*` cache tag for each so the rename shows without a cache clear. A menu
+  with no links is dropped rather than rendered as a heading over a hole.
+  `scripts/footer-menus.php` declares all four, but writes labels only on create or when the
+  menu still carries its pre-design name — a declarative script must not stomp a heading an
+  editor renamed. The fifth menu, `footer-support`, is gone — see `CONTENT_LOG.md`.
+- **No footer text is hardcoded, and it must stay that way.** Link labels are menu links,
+  headings are menu labels, the signup field and button are the `newsletter_email_signup`
+  webform, and the six remaining strings (wordmark, tagline, newsletter heading and blurb, both
+  legal lines) are theme settings, exposed by `theme-settings.php` at
+  `/admin/appearance/settings/mcc_theme`. The `MCC_FOOTER_*` constants in `mcc_theme.theme` are
+  fallbacks, not the source: `theme_get_setting()` returns NULL for a key never saved and `''`
+  for one an editor cleared, and only NULL falls through to the constant — clearing the contact
+  line is how you hide it. Use `[year]` in the legal line rather than writing a year.
+- **The newsletter signup is the footer's first row, not a band of its own.** It was an
+  `mcc-newsletter-band` SDC in a green band above the footer; the design handoff puts it inside
+  the walnut footer above a hairline rule, so that component is deleted and its markup, props
+  and webform CSS all live in `mcc-footer`. The webform-specific rules there are load-bearing:
+  the email field ships a `size` attribute worth ~500px of intrinsic width, and the submit is
+  styled `display:flex; width:100%` further up the cascade. Without the overrides the field
+  scrolls every page of the site sideways on a phone and the button drops onto its own line.
 - **Every band on a Canvas page is a `section` component carrying a `section_id`.**
   The band's background and vertical padding come from that section, and its colour
   is applied in `mcc_theme/css/mcc-landing-bands.css`, keyed to the id. The front
@@ -111,6 +135,7 @@ re-import re-applies the flat `/[node:title]` pattern and undoes the slugs:
 - `scripts/canvas-swap-component.php` — swap a component in a Canvas page's tree.
 - `scripts/homepage-structure.php` — the front page's band tree plus the four
   photo-slot media entities.
+- `scripts/footer-menus.php` — the four footer column menus, declared in full.
 
 **Content lives in the database; only code is deployed by git.** A push to `main`
 deploys code to mcc2026, and does *nothing* to that environment's Canvas trees, media

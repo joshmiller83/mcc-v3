@@ -1,25 +1,60 @@
 {#
-  Site footer: logo mark + Visit / Connect / Contact columns + credit line.
-  A literal port of the Claude Design system's Footer.jsx, fed real menu
-  data by mcc_theme_preprocess_page().
+  Site footer, built to the homepage design handoff: an oak-textured walnut
+  band holding three stacked rows — the newsletter signup, a brand cell plus
+  the link columns, and a legal row.
+
+  The newsletter used to be its own green band above the footer (the
+  mcc-newsletter-band SDC). The handoff puts it inside the footer, above a
+  hairline rule, so it lives here now and that component is gone.
+
+  Menu data and copy come from mcc_theme_preprocess_page().
 #}
 <div class="mcc-footer__inner">
-  <div class="mcc-footer__col mcc-footer__col--logo">
-    <img src="{{ logo_icon_src }}" alt="" class="mcc-footer__logo-icon" />
+
+  {% if newsletter_form %}
+    <div class="mcc-footer__newsletter">
+      <div class="mcc-footer__newsletter-copy">
+        <h2 class="mcc-footer__newsletter-heading">{{ newsletter_heading }}</h2>
+        <p class="mcc-footer__newsletter-text">{{ newsletter_description }}</p>
+      </div>
+      <div class="mcc-footer__newsletter-form">{{ newsletter_form }}</div>
+    </div>
+  {% endif %}
+
+  {# The column count is data-driven, so the grid template reads it from a
+     custom property rather than hardcoding `repeat(4, …)`: empty a footer menu
+     in the admin UI and the remaining columns still divide the row evenly. #}
+  <div class="mcc-footer__grid" style="--mcc-footer-cols: {{ columns|length }}">
+    <div class="mcc-footer__brand">
+      <span class="mcc-footer__chip">
+        <img src="{{ logo_icon_src }}" alt="" class="mcc-footer__logo-icon" />
+        <span class="mcc-footer__wordmark">
+          {%- for line in wordmark_lines -%}
+            {{ line }}{% if not loop.last %}<br />{% endif %}
+          {%- endfor -%}
+        </span>
+      </span>
+      {% if tagline %}<p class="mcc-footer__tagline">{{ tagline }}</p>{% endif %}
+    </div>
+
+    {% for column in columns %}
+      <div class="mcc-footer__col">
+        <span class="mcc-footer__heading">{{ column.heading }}</span>
+        <div class="mcc-footer__links">
+          {% for link in column.links %}
+            {% if link.is_link %}
+              <a class="mcc-footer__link" href="{{ link.url }}">{{ link.label }}</a>
+            {% else %}
+              <span class="mcc-footer__link mcc-footer__link--text">{{ link.label }}</span>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    {% endfor %}
   </div>
 
-  {% for column in columns %}
-    <div class="mcc-footer__col">
-      <span class="mcc-footer__heading">{{ column.heading }}</span>
-      {% for link in column.links %}
-        {% if link.is_link %}
-          <a class="mcc-footer__link" href="{{ link.url }}">{{ link.label }}</a>
-        {% else %}
-          <span class="mcc-footer__link mcc-footer__link--text">{{ link.label }}</span>
-        {% endif %}
-      {% endfor %}
-    </div>
-  {% endfor %}
+  <div class="mcc-footer__legal">
+    <span>{{ credit_line }}</span>
+    {% if contact_line %}<span>{{ contact_line }}</span>{% endif %}
+  </div>
 </div>
-
-<div class="mcc-footer__bottom">{{ credit_line }}</div>

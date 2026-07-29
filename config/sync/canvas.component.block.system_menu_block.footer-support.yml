@@ -1,16 +1,15 @@
 uuid: 28488e86-ad22-4850-b8cd-386d97490d1b
 langcode: en
 status: false
-dependencies:
-  config:
-    - system.menu.footer-support
-  module:
-    - system
+dependencies: {  }
 _core:
   default_config_hash: NqunpCU61U8TTQGFoCH6YRABgQCxpEGlGI4d-6bkDlM
-active_version: 19c048969a85eed0
+active_version: fallback
 versioned_properties:
   active:
+    settings:
+      last_active_version: 19c048969a85eed0
+  19c048969a85eed0:
     settings:
       default_settings:
         id: 'system_menu_block:footer-support'

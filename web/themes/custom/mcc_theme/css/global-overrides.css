@@ -273,10 +273,9 @@ blockquote cite {
   font-style: normal;
 }
 
-/* Footer markup/styling now lives entirely in the mcc-footer SDC
-   (components/mcc-footer/mcc-footer.css) and the newsletter band in
-   mcc-newsletter-band — both theme-owned, see mcc_theme.theme +
-   templates/layout/page.html.twig. */
+/* Footer markup/styling — including the newsletter signup row — lives
+   entirely in the mcc-footer SDC (components/mcc-footer/mcc-footer.css),
+   theme-owned, see mcc_theme.theme + templates/layout/page.html.twig. */
 
 /* --- CARD-ICON: suppress the link-to-nowhere overlay ---------------------
    card-icon.twig computes `has_url` as the *string* 'yes' or 'no', then tests

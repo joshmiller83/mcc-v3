@@ -1,0 +1,8 @@
+uuid: 5f3d15d4-1898-4668-8ec7-b3d0b117a3c5
+langcode: en
+status: true
+dependencies: {  }
+id: footer-ministries
+label: Ministries
+description: 'Footer column 2 — the ministry pages. The menu name is the column heading.'
+locked: false

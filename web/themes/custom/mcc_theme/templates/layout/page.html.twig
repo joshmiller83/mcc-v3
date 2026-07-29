@@ -50,8 +50,8 @@
     {% endif %}
   </main>
 
-  {% include 'mcc_theme:mcc-newsletter-band' with mcc_newsletter only %}
-
+  {# The newsletter signup is the footer's top row, not a band of its own —
+     see components/mcc-footer. #}
   <footer role="contentinfo">
     {% include 'mcc_theme:mcc-footer' with mcc_footer only %}
   </footer>

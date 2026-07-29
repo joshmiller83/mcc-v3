@@ -13,6 +13,39 @@ Newest entries at the top. Each entry: what changed, why, and what a re-import w
 
 ---
 
+## 2026-07-29 — footer menus reshaped into four columns
+
+The homepage design handoff's footer is a brand cell plus four link columns — **Visit ·
+Ministries · Connect · About** — and `mcc_theme_preprocess_page()` reads one menu per column.
+Only three footer menus existed, and one of them ("Footer Contact": an email address and a
+phone number) was contact detail rather than a column. `scripts/footer-menus.php` declares all
+four menus in full and is idempotent:
+
+| Column     | Menu                  | Change                                                                    |
+| ---------- | --------------------- | ------------------------------------------------------------------------- |
+| Visit      | `footer-organization` | Renamed "Footer Visit" → "Visit"; gained `(765) 325-2772` (`tel:`), moved from Footer Contact |
+| Ministries | `footer-ministries`   | **New menu** — the six published ministry nodes                            |
+| Connect    | `footer-connect`      | Renamed "Footer Connect" → "Connect"; lost "Ministries" (now its own column); gained "Email us", moved from Footer Contact |
+| About      | `footer-about`        | **New menu** — Who we are, Our beliefs, Our history, Our leadership        |
+
+**The menu label is the column heading**, which is why the "Footer " prefix came off — renaming
+a menu now renames the column. The script writes labels only on create, or on a menu still
+carrying its pre-design name, so re-running it will not undo a heading someone renamed.
+
+**`footer-support` ("Footer Contact") is deleted.** Both of its links live in other columns
+now. Canvas had auto-registered it as a `system_menu_block` component; that config falls back
+to disabled rather than disappearing, and is exported that way.
+
+Every URL in the script points at a page that already exists — no destination is invented. The
+street address and the service times stay `<nolink>` text, not anchors: they are facts, not
+somewhere to click.
+
+**Re-import safe** — menus are content, not touched by the migration. Re-run the script on any
+environment that needs it (`ddev drush php:script scripts/footer-menus.php`), since a push to
+`main` deploys code only.
+
+---
+
 ## 2026-07-29 — new "I'm New" page for first-time visitors
 
 Folding the old /im-new into Get Involved (below) left the nav with no entry for someone who

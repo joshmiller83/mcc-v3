@@ -8,9 +8,21 @@ dependencies:
     - system
 _core:
   default_config_hash: nEQXO4uSOBBLZ5o4ZtrTZrcoSJAr2FsvF_GUUmxcsr0
-active_version: 1614639bc333448a
+active_version: 795e01ce0de0acbf
 versioned_properties:
   active:
+    settings:
+      default_settings:
+        id: 'system_menu_block:footer-organization'
+        label: Visit
+        label_display: '0'
+        provider: system
+        level: 1
+        depth: null
+        expand_all_items: false
+    fallback_metadata:
+      slot_definitions: null
+  1614639bc333448a:
     settings:
       default_settings:
         id: 'system_menu_block:footer-organization'
@@ -46,7 +58,7 @@ versioned_properties:
         expand_all_items: false
     fallback_metadata:
       slot_definitions: null
-label: 'Footer Visit'
+label: Visit
 id: block.system_menu_block.footer-organization
 provider: system
 source: block

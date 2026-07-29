@@ -5,9 +5,9 @@
  * Preprocess functions for mcc_theme.
  *
  * Header and footer are theme-owned (not Canvas-managed): this file builds
- * the props for the mcc-header / mcc-footer / mcc-newsletter-band SDCs from
- * real menu data, and page.html.twig renders them via {% include %} in
- * place of the old per-block markup.
+ * the props for the mcc-header / mcc-footer SDCs from real menu data, and
+ * page.html.twig renders them via {% include %} in place of the old
+ * per-block markup. The newsletter signup is part of mcc-footer.
  */
 
 use Drupal\Core\Datetime\DrupalDateTime;
@@ -16,6 +16,34 @@ use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
+
+/**
+ * Fallbacks for the footer's editable text.
+ *
+ * These are what the theme ships with; theme-settings.php exposes each of them
+ * at /admin/appearance/settings/mcc_theme, and an installed site that has
+ * never opened that form has no `mcc_theme.settings` values at all, so the
+ * constants are what actually renders until someone edits one.
+ */
+const MCC_FOOTER_WORDMARK = "Mechanicsburg\nChristian Church";
+const MCC_FOOTER_TAGLINE = 'We Love People!';
+const MCC_FOOTER_NEWSLETTER_HEADING = 'Stay connected';
+const MCC_FOOTER_NEWSLETTER_DESCRIPTION = 'Get updates on events and ministries, straight to your inbox.';
+const MCC_FOOTER_CREDIT_LINE = '© [year] Mechanicsburg Christian Church · Est. 1840 · We Love People!';
+const MCC_FOOTER_CONTACT_LINE = '650 W. Horton Road, Kirklin, IN 46050 · (765) 325-2772';
+
+/**
+ * The footer's link columns, in order: menu id => nothing but its position.
+ *
+ * The heading is the menu's own label, so renaming "Visit" at
+ * /admin/structure/menu renames the column. Only the order lives in code.
+ */
+const MCC_FOOTER_COLUMN_MENUS = [
+  'footer-organization',
+  'footer-ministries',
+  'footer-connect',
+  'footer-about',
+];
 
 /**
  * Implements hook_theme_suggestions_page_alter().
@@ -34,8 +62,8 @@ function mcc_theme_theme_suggestions_page_alter(array &$suggestions, array $vari
  * Implements hook_preprocess_page().
  */
 function mcc_theme_preprocess_page(array &$variables): void {
-  // The bare print layout doesn't render the header, footer or newsletter
-  // band, so there is no point building any of them.
+  // The bare print layout doesn't render the header or footer, so there is no
+  // point building either of them.
   if (\Drupal::routeMatch()->getRouteName() === 'mcc_core.print_monthly') {
     return;
   }
@@ -53,21 +81,79 @@ function mcc_theme_preprocess_page(array &$variables): void {
     'cta_buttons' => _mcc_theme_header_cta_links(),
   ];
 
+  $wordmark = _mcc_theme_footer_setting('footer_wordmark', MCC_FOOTER_WORDMARK);
+
   $variables['mcc_footer'] = [
     'logo_icon_src' => '/' . $theme_path . '/images/logo-icon.svg',
-    'columns' => [
-      ['heading' => 'Visit', 'links' => _mcc_theme_menu_links('footer-organization')],
-      ['heading' => 'Connect', 'links' => _mcc_theme_menu_links('footer-connect')],
-      ['heading' => 'Contact', 'links' => _mcc_theme_menu_links('footer-support')],
-    ],
-    'credit_line' => 'Mechanicsburg Christian Church · Est. 1840 · “We Love People!”',
+    'wordmark_lines' => preg_split('/\R/', $wordmark, -1, PREG_SPLIT_NO_EMPTY) ?: [],
+    'tagline' => _mcc_theme_footer_setting('footer_tagline', MCC_FOOTER_TAGLINE),
+    'newsletter_heading' => _mcc_theme_footer_setting('footer_newsletter_heading', MCC_FOOTER_NEWSLETTER_HEADING),
+    'newsletter_description' => _mcc_theme_footer_setting('footer_newsletter_description', MCC_FOOTER_NEWSLETTER_DESCRIPTION),
+    'newsletter_form' => _mcc_theme_newsletter_form(),
+    'columns' => _mcc_theme_footer_columns(),
+    // The legal row repeats the address and phone that the Visit column also
+    // carries — that repetition is in the design, and it is what a visitor who
+    // scrolled straight to the bottom is looking for. It is one sentence rather
+    // than a list, so it is a theme setting and not a menu.
+    'credit_line' => _mcc_theme_footer_year(_mcc_theme_footer_setting('footer_credit_line', MCC_FOOTER_CREDIT_LINE)),
+    'contact_line' => _mcc_theme_footer_year(_mcc_theme_footer_setting('footer_contact_line', MCC_FOOTER_CONTACT_LINE)),
   ];
 
-  $variables['mcc_newsletter'] = [
-    'heading' => 'Stay connected',
-    'description' => 'Get updates on events and ministries, straight to your inbox.',
-    'form' => _mcc_theme_newsletter_form(),
-  ];
+  // Renaming a footer menu changes a column heading, so the page has to be
+  // invalidated when one is saved.
+  foreach (MCC_FOOTER_COLUMN_MENUS as $menu_id) {
+    $variables['#cache']['tags'][] = 'config:system.menu.' . $menu_id;
+  }
+  $variables['#cache']['tags'][] = 'config:mcc_theme.settings';
+}
+
+/**
+ * Reads one of the footer's editable strings.
+ *
+ * `theme_get_setting()` returns NULL for a key the site has never saved, and
+ * an empty string for one an editor has deliberately cleared. Only the first
+ * of those should fall back to the shipped default — clearing the contact line
+ * is how you hide it.
+ */
+function _mcc_theme_footer_setting(string $key, string $default): string {
+  $value = theme_get_setting($key, 'mcc_theme');
+  return $value === NULL ? $default : (string) $value;
+}
+
+/**
+ * Substitutes the current year for `[year]`, in the site's timezone.
+ */
+function _mcc_theme_footer_year(string $text): string {
+  if (!str_contains($text, '[year]')) {
+    return $text;
+  }
+  $year = \Drupal::service('date.formatter')
+    ->format(\Drupal::time()->getRequestTime(), 'custom', 'Y');
+  return str_replace('[year]', $year, $text);
+}
+
+/**
+ * The footer's link columns: heading from the menu's label, links from it.
+ *
+ * A menu with no links renders as a heading over nothing and leaves a hole in
+ * the grid, so it is dropped here rather than in the template.
+ */
+function _mcc_theme_footer_columns(): array {
+  $menus = \Drupal::entityTypeManager()->getStorage('menu')
+    ->loadMultiple(MCC_FOOTER_COLUMN_MENUS);
+
+  $columns = [];
+  foreach (MCC_FOOTER_COLUMN_MENUS as $menu_id) {
+    if (!isset($menus[$menu_id])) {
+      continue;
+    }
+    $links = _mcc_theme_menu_links($menu_id);
+    if ($links === []) {
+      continue;
+    }
+    $columns[] = ['heading' => $menus[$menu_id]->label(), 'links' => $links];
+  }
+  return $columns;
 }
 
 /**

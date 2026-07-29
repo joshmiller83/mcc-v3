@@ -1,86 +1,243 @@
+/* Footer, per the homepage design handoff.
+
+   The band is walnut-900 under two stacked full-bleed layers: the oak texture
+   tiled at 340px and knocked back to 30%, then walnut-900 again at 78%. That
+   second layer is what keeps the grain from competing with the type — without
+   it the tile reads as a photo rather than a surface. A CSS-gradient stand-in
+   was used here before the texture asset was available; it read as a flat
+   brown panel with a vignette, which is not the same thing. */
 footer[role="contentinfo"] {
-  /* Subtle CSS-only wood-grain approximation (layered radial gradients) in
-     place of a rasterized texture asset, over the walnut-900 base color from
-     Footer.jsx. */
+  position: relative;
+  overflow: hidden;
   background-color: var(--walnut-900);
-  background-image:
-    radial-gradient(ellipse 800px 40px at 10% 15%, rgba(0, 0, 0, 0.10), transparent 60%),
-    radial-gradient(ellipse 900px 50px at 80% 45%, rgba(0, 0, 0, 0.08), transparent 60%),
-    radial-gradient(ellipse 700px 35px at 30% 75%, rgba(0, 0, 0, 0.10), transparent 60%),
-    radial-gradient(ellipse 850px 45px at 60% 95%, rgba(255, 255, 255, 0.03), transparent 60%);
   color: var(--text-on-inverse);
-  padding: 3rem 1.5rem 2rem;
+}
+
+footer[role="contentinfo"]::before,
+footer[role="contentinfo"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+footer[role="contentinfo"]::before {
+  background-image: url("../../images/oak-wood.jpg");
+  background-repeat: repeat;
+  background-size: 340px;
+  opacity: 0.3;
+}
+
+footer[role="contentinfo"]::after {
+  background-color: var(--walnut-900);
+  opacity: 0.78;
 }
 
 .mcc-footer__inner {
+  position: relative;
+  z-index: 1;
   max-width: var(--container-max);
   margin: 0 auto;
+  padding: var(--space-16) var(--space-6) var(--space-8);
+}
+
+/* --- Newsletter row ------------------------------------------------------ */
+
+.mcc-footer__newsletter {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-8);
   flex-wrap: wrap;
-  gap: 2rem;
+  padding-bottom: var(--space-12);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-/* `min-width: 180px` plus an unbreakable 31-character email address gave this
-   row a minimum content width larger than a tablet viewport, so the whole
-   document scrolled sideways between roughly 700px and 940px. The footer is in
-   the page template, so that was every page. Columns now fold instead. */
-.mcc-footer__col {
-  display: flex;
-  flex-direction: column;
-  gap: 0.625rem;
+/* 24px Calistoga, per the handoff's "footer h3 24" — the display scale steps
+   22 → 28 either side of it, so this one is written out. It used to be a 13px
+   uppercase body eyebrow, which put the newsletter a full rank below the
+   section headings on the page instead of level with them. */
+.mcc-footer__newsletter-heading {
+  font-family: var(--font-display);
+  font-weight: var(--fw-regular);
+  font-size: 1.5rem;
+  line-height: var(--lh-heading-md);
+  margin: 0 0 0.5rem;
+}
+
+.mcc-footer__newsletter-text {
+  font-family: var(--font-body);
+  font-size: var(--text-body-md);
+  opacity: 0.9;
+  margin: 0;
+  max-width: 34rem;
+}
+
+.mcc-footer__newsletter-copy {
+  flex: 1 1 20rem;
   min-width: 0;
-  flex: 1 1 180px;
 }
 
-.mcc-footer__link {
-  overflow-wrap: anywhere;
-}
-
-@media (max-width: 56.25rem) {
-  .mcc-footer__col {
-    flex-basis: 40%;
-  }
-}
-
-@media (max-width: 37.5rem) {
-  .mcc-footer__col {
-    flex-basis: 100%;
-  }
-}
-
-.mcc-footer__col--logo {
+.mcc-footer__newsletter-form {
   flex: 0 0 auto;
   min-width: 0;
+  max-width: 100%;
+}
+
+.mcc-footer__newsletter-form form {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* The webform's email field carries a default `size` attribute, which gives
+   the input an intrinsic width of ~500px. On a phone that pushed the row to
+   524px inside a 390px viewport and put a horizontal scrollbar on every page
+   of the site, since this footer is in the page template. */
+.mcc-footer__newsletter-form form > *,
+.mcc-footer__newsletter-form .js-webform-type-email,
+.mcc-footer__newsletter-form .form-actions {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.mcc-footer__newsletter-form .js-webform-type-email {
+  flex: 0 1 16.25rem;
+}
+
+/* The submit is styled `display:flex; width:100%` further up the cascade, so
+   it filled the row and pushed itself onto a second line under the field —
+   the field and the button are meant to read as one control. Both the actions
+   wrapper and the button itself have to be pulled back to their content
+   width; constraining only the wrapper leaves the button stretched. */
+.mcc-footer__newsletter-form .form-actions {
+  flex: 0 0 auto;
+  width: auto;
+}
+
+.mcc-footer__newsletter-form input[type="email"] {
+  min-height: 48px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.625rem 0.875rem;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.14);
+  color: var(--text-on-inverse);
+  font-family: var(--font-body);
+  min-width: 12.5rem;
+}
+
+.mcc-footer__newsletter-form input[type="email"]::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.mcc-footer__newsletter-form input[type="submit"],
+.mcc-footer__newsletter-form button {
+  width: auto;
+  flex: 0 0 auto;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0.625rem 1.5rem;
+  border-radius: var(--radius-md);
+  border: none;
+  background: var(--color-secondary);
+  color: var(--text-on-primary);
+  font-family: var(--font-body);
+  font-weight: var(--fw-bold);
+  cursor: pointer;
+}
+
+.mcc-footer__newsletter-form input[type="submit"]:hover,
+.mcc-footer__newsletter-form button:hover {
+  background: var(--color-secondary-hover);
+}
+
+.mcc-footer__newsletter-form .form-item {
+  margin: 0;
+}
+
+/* --- Brand cell and link columns ----------------------------------------- */
+
+.mcc-footer__grid {
+  display: grid;
+  grid-template-columns: 1.4fr repeat(var(--mcc-footer-cols, 4), minmax(0, 1fr));
+  gap: var(--space-8);
+  padding: var(--space-12) 0;
+}
+
+.mcc-footer__brand {
+  min-width: 0;
+}
+
+/* The mark sits in an oatmeal chip rather than being knocked out to white:
+   the logo is a cross over an open book, and inverting it loses the page
+   edges that make the book read as a book at 32px. */
+.mcc-footer__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  background: var(--oatmeal);
+  border-radius: var(--radius-md);
+  padding: 0.625rem 0.875rem;
+  margin-bottom: 0.875rem;
 }
 
 .mcc-footer__logo-icon {
-  height: 48px;
+  height: 32px;
   width: auto;
-  filter: brightness(0) invert(1);
+}
+
+.mcc-footer__wordmark {
+  font-family: var(--font-display);
+  font-size: 0.9375rem;
+  line-height: 1.2;
+  color: var(--walnut-900);
+}
+
+.mcc-footer__tagline {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: var(--text-body-sm);
+  opacity: 0.85;
+  margin: 0;
+}
+
+.mcc-footer__col {
+  min-width: 0;
 }
 
 .mcc-footer__heading {
+  display: block;
   font-family: var(--font-body);
   font-weight: var(--fw-bold);
-  font-size: var(--text-caption);
+  font-size: var(--text-body-sm);
   letter-spacing: var(--tracking-eyebrow);
   text-transform: uppercase;
   opacity: 0.7;
-  margin-bottom: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+.mcc-footer__links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
 }
 
 .mcc-footer__link {
   color: var(--text-on-inverse);
-  opacity: 0.9;
-  font-size: var(--text-body-md);
+  opacity: 0.85;
+  font-family: var(--font-body);
+  font-size: var(--text-body-sm);
   text-decoration: none;
+  overflow-wrap: anywhere;
 }
 
-/* Only the real links get the 44px minimum — the address, service times,
-   email and phone share this class as plain <span>s and must not be turned
-   into targets. The column gap stays: Visit mixes both kinds, so zeroing it
-   would run the address and service times together. Pulling the anchors'
-   extra height back into negative margin keeps the rhythm even. */
+/* Only the real links get the 44px minimum — the address and service times
+   share this class as plain <span>s and must not be turned into targets.
+   Pulling the anchors' extra height back into negative margin keeps the 10px
+   rhythm the handoff asks for while the tap target stays full size. */
 a.mcc-footer__link {
   display: flex;
   align-items: center;
@@ -93,13 +250,48 @@ a.mcc-footer__link:hover {
   text-decoration: underline;
 }
 
-.mcc-footer__bottom {
-  max-width: var(--container-max);
-  margin: 2rem auto 0;
-  padding-top: 1.25rem;
+/* --- Legal row ----------------------------------------------------------- */
+
+.mcc-footer__legal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding-top: var(--space-8);
   border-top: 1px solid rgba(255, 255, 255, 0.15);
-  font-size: var(--text-caption);
-  opacity: 0.7;
-  font-style: italic;
-  text-align: center;
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  opacity: 0.65;
+}
+
+/* --- Responsive ---------------------------------------------------------- */
+
+/* ~940px: the five-cell row can no longer hold four link columns at a
+   readable measure, so the brand cell takes the full width and the columns
+   go two-up. */
+@media (max-width: 58.75rem) {
+  .mcc-footer__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .mcc-footer__brand {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 42.5rem) {
+  .mcc-footer__inner {
+    padding-top: var(--space-12);
+  }
+
+  .mcc-footer__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .mcc-footer__newsletter-form,
+  .mcc-footer__newsletter-form .js-webform-type-email {
+    width: 100%;
+    flex-basis: 100%;
+  }
 }

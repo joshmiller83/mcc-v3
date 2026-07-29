@@ -1,0 +1,39 @@
+uuid: 018c024b-f5a6-46ff-ac08-7e880d93ed7e
+langcode: en
+status: false
+dependencies:
+  config:
+    - system.menu.footer-ministries
+  module:
+    - system
+active_version: 3bbe068c809e6900
+versioned_properties:
+  active:
+    settings:
+      default_settings:
+        id: 'system_menu_block:footer-ministries'
+        label: Ministries
+        label_display: '0'
+        provider: system
+        level: 1
+        depth: null
+        expand_all_items: false
+    fallback_metadata:
+      slot_definitions: null
+  48b9b1f8af60abd8:
+    settings:
+      default_settings:
+        id: 'system_menu_block:footer-ministries'
+        label: 'Footer Ministries'
+        label_display: '0'
+        provider: system
+        level: 1
+        depth: null
+        expand_all_items: false
+    fallback_metadata:
+      slot_definitions: null
+label: Ministries
+id: block.system_menu_block.footer-ministries
+provider: system
+source: block
+source_local_id: 'system_menu_block:footer-ministries'

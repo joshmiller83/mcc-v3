@@ -5,6 +5,6 @@ dependencies: {  }
 _core:
   default_config_hash: cqOr0WP6jLYmyUgrQM1U-KA707rsiMkP6TBJfw_QDkw
 id: footer-connect
-label: 'Footer Connect'
-description: ''
+label: Connect
+description: 'Footer column 3 — ways to take part. The menu name is the column heading.'
 locked: false

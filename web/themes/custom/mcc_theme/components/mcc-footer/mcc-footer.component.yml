@@ -7,9 +7,23 @@ props:
     logo_icon_src:
       type: string
       title: Footer logo icon path
+    wordmark_lines:
+      type: array
+      title: Wordmark lines in the brand chip
+      items:
+        type: string
+    tagline:
+      type: string
+      title: Italic tagline under the brand chip
+    newsletter_heading:
+      type: string
+      title: Newsletter row heading
+    newsletter_description:
+      type: string
+      title: Newsletter row supporting line
     columns:
       type: array
-      title: Footer columns (Visit / Connect / Contact)
+      title: Footer link columns (Visit / Ministries / Connect / About)
       items:
         type: object
         properties:
@@ -28,4 +42,11 @@ props:
                   type: boolean
     credit_line:
       type: string
-      title: Bottom credit line
+      title: Legal row, left
+    contact_line:
+      type: string
+      title: Legal row, right (address and phone)
+slots:
+  newsletter_form:
+    title: Signup form
+    description: The real newsletter webform block, rendered by the caller.
