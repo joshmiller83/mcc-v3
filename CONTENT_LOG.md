@@ -13,6 +13,86 @@ Newest entries at the top. Each entry: what changed, why, and what a re-import w
 
 ---
 
+## 2026-07-29 — new "I'm New" page for first-time visitors
+
+Folding the old /im-new into Get Involved (below) left the nav with no entry for someone who
+has never visited. **Canvas page 13, `/im-new`, "I'm New"** is that page, built by
+`scripts/ia-im-new-page.php` — five bands: hero, "When we gather" (Sunday School 9:30 /
+Worship 10:30 / children and youth), "Come as you are", a four-item FAQ, and address + contact.
+Added back to the `main` menu at weight −10, ahead of About. The script also **deletes the
+`/im-new` → Get Involved 301** that the merge created, since a live redirect fires before path
+processing would ever resolve the new alias.
+
+**Every claim on the page traces to something already on the site**, because inventing details
+about a real congregation is not acceptable:
+
+| Claim | Source |
+|---|---|
+| Sunday School 9:30, worship 10:30 | `footer-organization` menu |
+| 650 W. Horton Road; (765) 325-2772 | `footer-organization` / `footer-support` menus |
+| nursery, Kids Worship, Sunday School, youth | ministry nodes 12, 10, 13, 8 |
+| streamed on Facebook Live | recurring "FaceBookLive Church Service 10:30a" calendar event |
+| "welcome exactly as you are", "without much fuss" | `/about` copy |
+
+**Not on the page, and deliberately:** where to park, which door to use, how long the service
+runs, communion practice. None of it is recorded anywhere. `ia-im-new-page.php` carries a
+commented-out `PARKING` constant — fill it in and re-run to add a fifth FAQ item.
+
+**On a re-import:** canvas pages are not migrated, so page 13 survives. The script is
+idempotent — it finds the page by its alias and rebuilds the component tree in full.
+
+---
+
+## 2026-07-29 — "I'm New" folded into Get Involved
+
+Canvas pages **3** (`Get involved`, `/get-involved`) and **11** (`I'm New`, `/im-new`) held the
+same content: same five bands, same three serve cards, same four FAQ items, differing only in
+button label casing. Page 11's `h1` was already "Get Involved at MCC", so there was never any
+first-time-visitor content — it was Get Involved content under the wrong name.
+
+Page 11 is the copy that received the structural repair below, so it is the one that survives.
+
+| What | Before | After |
+|---|---|---|
+| Canvas page 11 | "I'm New", `/im-new` | "Get Involved", `/get-involved` |
+| Canvas page 3 | published at `/get-involved` | **unpublished**, alias dropped |
+| `main` menu | I'm New · About · Ministries · Sermons · Calendar | About · Ministries · Sermons · Calendar |
+| `footer-organization` | Visit column had an "I'm New" link | link removed |
+| `/im-new` | page 11 | **301 → `/page/11`** |
+
+`header-cta` and `footer-connect` already pointed at `/get-involved`, so both now resolve to
+page 11 with no edit. The `/about` CTA that said "I'm new" was repointed to `/get-involved` but
+**kept its label** — `/about` now has three CTAs to the same page, which is an editorial call
+to make, not a mechanical one.
+
+Run `scripts/ia-get-involved-merge.php`; it is idempotent. It deletes the old alias *before*
+writing the 301, because a live alias shadows a redirect — same reasoning as
+`canvas-realias.php`. The redirect points at `/page/11`, not at the alias.
+
+**On a re-import:** canvas pages are not migrated, so pages 3 and 11 survive as they are. The
+menu links are `menu_link_content` entities and also survive. Re-running
+`scripts/ia-landing-links.php` is safe — it merges `href`/`label` only and preserves component
+nesting. Re-running `scripts/ia-page-slugs.php` is unaffected.
+
+### Structural repair of page 11 (same day)
+
+All 25 of the page's components were stored with `components_parent_uuid` and `components_slot`
+NULL, so Canvas rendered eight empty padded `<section>`s with their intended children emitted
+as siblings after them. The `section` / `section-grid` templates were never at fault — both
+print their slots. `scripts/get-involved-structure.php` rebuilds the tree by uuid (idempotent)
+into five nested bands, 22 components; three sections that existed only as pseudo-containers
+were dropped. Card CTAs were repointed off `/node/35` and off `/our-missions`, which was a 404.
+
+Pages 3 and 11 were the only two Canvas pages with flat component trees; every other page
+nests correctly. Page 11 is repaired and page 3 is retired, so none remain. Verify with:
+
+```sql
+SELECT entity_id, COUNT(*), SUM(components_parent_uuid IS NOT NULL)
+FROM canvas_page__components GROUP BY entity_id;
+```
+
+---
+
 ## 2026-07-28 — IA rebuild
 
 ### Redirects — all of it is the `redirect` module
