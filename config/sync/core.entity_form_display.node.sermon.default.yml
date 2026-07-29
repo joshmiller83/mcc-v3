@@ -13,6 +13,7 @@ dependencies:
   module:
     - content_moderation
     - datetime
+    - media_library
     - path
     - tagify
     - text
@@ -36,18 +37,11 @@ content:
       placeholder: ''
     third_party_settings: {  }
   field_sermon_audio:
-    type: tagify_entity_reference_autocomplete_widget
+    type: media_library_widget
     weight: 4
     region: content
     settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      placeholder: ''
-      suggestions_dropdown: 1
-      show_entity_id: 0
-      show_info_label: 0
-      info_label: ''
-      parent_selection: 1
+      media_types: {  }
     third_party_settings: {  }
   field_sermon_date:
     type: datetime_default
@@ -64,17 +58,14 @@ content:
       placeholder: ''
     third_party_settings: {  }
   field_sermon_series:
-    type: tagify_entity_reference_autocomplete_widget
+    type: tagify_select_widget
     weight: 3
     region: content
     settings:
       match_operator: CONTAINS
       match_limit: 10
       placeholder: ''
-      suggestions_dropdown: 1
       show_entity_id: 0
-      show_info_label: 0
-      info_label: ''
       parent_selection: 1
     third_party_settings: {  }
   field_sermon_speaker:
