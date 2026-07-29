@@ -1,0 +1,38 @@
+name: Deploy to Pantheon
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Pantheon deploy key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.PANTHEON_SSH_PRIVATE_KEY }}
+
+      - name: Trust Pantheon's git hosts
+        run: |
+          mkdir -p ~/.ssh
+          cat >> ~/.ssh/config <<'EOF'
+          Host *.drush.in
+            StrictHostKeyChecking accept-new
+            Port 2222
+          EOF
+          chmod 600 ~/.ssh/config
+
+      # This only pushes source (composer.json/lock, code) — no vendor/ or
+      # web/core, matching .gitignore. Pantheon's Integrated Composer build
+      # step (build_step: true in pantheon.upstream.yml) runs `composer
+      # install` server-side and deploys the result to the dev environment.
+      - name: Push to Pantheon (mcc2026, dev environment)
+        run: |
+          git remote add pantheon ssh://codeserver.dev.3e7034de-9912-4c4f-8856-5492a6770559@codeserver.dev.3e7034de-9912-4c4f-8856-5492a6770559.drush.in:2222/~/repository.git
+          git push pantheon HEAD:master
