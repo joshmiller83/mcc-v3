@@ -213,7 +213,10 @@ DDEV project config lives in `.ddev/config.yaml`. Use `.ddev/config.local.yaml` 
   to `main` is what triggers the deploy pipeline (see [Deploys](#deploys)), so unpushed work is
   invisible to it. Work directly on `main` for now. This is early-stage and low-complexity
   enough that feature branches would just add overhead; revisit this once multiple people or
-  longer-running changes are involved.
+  longer-running changes are involved. The one exception is config-drift capture (see
+  [Config sync](#config-sync)) — that goes through a short-lived PR, since it's reconciling
+  `main` with whatever the tip environment's active config actually is, not a reviewed code
+  change, and deserves a look before merging.
 - Keep this file and `README.md` up to date whenever an architectural decision is made (new tooling, new environment setup, etc.) — update them as part of finishing the work, not as an afterthought.
 
 ## Tooling reference
@@ -298,6 +301,47 @@ dependency tree. Check step 1 first since it fails fast; only move to step 2 onc
   specifically so Pantheon has something to boot from — don't re-gitignore them. The
   `IS_DDEV_PROJECT`-guarded block in `settings.php` is ddev-only; anything that must also apply
   on Pantheon (like `config_sync_directory`) needs to sit outside that guard.
+
+## Config sync
+
+mcc2026 (Pantheon) is the source of truth for this rebuild, not `main` — the git repo is a
+mirror of it. The **tip** is whichever environment currently holds the working version:
+`dev` today, moving to `test` and then `live` as the project is promoted. Active config on
+the tip (its database) can drift from what's checked into `main`'s `config/sync/` — from UI
+edits, or a migration/content script run directly against it via `terminus remote:drush` —
+and code can just as easily land on the tip ahead of the config it depends on. Both
+directions are handled now, so neither should require remembering to do it by hand:
+
+- **Tip → `main` (descending):** `scripts/sync-config-from-tip.sh [env]` (`env` defaults to
+  `dev`). It pulls a live DB from that Pantheon environment into local ddev (full DB, no
+  files — this is about config+content parity, not asset storage), runs
+  `drush config:export`, and if that surfaces any drift, commits it to a
+  `chore/config-sync-<env>-<date>` branch and pushes it for you to review and open a PR
+  from. If there's no drift, it says so and cleans up — nothing to merge.
+  **Run this, and get the resulting PR merged (or confirm it found nothing), before cutting
+  any new feature/fix branch.** That's what keeps a feature branch's own `config:export` diff
+  showing *only* that feature's intended changes — if it shows anything else, baseline drift
+  wasn't reconciled first; re-run the script and rebase.
+  - Not every drift the script finds is safe to blindly merge — read the diff. E.g.
+    `canvas.component.sdc.*` component entries carry versioned prop schemas
+    (`versioned_properties.active` plus older hash-keyed snapshots); a real schema change on
+    the tip is fine to bring in, but check whether it's the tip catching up to reality (safe)
+    versus something that shouldn't be sitting in that environment's database at all.
+- **`main` → tip (ascending), automatic:** a Pantheon Quicksilver hook in `pantheon.yml`
+  (`workflows.sync_code` and `workflows.deploy`) runs
+  `private/scripts/quicksilver/config-import.php` — `drush config:import -y` then
+  `drush cache:rebuild` — server-side after every code sync (push to `main`, today) and every
+  environment promotion (dev→test, test→live, once that starts happening). There's no manual
+  `drush cim` step anymore. Caveats:
+  - `config:import` is idempotent, so it's harmless if `sync_code` ever fires twice for one
+    push (a known Integrated Composer quirk).
+  - This makes the descending sync load-bearing: the hook applies whatever `main` has, no
+    questions asked. If `main` wasn't actually reconciled with the tip before a feature
+    merged, the auto-import ships that gap right along with the feature.
+  - `webphp` Quicksilver operations have a 120s timeout — fine for this project's config set
+    today, worth watching if it ever grows enough to matter.
+  - Check it fired: `ddev exec terminus workflow:list mcc2026 --format=table` after a push,
+    look for "Import configuration..." under the `Sync code on "dev"` workflow.
 
 ## References
 
