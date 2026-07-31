@@ -1,6 +1,9 @@
 # Dependencies managed by Composer.
 /recipes
 /vendor
+
+# Dependencies managed by npm (the headless-render tooling in scripts/).
+/node_modules
 /web/core
 /web/libraries
 /web/modules/contrib
@@ -53,6 +56,8 @@ $RECYCLE.BIN/
 /.im-new-review
 /.homepage-review
 /.hp-regress-*
+/.about-design
+/.about-review
 
 # Handoff notes between agent threads — not part of the project itself.
 /.next-thread-brief.md
