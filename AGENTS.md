@@ -144,7 +144,7 @@ then run against each environment:
 
 ```sh
 ddev drush php:script scripts/<name>.php                              # local
-ddev exec terminus remote:drush mcc2026.dev -- php:script scripts/<name>.php
+ddev exec terminus drush mcc2026.dev -- php:script scripts/<name>.php
 ```
 
 Write these so re-running is a no-op: declare the whole desired tree, look media up
@@ -225,9 +225,10 @@ DDEV project config lives in `.ddev/config.yaml`. Use `.ddev/config.local.yaml` 
 - `ddev composer <command>` — Composer, for adding/updating modules, themes, and dependencies.
 - `node scripts/calendar-compare.mjs [YYYY-MM …]` — renders the `calendar_design.zip` reference and the live `/calendar` and `/calendar/print` pages in headless Chromium and diffs them side by side. It also asserts the print sheet is one Letter page with nothing clipped, and exits non-zero when it isn't. Run it after any change to the calendar components, `CalendarMonth`, or the print CSS. Runs on the Codespace host (no ddev); output lands in the gitignored `.calendar-compare/`.
 - `ddev exec terminus <command>` — Terminus, giving access both to the Pantheon `dev`, `test`, and `live` environments of the legacy site (`mcc-church` on Pantheon) that we're migrating content from, and to the **mcc2026** sandbox (this rebuild's `dev` environment only — it has no test/live). Treat `mcc-church` `test`/`live` with care — these are real environments, not scratch space. Prefer read-only Terminus commands on them unless a change has been explicitly requested. Terminus is installed inside the ddev `web` container, not on the Codespace host — `ddev terminus` (without `exec`) is not a valid command.
-- `ddev exec terminus remote:drush <site>.<env> -- <command>` — run drush against a remote Pantheon environment over SSH without a manual `ssh` session. Useful for `status`, `cache:rebuild`, `watchdog:show`, `sql:query`, etc. Arbitrary shell commands over that same SSH channel are rejected ("exec request failed on channel 0") — only specific allowed commands (drush, git, sql-cli, rsync/sftp) work.
+- `ddev exec terminus drush <site>.<env> -- <command>` — run drush against a remote Pantheon environment over SSH without a manual `ssh` session. Useful for `status`, `cache:rebuild`, `watchdog:show`, `sql:query`, etc. Arbitrary shell commands over that same SSH channel are rejected ("exec request failed on channel 0") — only specific allowed commands (drush, git, sql-cli, rsync/sftp) work.
 - Creating a new Pantheon site (`terminus site:create <name> <label> <upstream-machine-name> --org=mcc`) requires `--org` — this account's sites live under the **mcc** organization (`terminus org:list` shows it, though it has been seen to report empty on a stale/first call in a session; retry before assuming there's no org). `terminus upstream:list` shows available upstreams; this project's composer.json matches `drupal-cms-composer-managed`.
-- SSH access to Pantheon (git clone/push, `remote:drush`, rsync) needs a key registered to the account via `terminus ssh-key:add`. A fresh Codespace's container has no keys in `~/.ssh` — generate one before first use. **Pantheon rejects ed25519 keys** ("SSH keys of type 'ed25519' are not yet supported") — use `ssh-keygen -t rsa -b 4096`.
+- SSH access to Pantheon (git clone/push, `drush`, rsync) needs a key registered to the account via `terminus ssh-key:add`. A fresh Codespace's container has no keys in `~/.ssh` — generate one before first use. **Pantheon rejects ed25519 keys** ("SSH keys of type 'ed25519' are not yet supported") — use `ssh-keygen -t rsa -b 4096`.
+- The key has to live on the *Codespace host* (`~/.ssh/id_rsa`) and then be loaded into ddev's ssh-agent with `ddev auth ssh` — the web container doesn't mount the host's `~/.ssh`. `Permission denied (publickey)` from `terminus drush` almost always means the agent is empty, not that the key is unregistered. **`ddev auth ssh` recreates the containers**, so run it on its own and let them settle; a `ddev exec` issued in the same breath gets killed mid-flight (exit 143). The agent also empties whenever the containers restart, so re-run it after any `ddev restart`.
 - Importing a DB dump into a remote environment without uploading it first: `zcat dump.sql.gz | ssh -p 2222 <env>.<site-id>@appserver.<env>.<site-id>.drush.in drush sql-cli` (get the exact host/user from `terminus connection:info <site>.<env>`). Syncing `web/sites/default/files`: `rsync -rlz --ipv4 -e 'ssh -p 2222' web/sites/default/files/ <env>.<site-id>@appserver.<env>.<site-id>.drush.in:files/`.
 
 ## Secrets & tokens
@@ -266,8 +267,15 @@ ddev exec terminus workflow:list mcc2026 --format=table | head -6   # look for "
 
 # 3. If the build succeeded but the site still errors, the plugin/service cache is probably
 #    stale (see gotcha below) — rebuild it and recheck:
-ddev exec terminus remote:drush mcc2026.dev -- cache:rebuild
+ddev exec terminus drush mcc2026.dev -- cache:rebuild
 curl -s -o /dev/null -w "%{http_code}\n" https://dev-mcc2026.pantheonsite.io/
+
+# 4. A CSS/JS-only change deploys green and still serves the OLD file, silently — Drupal
+#    keeps serving the aggregate it already built. Don't trust a 200; diff the bytes the
+#    browser actually gets against the source:
+curl -s https://dev-mcc2026.pantheonsite.io/<path> | grep -o 'files/css/css_[A-Za-z0-9_-]*\.css'
+#    then fetch that aggregate and grep it for a rule the change introduced. A cache:rebuild
+#    is what mints a new aggregate hash.
 ```
 
 A GitHub Actions run typically finishes in ~15s (it's just a git push); the Pantheon build
@@ -308,7 +316,7 @@ mcc2026 (Pantheon) is the source of truth for this rebuild, not `main` — the g
 mirror of it. The **tip** is whichever environment currently holds the working version:
 `dev` today, moving to `test` and then `live` as the project is promoted. Active config on
 the tip (its database) can drift from what's checked into `main`'s `config/sync/` — from UI
-edits, or a migration/content script run directly against it via `terminus remote:drush` —
+edits, or a migration/content script run directly against it via `terminus drush` —
 and code can just as easily land on the tip ahead of the config it depends on. Both
 directions are handled now, so neither should require remembering to do it by hand:
 
