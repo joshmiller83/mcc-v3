@@ -22,6 +22,7 @@
     "require": {
         "composer/composer": "^2.9.8",
         "composer/installers": "^2.3",
+        "cweagans/composer-patches": "^1.7",
         "drupal/ai": "^1.3.1",
         "drupal/ai_agents": "^1.2",
         "drupal/ai_dashboard": "^1",
@@ -124,6 +125,7 @@
     "config": {
         "allow-plugins": {
             "composer/installers": true,
+            "cweagans/composer-patches": true,
             "drupal/core-composer-scaffold": true,
             "drupal/core-project-message": true,
             "drupal/core-recipe-unpack": true,
@@ -176,6 +178,11 @@
         },
         "drupal-core-vendor-hardening": {
             "composer/composer": false
+        },
+        "patches": {
+            "drupal/caresphere_theme": {
+                "Restore subtitle/side_media on hero-card": "patches/local/caresphere_theme-hero-card-subtitle.patch"
+            }
         }
     },
     "scripts": {

@@ -53,3 +53,6 @@ $RECYCLE.BIN/
 /.im-new-review
 /.homepage-review
 /.hp-regress-*
+
+# Handoff notes between agent threads — not part of the project itself.
+/.next-thread-brief.md
