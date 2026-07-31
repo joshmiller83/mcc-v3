@@ -161,12 +161,12 @@
 #ministries-verse .section-intro__heading,
 #home-impact .section-intro__heading,
 #home-ministries .section-intro__heading,
-#home-events .section-intro__heading,
-#about-vision .section-intro__heading,
-#about-cards .section-intro__heading,
-#about-glance .section-intro__heading {
+#home-events .section-intro__heading {
   color: var(--color-primary);
 }
+
+/* /about is excluded deliberately — its handoff puts every light-band heading
+   in --text-body, not the green the other landing pages use. See below. */
 
 #get-involved-serve .section-intro__description,
 #get-involved-faq .section-intro__description,
@@ -568,7 +568,45 @@
    The only landing page with a bottom-anchored photo hero rather than a
    left-anchored one, and a two-column vision/mission band, so those two get
    page-specific rules; everything else is the shared vocabulary above.
+
+   This is also the first page built to a full design handoff
+   (.about-design/design_handoff_about/README.md), which fixes its own type
+   scale and a 1200px measure — both narrower than caresphere's defaults, so
+   the sizes here are stated outright rather than inherited. `node
+   scripts/about-compare.mjs` renders the handoff and the live page side by
+   side and prints band heights; run it after touching anything below.
    ----------------------------------------------------------------------- */
+
+/* Measure. The handoff lays every band out on --container-max (1200px), while
+   .custom-container runs to ~1312px at desktop — which is what left the hero
+   breadcrumb, the H1 and the bands beneath them on three different left edges. */
+#about-hero .breadcrumb,
+#about-hero .section-intro,
+#about-vision .section-grid,
+#about-cards .section-intro,
+#about-cards .section-grid,
+#about-glance .section-intro,
+#about-glance .section-grid,
+#about-cta .section-intro {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  /* .custom-container zeroes its own inline padding with !important at the
+     wider breakpoints, so the handoff's 24px gutter has to be stated the
+     same way or the content sits flush against the measure. */
+  padding-inline: var(--space-6) !important;
+}
+
+/* Band rhythm. section.twig emits its padding as inline --section-pt/--section-pb
+   custom properties, so the handoff's 96px rhythm only sticks with !important —
+   an inline declaration outranks any stylesheet selector otherwise. */
+#about-vision,
+#about-cards,
+#about-glance,
+#about-cta {
+  --section-pt: var(--space-24) !important;
+  --section-pb: var(--space-24) !important;
+}
 
 /* Hero. Content sits at the bottom of the photo, so the scrim rises from the
    bottom rather than sitting behind a left column — see #home-hero above for
@@ -583,20 +621,35 @@
   opacity: 1;
 }
 
+/* `display:flex` with no direction laid the breadcrumb block and the intro out
+   as a ROW, which is what put the crumb beside the H1 at the viewport edge
+   instead of above it. Stack them, then anchor the stack to the band's floor. */
 #about-hero {
   display: flex;
-  align-items: flex-end;
+  flex-direction: column;
+  justify-content: flex-end;
   min-height: 440px;
-}
-
-#about-hero .section-intro {
-  max-width: 760px;
+  --section-pt: var(--space-16) !important;
+  --section-pb: var(--space-12) !important;
 }
 
 #about-hero .breadcrumb {
-  margin: 0 0 var(--space-4);
-  padding: 0;
-  justify-content: flex-start;
+  margin-block: 0 18px;
+  padding-block: 0;
+  font-size: 14px;
+}
+
+#about-hero .section-intro__heading--h1 {
+  font-size: 52px;
+  line-height: 1.1;
+  max-width: 760px;
+}
+
+#about-hero .section-intro__description {
+  font-size: 19px;
+  line-height: 1.6;
+  max-width: 620px;
+  opacity: 0.92;
 }
 
 #about-hero .breadcrumb__link,
@@ -617,6 +670,10 @@
    not a band of its own — border + radius + padding directly on the grid
    column rather than a nested section, since section-grid's slots are plain
    divs and this is the only page that needs one styled as a card. */
+#about-vision .section-grid {
+  gap: var(--space-16);
+}
+
 #about-vision .section-grid__col:nth-child(2) {
   background: var(--surface-card);
   border: 1px solid var(--border-default);
@@ -624,19 +681,100 @@
   padding: var(--space-10);
 }
 
-#about-vision .section-grid__col:nth-child(2) .section-intro + .card-icon {
-  margin-top: var(--space-6);
-  padding-top: var(--space-5);
-  border-top: 1px solid var(--border-subtle);
+#about-vision .section-intro__heading--h2 {
+  font-size: 32px;
+  line-height: 1.2;
 }
 
+#about-vision .section-intro__description {
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--text-muted);
+}
+
+/* The mission statement is a quotation, but section-intro marks `heading` as a
+   required prop and only `heading` is declared text/html — it is what carries
+   the <em>. So it is authored as an h3 and dressed back down here: the
+   handoff's italic body face at 23px, not the band's display-face heading.
+   A genuine quote slot would take an mcc_-prefixed SDC of our own. */
+#about-vision .section-grid__col:nth-child(2) .section-intro__heading {
+  font-family: var(--font-body);
+  font-weight: var(--fw-regular);
+  font-style: italic;
+  font-size: 23px;
+  line-height: 1.5;
+  letter-spacing: normal;
+  color: var(--text-body);
+}
+
+/* The three mission points are icon+text rows inside the card, not cards of
+   their own. global-overrides.css styles every .card-icon as a bordered,
+   centred, 2.25rem-padded card and does it with !important throughout, which
+   is what stretched this column to roughly three times its designed height —
+   the earlier attempt here to compact them carried no !important and so never
+   applied at all. Matching it declaration for declaration is what it takes. */
 #about-vision .section-grid__col:nth-child(2) .card-icon {
   width: 100%;
+  padding: 0 !important;
+  background: none !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  text-align: left !important;
+  align-items: stretch !important;
 }
 
-#about-vision .section-grid__col:nth-child(2) .card-icon,
-#about-vision .section-grid__col:nth-child(2) .card-icon .card-icon__inner {
-  padding: var(--space-2) 0;
+#about-vision .section-grid__col:nth-child(2) .section-intro + .card-icon {
+  margin-top: var(--space-6);
+  padding-top: var(--space-5) !important;
+  border-top: 1px solid var(--border-subtle) !important;
+}
+
+#about-vision .section-grid__col:nth-child(2) .card-icon + .card-icon {
+  margin-top: 14px;
+}
+
+#about-vision .section-grid__col:nth-child(2) .card-icon__inner {
+  flex-direction: row !important;
+  align-items: flex-start !important;
+  gap: 12px !important;
+  padding: 0 !important;
+}
+
+#about-vision .section-grid__col:nth-child(2) .card-icon__icon-wrap {
+  flex: none !important;
+  width: 20px !important;
+  height: 20px !important;
+  margin: 3px 0 0 !important;
+  background: none !important;
+  border-radius: 0 !important;
+}
+
+#about-vision .section-grid__col:nth-child(2) .card-icon__icon-wrap :is(img, svg) {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* card-icon__content and its inner block both carry a 24px flex gap, which
+   reads as a paragraph break between a mission point's label and its sentence.
+   They are one thought — close it up. */
+#about-vision .section-grid__col:nth-child(2) :is(.card-icon__content, .card-icon__content-block) {
+  gap: var(--space-1) !important;
+}
+
+#about-vision .section-grid__col:nth-child(2) .card-icon__heading {
+  font-family: var(--font-body) !important;
+  font-size: 15px !important;
+  line-height: 1.55 !important;
+  font-weight: var(--fw-bold) !important;
+  color: var(--text-body) !important;
+  margin: 0 !important;
+}
+
+#about-vision .section-grid__col:nth-child(2) .card-icon__description {
+  font-size: 15px !important;
+  line-height: 1.55 !important;
+  color: var(--text-muted) !important;
+  margin: 0 !important;
 }
 
 /* "Four places to start" and "At a glance": both declare a single stacked
@@ -650,22 +788,175 @@
   gap: var(--space-6);
 }
 
+/* The four IA cards are icon-left rows, not the centred stack global-overrides
+   gives every .card-icon site-wide — same override-in-kind as the mission rows
+   above. Each card is a whole link, so the tile and the copy have to share one
+   horizontal band or the hit area reads as two stacked targets. */
 #about-cards .card-icon {
   min-height: 172px;
+  padding: var(--space-8) !important;
+  background: var(--surface-page) !important;
+  border: 1px solid var(--border-default) !important;
+  text-align: left !important;
+  align-items: stretch !important;
+  justify-content: center !important;
+}
+
+#about-cards .card-icon__inner {
+  flex-direction: row !important;
+  align-items: flex-start !important;
+  gap: var(--space-6) !important;
+}
+
+#about-cards .card-icon__icon-wrap {
+  flex: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 56px !important;
+  height: 56px !important;
+  margin: 0 !important;
+  border-radius: var(--radius-md, 10px) !important;
+  background: var(--color-primary-subtle) !important;
+}
+
+#about-cards .card-icon__icon-wrap :is(img, svg) {
+  width: 26px !important;
+  height: 26px !important;
+}
+
+/* .card-icon__inner going row-wise is only half of it — the content column
+   inside keeps global-overrides' centred alignment and a 24px gap, which left
+   the copy floating in the middle of the card away from its icon. The band is
+   centre-aligned for its intro, and caresphere enforces that with
+   `.section-layout--align-center * { text-align: center !important }`, so the
+   cards need the same reach to get back out of it — same shape as the FAQ fix
+   above. */
+#about-cards :is(.card-icon__content, .card-icon__content-block) {
+  align-items: flex-start !important;
+  gap: var(--space-2) !important;
+}
+
+#about-cards .card-icon,
+#about-cards .card-icon * {
+  text-align: left !important;
+}
+
+#about-cards .card-icon__heading {
+  font-size: 23px !important;
+  line-height: 1.3 !important;
+  color: var(--text-body) !important;
+  margin: 0 0 var(--space-2) !important;
+}
+
+#about-cards .card-icon__description {
+  font-size: 15px !important;
+  line-height: 1.6 !important;
+  color: var(--text-muted) !important;
+}
+
+#about-cards .card-icon__actions {
+  justify-content: flex-start !important;
+  margin-top: var(--space-3) !important;
+}
+
+#about-cards .card-icon .button {
+  font-size: 15px !important;
+  font-weight: var(--fw-bold) !important;
+  color: var(--color-secondary) !important;
+  padding: 0 !important;
+}
+
+/* Heading scale for the three light bands and the closing CTA. caresphere
+   sizes .section-intro__heading--h2 at 3.25rem site-wide; the handoff runs
+   34px on the two card bands and 36px on the CTA, and every light-band
+   heading in --text-body rather than the green used elsewhere. */
+#about-cards .section-intro__heading--h2,
+#about-glance .section-intro__heading--h2 {
+  font-size: 34px;
+  line-height: 1.2;
+}
+
+#about-cta .section-intro__heading--h2 {
+  font-size: 36px;
+  line-height: 1.2;
+}
+
+#about-vision .section-intro__heading,
+#about-cards .section-intro__heading,
+#about-glance .section-intro__heading {
+  color: var(--text-body);
+}
+
+#about-cards .section-intro {
+  margin-bottom: var(--space-16);
+}
+
+#about-cards .section-intro__description,
+#about-glance .section-intro__description {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+#about-cards .section-intro__content {
+  max-width: 620px;
+  margin-inline: auto;
+}
+
+/* Two nested boxes were rendering per stat: global-overrides.css dresses
+   .stat-card as a bordered card, and caresphere's own .stat-card__panel inside
+   it carries a second border and another 32px of padding. The handoff asks for
+   one card, so the inner panel goes flat and the outer one keeps the chrome.
+   NB: /home's impact band uses the same component and has the same doubled
+   border — fixing that means touching the shared rule, so it is left alone. */
+#about-glance .stat-card {
+  padding: var(--space-8) !important;
+}
+
+#about-glance .stat-card__panel {
+  padding: 0 !important;
+  background: none !important;
+  border: 0 !important;
+  border-radius: 0 !important;
 }
 
 #about-glance .stat-card__value {
   white-space: nowrap;
+  font-size: 40px !important;
+  line-height: 1.1 !important;
+}
+
+#about-glance .stat-card__label {
+  font-size: 15px !important;
+  line-height: 1.55 !important;
+  font-weight: var(--fw-regular) !important;
+  color: var(--text-muted) !important;
+}
+
+/* Four stats across, per the handoff — the shared rule above puts both #about
+   grids on a 2×2, which is right for the cards but not for these. */
+#about-glance .section-grid__col--stacked {
+  grid-template-columns: repeat(4, 1fr);
 }
 
 @media (max-width: 61.99rem) {
-  #about-cards .section-grid__col--stacked,
-  #about-glance .section-grid__col--stacked {
+  #about-cards .section-grid__col--stacked {
     grid-template-columns: 1fr;
+  }
+
+  /* Stats step 4 → 2 → 1 rather than dropping straight to a single column;
+     four short numerals in one stack is a lot of scrolling for very little. */
+  #about-glance .section-grid__col--stacked {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 43.75rem) {
+  #about-glance .section-grid__col--stacked {
+    grid-template-columns: 1fr;
+  }
+
   #about-hero,
   #about-vision,
   #about-cards,
@@ -677,5 +968,30 @@
 
   #about-vision .section-grid--layout-2_column_50_50 {
     grid-template-columns: 1fr;
+  }
+
+  /* The handoff's small-screen step: h1 ~34, h2 ~26. The desktop sizes fit at
+     390px without overflowing, but a 52px display face eats most of the first
+     screenful before the lede starts. */
+  #about-hero .section-intro__heading--h1 {
+    font-size: 34px;
+  }
+
+  #about-vision .section-intro__heading--h2,
+  #about-cards .section-intro__heading--h2,
+  #about-glance .section-intro__heading--h2,
+  #about-cta .section-intro__heading--h2 {
+    font-size: 26px;
+  }
+
+  #about-hero .section-intro__description {
+    font-size: 17px;
+  }
+
+  /* The four IA cards go back to icon-over-text when there is no room for a
+     56px tile and a line of copy side by side. */
+  #about-cards .card-icon__inner {
+    flex-direction: column !important;
+    gap: var(--space-4) !important;
   }
 }
