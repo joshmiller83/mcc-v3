@@ -3,3 +3,18 @@ api_version: 1
 # Override the Drupal CMS upstream's default (8.3) to match local ddev (8.4.22),
 # since composer.lock resolves packages (e.g. symfony/css-selector) that require PHP >=8.4.1.
 php_version: 8.4
+
+# Keep active config on every environment in sync with whatever main last exported to
+# config/sync/, without a manual drush cim step. sync_code fires after a git push builds
+# and deploys (dev today); deploy fires on a dev->test or test->live promotion.
+workflows:
+  sync_code:
+    after:
+      - type: webphp
+        description: Import configuration after code sync
+        script: private/scripts/quicksilver/config-import.php
+  deploy:
+    after:
+      - type: webphp
+        description: Import configuration after environment promotion
+        script: private/scripts/quicksilver/config-import.php
