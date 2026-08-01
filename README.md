@@ -150,6 +150,49 @@ ddev drush php:script scripts/mcc_merge_duplicate_bios.php      # fold the dupli
 
 The merge goes last even though the migration already ran it once. Jon Culbertson's "Finance" role lives on the record being retired, and it only exists as a *field* after the name/role split has run — so the merge has to pass over it again to carry it onto the surviving record.
 
+## Ministries
+
+`/ministries` lists every ministry the church runs, grouped, and each one has a page of its own. Like the leadership listing, nothing about the grouping is hardcoded — it comes from the *Ministry Groups* (`mcc_ministry_groups`) vocabulary.
+
+The listing is **two views, not one**, the same shape as Our Leadership. `mcc_ministry_groups` lists the terms; `mcc_ministries` lists the ministries in *one* group, taking the term as a contextual filter, and is embedded once per term. So:
+
+- **Reordering the vocabulary reorders the page**, and adding a term adds a section. Manage them at Administration → Structure → Taxonomy → Ministry Groups.
+- **A group with nothing published in it is skipped** — no empty heading over a hole.
+- **Ordering inside a group is `field_weight`, then title.** Alphabetical alone is wrong here: it put "Building & Grounds" at the top of the page.
+
+What a group *says* lives on its term: `name` is the heading, `description` is the blurb beside it, `field_group_eyebrow` is the small line above it, and the term's weight is its position. Seed or reset all of it with `scripts/ministry-groups.php`.
+
+The listing covers **two bundles**, `ministry` and `missions`. A visitor reading `/ministries/emergency-response` has no idea it is a different content type from `/ministries/womens`, so the split should not be visible — five ministries that arrived from D7 as `page` nodes were converted to `ministry` for exactly that reason (`scripts/ministries-content.php`). The two `missions` nodes are supported partner organisations; they render the same card in a `partner` variant and sit in the same grid as the Missions ministry, which would otherwise be alone in a three-column row.
+
+### The fields a ministry page is built from
+
+Nothing on either page is parsed out of prose. `field_summary` is the card dek and the detail page's lede; `field_display_title` overrides an awkward title ("C.A.R.E. (Christians Are Reaching Everyone) MINISTRY" → "C.A.R.E. Ministry") and falls back to the title when empty; `field_subtitle` carries age ranges and acronym expansions; `field_schedule` answers "when could I show up"; `field_time_commitment` answers "what would this ask of me" and appears only on the detail page, because it addresses a different reader.
+
+`field_verse_text` and `field_verse_reference` are **both unlimited and paired by position** — the reference at position 2 belongs to the verse at position 2. Women's Ministry needs two verses with two citations, which is why one field could not do it. They sit next to each other in the edit form for that reason; keep them in step.
+
+A ministry with no summary, no schedule, no leader or no events is normal, and the templates omit rather than invent. The one exception is the summary: an empty dek makes the grid look broken, so a ministry without one gets a visible "a description is on the way" note instead of a blank line.
+
+**Upcoming dates** come from the reverse reference on `calendar_event.field_related_ministry`, through `EventContext::upcomingForMinistry()` — the same service the calendar uses, so the two can't disagree about what "upcoming" means. As of the current content, no ministry has any *future* events, so that row is absent everywhere; the lookup works, the calendar just hasn't been filled forward.
+
+### Icons
+
+Icons everywhere on the site come from **core's Icon API** over the Lucide pack (`drupal/lucide` + the `lucide-static` library, both installed by Composer). Editors pick one from a searchable list of ~1,900 through `ui_icons_field`'s picker — on a ministry (`field_icon`) and on a Mission Category (`field_icon`, shown on event pages).
+
+In templates it is `{{ icon('lucide', 'church', { size: 22 }) }}`. There is no second icon mechanism: the category icons used to be per-category SVG *media entities* an editor had to draw and upload, tinted through CSS `mask-image`, and the header, print button and photo placeholder each carried their own inline `<svg>`. All of them now go through the same call. Adding an icon to a new content type is a field, not a code change.
+
+### One-off content scripts
+
+All idempotent, all safe to re-run — which matters, because a migration re-import undoes them. Run in this order:
+
+```bash
+ddev drush php:script scripts/ministry-groups.php      # the three group terms, their order, blurbs and eyebrows
+ddev drush php:script scripts/ministries-content.php   # bundle conversion + every field value on all thirteen
+ddev drush php:script scripts/ministries-cleanup.php   # Word residue, the time-commitment lift, two data fixes
+ddev drush php:script scripts/ministries-page.php      # the /ministries Canvas page tree
+```
+
+`node scripts/ministries-review.mjs --login "$(ddev drush uli --uri=http://127.0.0.1)"` screenshots both pages at three widths, anonymously and logged in, and fails on horizontal overflow or a collapsed icon tile. The logged-in pass is not optional — see the `.contextual-region` trap in [AGENTS.md](file:///workspaces/mcc-v3/AGENTS.md).
+
 ## Ground rules
 
 - Keep it clear and straightforward. This is a small church site, not an enterprise platform — prefer boring, well-supported Drupal patterns over clever ones.
