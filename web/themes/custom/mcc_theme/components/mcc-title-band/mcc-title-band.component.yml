@@ -1,0 +1,59 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Title Band
+group: MCC Components
+description: >
+  The green band at the top of a section landing page or a detail page:
+  breadcrumb, eyebrow, h1, lede, an optional meta row, and optional actions.
+
+  One component rather than a band per page. /ministries and every ministry
+  detail page use it, and it is the shape the About and homepage handoffs
+  describe too — so a change to the band's geometry is one edit rather than a
+  sweep through Canvas page trees.
+
+  On a landing page the eyebrow is a word for the section ("Serve") and the
+  actions hold a button; on a detail page the eyebrow links back to the
+  ministry's group and the meta row carries the schedule and the leader. Both
+  read as the same band because they are.
+
+  Colour is not set here. Like every other band on the site it comes from
+  `mcc-landing-bands.css` keyed to the section id — see AGENTS.md on why the
+  `backgroundcolor` prop's `bg-*` classes must not be used.
+props:
+  type: object
+  required:
+    - title
+  properties:
+    title:
+      type: string
+      title: Heading
+      examples:
+        - 'Where people serve at MCC'
+    eyebrow:
+      type: string
+      title: Eyebrow
+      default: ''
+      examples:
+        - Serve
+    eyebrow_url:
+      type: string
+      title: Eyebrow link
+      description: 'Makes the eyebrow a link — used on detail pages to point back at the group.'
+      default: ''
+    lede:
+      type: string
+      title: Lede
+      default: ''
+slots:
+  breadcrumb:
+    title: Breadcrumb
+    description: 'The site breadcrumb block.'
+  meta:
+    title: Meta row
+    description: >
+      Small facts under the lede — schedule, cadence, who leads it. A slot
+      rather than a prop because Canvas can only represent props it can build
+      a field widget for, and a list of icon/text pairs is not one of those;
+      making it a prop would have kept this component out of Canvas entirely.
+  actions:
+    title: Actions
+    description: 'Buttons or links, pinned right on wide viewports.'

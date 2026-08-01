@@ -1,0 +1,9 @@
+uuid: a9b3635b-655d-4554-a7a8-08d59efa6170
+langcode: en
+status: true
+dependencies: {  }
+name: 'Ministry Groups'
+vid: mcc_ministry_groups
+description: 'Editorial groupings for the /ministries listing. Term order is the order the groups appear on the page, and the term description is the blurb shown beside the group heading.'
+weight: 0
+new_revision: false

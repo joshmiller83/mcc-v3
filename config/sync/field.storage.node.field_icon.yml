@@ -1,0 +1,19 @@
+uuid: e3f86a81-d0be-46d6-84e9-2369e05e11b2
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - ui_icons_field
+id: node.field_icon
+field_name: field_icon
+entity_type: node
+type: ui_icon
+settings: {  }
+module: ui_icons_field
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -1,0 +1,19 @@
+uuid: d225241b-2d01-49ae-a24a-fd143e10dbb5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_schedule
+    - node.type.ministry
+id: node.ministry.field_schedule
+field_name: field_schedule
+entity_type: node
+bundle: ministry
+label: Schedule
+description: 'When someone could show up — "Wednesdays, 6:45-8:00pm", "Meets quarterly". Not the time commitment.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

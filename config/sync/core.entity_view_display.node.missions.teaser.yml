@@ -1,0 +1,38 @@
+uuid: a5d5074f-830d-4235-8902-69a8e54b32ad
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.missions.field_content
+    - field.field.node.missions.field_logo_image
+    - field.field.node.missions.field_ministry_group
+    - field.field.node.missions.field_missions_website
+    - field.field.node.missions.field_subtitle
+    - field.field.node.missions.field_summary
+    - field.field.node.missions.field_weight
+    - node.type.missions
+  module:
+    - user
+id: node.missions.teaser
+targetEntityType: node
+bundle: missions
+mode: teaser
+content:
+  field_logo_image:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: 1_1_square_small
+      link: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_content: true
+  field_ministry_group: true
+  field_missions_website: true
+  field_subtitle: true
+  field_summary: true
+  field_weight: true
+  links: true

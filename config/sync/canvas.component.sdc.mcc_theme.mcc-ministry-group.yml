@@ -1,0 +1,67 @@
+uuid: 92962092-55c7-4847-9779-185e620576ea
+langcode: en
+status: true
+dependencies:
+  theme:
+    - mcc_theme
+active_version: 0fc176cd6ade6d90
+versioned_properties:
+  active:
+    settings:
+      prop_field_definitions:
+        heading:
+          required: true
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value:
+            -
+              value: 'Care & Community'
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+        heading_id:
+          required: false
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value:
+            -
+              value: group-82
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+        eyebrow:
+          required: false
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value:
+            -
+              value: 'Serving one another'
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+        blurb:
+          required: false
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value: null
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+    fallback_metadata:
+      slot_definitions:
+        cards:
+          title: Cards
+          description: "This group's ministry and partner cards, from the mcc_ministries view."
+label: 'Ministry Group'
+id: sdc.mcc_theme.mcc-ministry-group
+provider: mcc_theme
+source: sdc
+source_local_id: 'mcc_theme:mcc-ministry-group'

@@ -1,0 +1,25 @@
+uuid: 451f6734-8f83-41d2-9891-f9452ab8e5e7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_weight
+    - node.type.ministry
+id: node.ministry.field_weight
+field_name: field_weight
+entity_type: node
+bundle: ministry
+label: 'Order within group'
+description: 'Lower numbers sort first inside the group. Ministries with the same weight fall back to alphabetical.'
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

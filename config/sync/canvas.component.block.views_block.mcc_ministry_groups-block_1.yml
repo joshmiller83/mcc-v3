@@ -1,0 +1,26 @@
+uuid: 76fae530-2067-4ee1-864b-fff5f3aba2af
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.mcc_ministry_groups
+  module:
+    - views
+active_version: 8f51d480d4fab34f
+versioned_properties:
+  active:
+    settings:
+      default_settings:
+        id: 'views_block:mcc_ministry_groups-block_1'
+        label: 'Ministry Groups'
+        label_display: '0'
+        provider: views
+        views_label: ''
+        items_per_page: null
+    fallback_metadata:
+      slot_definitions: null
+label: 'Ministry Groups'
+id: block.views_block.mcc_ministry_groups-block_1
+provider: views
+source: block
+source_local_id: 'views_block:mcc_ministry_groups-block_1'

@@ -1,0 +1,19 @@
+uuid: 608ce2a9-b0c9-4df1-8232-3cecf1951dbc
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_summary
+    - node.type.missions
+id: node.missions.field_summary
+field_name: field_summary
+entity_type: node
+bundle: missions
+label: Summary
+description: 'One or two sentences describing this ministry to someone who has never been. Shown on the /ministries card and as the lede on the detail page — around 200 characters.'
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

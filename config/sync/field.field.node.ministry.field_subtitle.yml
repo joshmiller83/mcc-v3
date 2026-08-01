@@ -1,0 +1,19 @@
+uuid: 6fe9d72e-96b1-410b-86d0-2b5e41032936
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_subtitle
+    - node.type.ministry
+id: node.ministry.field_subtitle
+field_name: field_subtitle
+entity_type: node
+bundle: ministry
+label: Subtitle
+description: 'A short line under the title on the card — an age range, or the expansion of an acronym. Often empty.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

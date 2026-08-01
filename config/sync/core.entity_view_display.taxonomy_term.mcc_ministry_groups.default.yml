@@ -1,0 +1,23 @@
+uuid: 4f9a20f3-0b8b-4390-92e1-e163e6502ff3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.mcc_ministry_groups.field_group_eyebrow
+    - taxonomy.vocabulary.mcc_ministry_groups
+  module:
+    - text
+id: taxonomy_term.mcc_ministry_groups.default
+targetEntityType: taxonomy_term
+bundle: mcc_ministry_groups
+mode: default
+content:
+  description:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_group_eyebrow: true

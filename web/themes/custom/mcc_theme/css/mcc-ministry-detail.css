@@ -1,0 +1,499 @@
+/**
+ * A single ministry's page.
+ *
+ * Sibling of mcc-bio-detail.css: same surfaces, same hairlines, same radius.
+ * The title band is the shared mcc-title-band component and owns its own
+ * styling, so nothing here touches it.
+ */
+
+/* Layout ------------------------------------------------------------------ */
+
+.mcc-ministry__layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: var(--space-16);
+  /* Required for the sticky rail: a stretched grid item is full-height, and
+     `position: sticky` on a full-height box has nowhere to travel. */
+  align-items: start;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: var(--space-16) var(--space-6) var(--space-20);
+}
+
+.mcc-ministry__main {
+  min-width: 0;
+}
+
+.mcc-ministry__heading {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 28px;
+  line-height: 1.2;
+  color: var(--text-body);
+}
+
+/* Body -------------------------------------------------------------------- */
+
+.mcc-ministry__body {
+  max-width: 64ch;
+}
+
+.mcc-ministry__body :is(p, li) {
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--text-body);
+  text-wrap: pretty;
+}
+
+.mcc-ministry__body > :is(p, ul, ol) {
+  margin: var(--space-5) 0 0;
+}
+
+.mcc-ministry__body ul {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 0;
+  list-style: none;
+}
+
+/* The duty lists are the useful half of these bodies — they just needed to
+   stop being an undifferentiated wall. A check mark per row does that without
+   a component. */
+.mcc-ministry__body ul li {
+  position: relative;
+  padding-left: 32px;
+}
+
+.mcc-ministry__body ul li::before {
+  content: "";
+  position: absolute;
+  top: 0.42em;
+  left: 0;
+  width: 18px;
+  height: 18px;
+  background: var(--color-primary);
+  -webkit-mask: var(--mcc-check) center / contain no-repeat;
+  mask: var(--mcc-check) center / contain no-repeat;
+}
+
+:root {
+  --mcc-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+}
+
+/* Time commitment --------------------------------------------------------- */
+
+.mcc-ministry__commitment {
+  max-width: 64ch;
+  margin-top: var(--space-10);
+  padding: var(--space-8);
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+}
+
+.mcc-ministry__commitment-label {
+  margin: 0 0 var(--space-3);
+  font-size: 13px;
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-secondary);
+}
+
+.mcc-ministry__commitment-body {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--text-muted);
+}
+
+/* Upcoming dates ---------------------------------------------------------- */
+
+.mcc-ministry__dates {
+  margin-top: var(--space-12);
+}
+
+.mcc-ministry__dates-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border-default);
+}
+
+.mcc-ministry__dates-more {
+  font-size: 14px;
+  font-weight: var(--fw-bold);
+  color: var(--text-link);
+  text-decoration: none;
+}
+
+.mcc-ministry__dates-more:hover {
+  color: var(--text-link-hover);
+  text-decoration: underline;
+}
+
+.mcc-ministry__date {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  min-height: 76px;
+  margin-top: var(--space-4);
+  padding: var(--space-5) var(--space-6);
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  color: var(--text-body);
+  text-decoration: none;
+  transition:
+    box-shadow var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard);
+}
+
+.mcc-ministry__date:hover {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-sm);
+  color: var(--text-body);
+  text-decoration: none;
+}
+
+.mcc-ministry__date-badge {
+  flex: none;
+  width: 62px;
+  text-align: center;
+}
+
+.mcc-ministry__date-month {
+  display: block;
+  font-size: 12px;
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-secondary);
+}
+
+.mcc-ministry__date-day {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 28px;
+  line-height: 1.1;
+  color: var(--color-primary);
+}
+
+.mcc-ministry__date-divider {
+  align-self: stretch;
+  width: 1px;
+  background: var(--border-subtle);
+}
+
+.mcc-ministry__date-title {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 19px;
+  line-height: 1.25;
+}
+
+.mcc-ministry__date-meta {
+  display: block;
+  margin-top: 2px;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+/* Sidebar ----------------------------------------------------------------- */
+
+.mcc-ministry__sidebar {
+  position: sticky;
+  top: 96px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.mcc-ministry__card {
+  padding: var(--space-6);
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+}
+
+.mcc-ministry__card-label {
+  margin: 0 0 var(--space-4);
+  font-size: 13px;
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.mcc-ministry__person {
+  display: flex;
+  gap: var(--space-4);
+}
+
+/* Fixed height rather than an aspect-ratio box. For an editor Drupal wraps the
+   rendered node in `.contextual-region`, which contextual.module gives
+   `position: relative` — that wrapper becomes the containing block for
+   anything positioned inside it, which is exactly what collapsed the bio
+   portraits to 0px while the anonymous page looked fine. */
+.mcc-ministry__portrait {
+  flex: none;
+  width: 64px;
+  height: 80px;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+}
+
+.mcc-ministry__portrait :is(img, picture) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mcc-ministry__person-name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 19px;
+  line-height: 1.2;
+}
+
+.mcc-ministry__person-role {
+  margin: 2px 0 0;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
+.mcc-ministry__person-more {
+  display: inline-block;
+  margin-top: var(--space-3);
+  font-size: 14px;
+  font-weight: var(--fw-bold);
+  color: var(--text-link);
+  text-decoration: none;
+}
+
+.mcc-ministry__person-more:hover {
+  color: var(--text-link-hover);
+  text-decoration: underline;
+}
+
+.mcc-ministry__card-rule {
+  margin: var(--space-6) 0;
+  border: 0;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.mcc-ministry__contact-note {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+.mcc-ministry__contact-button {
+  display: block;
+  margin-top: var(--space-4);
+  padding: 12px 20px;
+  background: var(--color-primary);
+  border-radius: var(--radius-md);
+  color: var(--text-on-primary);
+  font-weight: var(--fw-bold);
+  text-align: center;
+  text-decoration: none;
+}
+
+.mcc-ministry__contact-button:hover {
+  background: var(--color-primary-hover);
+  color: var(--text-on-primary);
+  text-decoration: none;
+}
+
+.mcc-ministry__contact-phone {
+  margin: var(--space-3) 0 0;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.mcc-ministry__siblings {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mcc-ministry__siblings a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  font-size: 15px;
+  color: var(--text-body);
+  text-decoration: none;
+}
+
+.mcc-ministry__siblings a:hover {
+  color: var(--text-link-hover);
+  text-decoration: underline;
+}
+
+.mcc-ministry__siblings .lucide {
+  flex: none;
+  color: var(--color-primary);
+}
+
+/* Scripture band ---------------------------------------------------------- */
+
+.mcc-ministry__scripture {
+  padding: var(--space-20) var(--space-6);
+  background: var(--surface-card);
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  text-align: center;
+}
+
+.mcc-ministry__scripture-inner {
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+.mcc-ministry__scripture-label {
+  margin: 0 0 var(--space-6);
+  font-size: 13px;
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-secondary);
+}
+
+.mcc-ministry__verse {
+  margin: 0;
+}
+
+.mcc-ministry__verse + .mcc-ministry__verse {
+  margin-top: var(--space-8);
+}
+
+.mcc-ministry__verse-text {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.35rem, 1.1rem + 1vw, 1.6875rem);
+  line-height: 1.4;
+  color: var(--color-primary);
+  text-wrap: pretty;
+}
+
+/* Supporting rather than competing: a second display block at the same size
+   reads as two headings arguing. */
+.mcc-ministry__verse--secondary .mcc-ministry__verse-text {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--text-muted);
+}
+
+.mcc-ministry__verse-reference {
+  display: block;
+  margin-top: var(--space-3);
+  font-size: 15px;
+  font-style: normal;
+  font-weight: var(--fw-bold);
+  color: var(--text-muted);
+}
+
+.mcc-ministry__verse-reference a {
+  color: inherit;
+}
+
+/* Closing CTA ------------------------------------------------------------- */
+
+.mcc-ministry__cta {
+  padding: var(--space-20) var(--space-6);
+  background: var(--terracotta-900);
+  color: var(--text-on-inverse);
+  text-align: center;
+}
+
+.mcc-ministry__cta-inner {
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.mcc-ministry__cta-heading {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.125rem);
+  color: inherit;
+}
+
+.mcc-ministry__cta-body {
+  margin: var(--space-4) 0 0;
+  font-size: 17px;
+  line-height: 1.6;
+  opacity: 0.9;
+}
+
+.mcc-ministry__cta-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  margin-top: var(--space-8);
+}
+
+/* On a terracotta band the site's standard secondary button would be
+   terracotta on terracotta, which is why the primary action here is oatmeal. */
+.mcc-ministry__cta-primary,
+.mcc-ministry__cta-ghost {
+  padding: 14px 28px;
+  border-radius: var(--radius-md);
+  font-size: 17px;
+  font-weight: var(--fw-bold);
+  text-decoration: none;
+}
+
+.mcc-ministry__cta-primary {
+  background: var(--oatmeal);
+  border: 1px solid var(--oatmeal);
+  color: var(--walnut-900);
+}
+
+.mcc-ministry__cta-primary:hover {
+  background: var(--white-warm);
+  color: var(--walnut-900);
+  text-decoration: none;
+}
+
+.mcc-ministry__cta-ghost {
+  background: transparent;
+  border: 1px solid rgb(255 255 255 / 70%);
+  color: var(--text-on-inverse);
+}
+
+.mcc-ministry__cta-ghost:hover {
+  background: rgb(255 255 255 / 15%);
+  color: var(--text-on-inverse);
+  text-decoration: none;
+}
+
+/* Responsive -------------------------------------------------------------- */
+
+@media (max-width: 1023px) {
+  .mcc-ministry__layout {
+    grid-template-columns: 1fr;
+    gap: var(--space-10);
+  }
+
+  .mcc-ministry__sidebar {
+    position: static;
+  }
+}

@@ -1,0 +1,20 @@
+{#
+/**
+ * @file
+ * The grouped /ministries listing.
+ *
+ * The view's own rows are thrown away: what it supplies is the list of Ministry
+ * Group terms in vocabulary order, and _mcc_theme_ministry_group_sections()
+ * turns each into a heading plus an embedded mcc_ministries view. Same shape as
+ * views-view--mcc-leadership-groups.html.twig.
+ *
+ * This is a block display embedded in the /ministries Canvas page rather than a
+ * page display of its own — no view owns a route here except the two
+ * exceptions AGENTS.md names.
+ */
+#}
+<div{{ attributes.addClass('mcc-ministries') }}>
+  {% for section in mcc_ministry_groups %}
+    {{ section }}
+  {% endfor %}
+</div>

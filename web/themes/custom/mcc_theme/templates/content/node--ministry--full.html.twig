@@ -1,0 +1,226 @@
+{#
+/**
+ * @file
+ * A single ministry's page.
+ *
+ * `mcc_ministry` is built by _mcc_theme_ministry_context() in mcc_theme.theme.
+ *
+ * The handoff proposed a Canvas content template here, modelled on
+ * `canvas.content_template.node.page.full`. That works for `page` because
+ * every one of mcc-page-body's props maps to a single field. This page does
+ * not: the group name and link, the leader's portrait and role, the next three
+ * calendar occurrences and the sibling rail are all derived, and Canvas prop
+ * expressions address fields on the node itself. So this follows the same
+ * shape node--bio--full and node--calendar-event--full already use — a bundle
+ * template over a preprocess-built context — and the title band stays a shared
+ * component so the listing and the detail pages cannot drift apart.
+ *
+ * Every section is wrapped in its own emptiness check: five of the eleven
+ * ministries are missing at least one of schedule, leader, verse and events,
+ * and a sparse record has to read as a finished page rather than a run of
+ * empty headings.
+ */
+#}
+{% set m = mcc_ministry %}
+
+<article{{ attributes.addClass('mcc-ministry') }}>
+
+  {#
+    Slots are passed as variables to {% include %} rather than as {% block %}s
+    to an {% embed %}: mcc-title-band prints `{{ breadcrumb }}` directly, and an
+    embed's blocks can only override blocks the embedded template declares — so
+    the embed form silently rendered an empty band.
+
+    The breadcrumb is written here rather than taken from the breadcrumb block
+    because the block derives its trail from the URL, and three of these pages
+    still live under /ministries/worship-service/ while every one of them is a
+    peer in the listing. "Home › Ministries › this one" is what the page means.
+  #}
+  {% set band_breadcrumb %}
+    <nav aria-label="{{ 'Breadcrumb'|t }}">
+      <ol>
+        <li><a href="/">{{ 'Home'|t }}</a></li>
+        <li><a href="/ministries">{{ 'Ministries'|t }}</a></li>
+        <li aria-current="page">{{ m.title }}</li>
+      </ol>
+    </nav>
+  {% endset %}
+
+  {% set band_meta %}
+    {% if m.schedule %}
+      <span class="mcc-title-band__meta-item">
+        {{ icon('lucide', 'clock', { size: 17 }) }}{{ m.schedule }}
+      </span>
+    {% endif %}
+    {% if m.leader %}
+      <span class="mcc-title-band__meta-item">
+        {{ icon('lucide', 'user-round', { size: 17 }) }}{{ 'Led by @name'|t({ '@name': m.leader.name }) }}
+      </span>
+    {% endif %}
+  {% endset %}
+
+  {% include 'mcc_theme:mcc-title-band' with {
+    title: m.title,
+    eyebrow: m.group.label|default(''),
+    eyebrow_url: m.group.url|default(''),
+    lede: m.summary,
+    breadcrumb: band_breadcrumb,
+    meta: band_meta|trim is not empty ? band_meta : null,
+  } only %}
+
+  <div class="mcc-ministry__layout custom-container">
+
+    <div class="mcc-ministry__main">
+      {% if content.field_content|render|trim is not empty %}
+        <div class="mcc-ministry__body">
+          <h2 class="mcc-ministry__heading">{{ 'What this ministry does'|t }}</h2>
+          {{ content.field_content }}
+        </div>
+      {% endif %}
+
+      {#
+        A different reader from everything above it: this addresses somebody
+        already deciding whether to serve, so it is visibly an aside rather
+        than more body copy.
+      #}
+      {% if m.time_commitment %}
+        <aside class="mcc-ministry__commitment">
+          <p class="mcc-ministry__commitment-label">{{ 'Time commitment'|t }}</p>
+          <p class="mcc-ministry__commitment-body">{{ m.time_commitment }}</p>
+        </aside>
+      {% endif %}
+
+      {# Omitted entirely when there is nothing coming up — an empty
+         "Upcoming dates" heading is worse than no heading. #}
+      {% if m.upcoming %}
+        <section class="mcc-ministry__dates">
+          <div class="mcc-ministry__dates-head">
+            <h2 class="mcc-ministry__heading">{{ 'Upcoming dates'|t }}</h2>
+            <a href="/calendar" class="mcc-ministry__dates-more">
+              {{ 'See the full calendar'|t }} <span aria-hidden="true">&rarr;</span>
+            </a>
+          </div>
+          {% for date in m.upcoming %}
+            <a href="{{ date.url }}" class="mcc-ministry__date">
+              <span class="mcc-ministry__date-badge">
+                <span class="mcc-ministry__date-month">{{ date.month }}</span>
+                <span class="mcc-ministry__date-day">{{ date.day }}</span>
+              </span>
+              <span class="mcc-ministry__date-divider" aria-hidden="true"></span>
+              <span class="mcc-ministry__date-text">
+                <span class="mcc-ministry__date-title">{{ date.title }}</span>
+                {% if date.meta %}
+                  <span class="mcc-ministry__date-meta">{{ date.meta }}</span>
+                {% endif %}
+              </span>
+            </a>
+          {% endfor %}
+        </section>
+      {% endif %}
+    </div>
+
+    <aside class="mcc-ministry__sidebar">
+      {#
+        With a leader, the card is "Led by" plus the office-routed contact
+        block. Without one it is the contact block alone — never an empty
+        person row under a "Led by" heading.
+
+        Contact details are the office's, never the person's: field_email and
+        field_phone_number sit behind field_publish_contact, which is off for
+        everybody, and this page must not become a second route around that.
+      #}
+      <div class="mcc-ministry__card">
+        {% if m.leader %}
+          <p class="mcc-ministry__card-label">{{ 'Led by'|t }}</p>
+          <div class="mcc-ministry__person">
+            <div class="mcc-ministry__portrait">
+              {% if m.leader.photo %}
+                {{ m.leader.photo }}
+              {% else %}
+                {% include 'mcc_theme:mcc-monogram' with { initials: m.leader.initials, size: 'card' } only %}
+              {% endif %}
+            </div>
+            <div class="mcc-ministry__person-text">
+              <p class="mcc-ministry__person-name">{{ m.leader.name }}</p>
+              {% if m.leader.role %}
+                <p class="mcc-ministry__person-role">{{ m.leader.role }}</p>
+              {% endif %}
+              <a href="{{ m.leader.url }}" class="mcc-ministry__person-more">
+                {{ 'Read bio'|t }} <span aria-hidden="true">&rarr;</span>
+              </a>
+            </div>
+          </div>
+          <hr class="mcc-ministry__card-rule" />
+        {% endif %}
+
+        <p class="mcc-ministry__contact-note">
+          {{ 'Questions about this ministry go through the church office, and we pass them to the right person — usually the same week.'|t }}
+        </p>
+        <a href="/contact" class="mcc-ministry__contact-button">{{ 'Get in touch'|t }}</a>
+        <p class="mcc-ministry__contact-phone">
+          {{ 'Or call the office at'|t }} <a href="tel:+17653252772">(765) 325-2772</a>
+        </p>
+      </div>
+
+      {% if m.siblings %}
+        <div class="mcc-ministry__card">
+          <p class="mcc-ministry__card-label">
+            {{ 'Also in @group'|t({ '@group': m.group.label }) }}
+          </p>
+          <ul class="mcc-ministry__siblings">
+            {% for sibling in m.siblings %}
+              {% set sibling_icon = sibling.icon_id|split(':') %}
+              <li>
+                <a href="{{ sibling.url }}">
+                  {{ icon(sibling_icon[0], sibling_icon[1], { size: 17 }) }}{{ sibling.title }}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+    </aside>
+
+  </div>
+
+  {#
+    The second and subsequent verses render smaller, so a two-verse ministry
+    reads as one theme scripture with support rather than as two display blocks
+    competing.
+  #}
+  {% if m.verses %}
+    <section class="mcc-ministry__scripture">
+      <div class="mcc-ministry__scripture-inner">
+        <p class="mcc-ministry__scripture-label">{{ 'Theme scripture'|t }}</p>
+        {% for verse in m.verses %}
+          <blockquote class="mcc-ministry__verse{{ loop.first ? '' : ' mcc-ministry__verse--secondary' }}">
+            <p class="mcc-ministry__verse-text">{{ verse.text }}</p>
+            {% if verse.reference %}
+              <cite class="mcc-ministry__verse-reference">
+                {% if verse.url %}
+                  <a href="{{ verse.url }}">{{ verse.reference }}</a>
+                {% else %}
+                  {{ verse.reference }}
+                {% endif %}
+              </cite>
+            {% endif %}
+          </blockquote>
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
+
+  <section class="mcc-ministry__cta">
+    <div class="mcc-ministry__cta-inner">
+      <h2 class="mcc-ministry__cta-heading">{{ 'Find where you fit'|t }}</h2>
+      <p class="mcc-ministry__cta-body">
+        {{ 'Talk to any ministry leader on a Sunday morning, or reach out to the church office.'|t }}
+      </p>
+      <div class="mcc-ministry__cta-actions">
+        <a href="/get-involved" class="mcc-ministry__cta-primary">{{ 'Get involved'|t }}</a>
+        <a href="/ministries" class="mcc-ministry__cta-ghost">{{ 'All ministries'|t }}</a>
+      </div>
+    </div>
+  </section>
+
+</article>

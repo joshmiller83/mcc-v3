@@ -1,4 +1,4 @@
-uuid: 77574d38-93b9-4728-b998-4a8d07ca1a71
+uuid: 7e4f6500-7618-485b-93bd-063273868f48
 langcode: en
 status: true
 dependencies:
@@ -6,21 +6,21 @@ dependencies:
     - views.view.mcc_ministries
   module:
     - views
-active_version: aa6aa605a5221e95
+active_version: 3e44cd2b927b42d3
 versioned_properties:
   active:
     settings:
       default_settings:
-        id: 'views_block:mcc_ministries-block_1'
-        label: 'MCC Ministries'
+        id: 'views_block:mcc_ministries-group_ministries'
+        label: 'MCC Ministries: Group ministries'
         label_display: '0'
         provider: views
         views_label: ''
         items_per_page: null
     fallback_metadata:
       slot_definitions: null
-label: 'MCC Ministries'
-id: block.views_block.mcc_ministries-block_1
+label: 'MCC Ministries: Group ministries'
+id: block.views_block.mcc_ministries-group_ministries
 provider: views
 source: block
-source_local_id: 'views_block:mcc_ministries-block_1'
+source_local_id: 'views_block:mcc_ministries-group_ministries'

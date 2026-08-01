@@ -1,0 +1,23 @@
+uuid: fac05318-f716-406a-a4a4-1457c438be0d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_icon
+    - node.type.ministry
+  module:
+    - ui_icons_field
+id: node.ministry.field_icon
+field_name: field_icon
+entity_type: node
+bundle: ministry
+label: Icon
+description: "The icon on this ministry's card. Search the Lucide set — 1,900-odd icons, all in the same drawing style."
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_icon_pack:
+    lucide: lucide
+field_type: ui_icon

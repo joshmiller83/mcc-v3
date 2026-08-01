@@ -1,0 +1,103 @@
+/**
+ * One group section of the /ministries listing.
+ */
+
+.mcc-ministry-group {
+  margin-bottom: var(--space-16);
+}
+
+.mcc-ministry-group:last-child {
+  margin-bottom: 0;
+}
+
+/* Heading row ------------------------------------------------------------- */
+
+.mcc-ministry-group__header {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-6);
+  margin-bottom: var(--space-8);
+}
+
+.mcc-ministry-group__heading {
+  flex: none;
+}
+
+.mcc-ministry-group__eyebrow {
+  margin: 0 0 8px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-secondary);
+}
+
+.mcc-ministry-group__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 30px;
+  line-height: 1.2;
+  color: var(--text-body);
+}
+
+/* A flex child rather than a border on the heading: this is what lets the
+   blurb sit hard right at any width, and lets the rule disappear cleanly
+   instead of leaving a stub when the row wraps under 1024px. */
+.mcc-ministry-group__rule {
+  flex: 1;
+  height: 1px;
+  margin-bottom: 9px;
+  background: var(--border-default);
+}
+
+.mcc-ministry-group__blurb {
+  flex: none;
+  max-width: 300px;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+
+.mcc-ministry-group__blurb p {
+  margin: 0;
+}
+
+/* Grid -------------------------------------------------------------------- */
+
+.mcc-ministry-group__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-6);
+}
+
+@media (max-width: 1023px) {
+  .mcc-ministry-group__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .mcc-ministry-group__header {
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .mcc-ministry-group__rule {
+    display: none;
+  }
+
+  .mcc-ministry-group__blurb {
+    max-width: none;
+    margin-top: var(--space-3);
+  }
+}
+
+@media (max-width: 767px) {
+  .mcc-ministry-group__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mcc-ministry-group__title {
+    font-size: 24px;
+  }
+}

@@ -1,0 +1,30 @@
+{#
+/**
+ * @file
+ * A supported mission partner, as a card in the /ministries listing.
+ *
+ * The same component as a ministry, in its `partner` variant, and in the same
+ * grid — which is load-bearing rather than incidental. Missions is the only
+ * ministry in its group, and alone in a three-column grid it left a
+ * two-thirds-empty row.
+ *
+ * The logo comes through the teaser view display so that which image style it
+ * uses stays an admin setting, matching how the bio card takes its portrait.
+ * Emptiness is tested on the rendered string but the render array is what gets
+ * passed on: a media field with nothing usable behind it still arrives as a
+ * non-empty array, so `{% if logo %}` alone would never reach the fallback.
+ */
+#}
+{% set logo = content.field_logo_image|render|trim is not empty ? content.field_logo_image : null %}
+
+{% include 'mcc_theme:mcc-ministry-card' with {
+  attributes: attributes,
+  variant: 'partner',
+  title: mcc_ministry.title,
+  subtitle: mcc_ministry.subtitle,
+  url: url,
+  summary: mcc_ministry.summary,
+  summary_missing: mcc_ministry.summary_missing,
+  link_label: mcc_ministry.link_label,
+  logo: logo,
+} only %}

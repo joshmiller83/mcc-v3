@@ -1,0 +1,50 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Ministry Group
+group: MCC Components
+description: >
+  One group's heading and card grid on /ministries — the counterpart of
+  mcc-people-grid on Our Leadership, and built the same way for the same
+  reason.
+
+  Everything here comes off a Ministry Groups taxonomy term: the heading is the
+  term name, the eyebrow is `field_group_eyebrow`, the blurb is the term
+  description, and the order the sections appear in is the vocabulary's own
+  term order. So adding a fourth group, reordering them, or rewriting what
+  "Care & Community" covers are all term edits — no developer, no deploy.
+
+  The rule between the heading and the blurb is a `flex: 1` hairline rather
+  than a border on a container, which is what lets the blurb sit hard right at
+  any width and drop below the heading under 1024px without the rule leaving a
+  stub behind.
+props:
+  type: object
+  required:
+    - heading
+  properties:
+    heading:
+      type: string
+      title: Group name
+      examples:
+        - 'Care & Community'
+    heading_id:
+      type: string
+      title: Heading id
+      description: 'Anchor target, so a ministry page can link back to its own group.'
+      default: ''
+      examples:
+        - group-82
+    eyebrow:
+      type: string
+      title: Eyebrow
+      default: ''
+      examples:
+        - 'Serving one another'
+    blurb:
+      type: string
+      title: Blurb
+      description: 'The term description, shown to the right of the heading.'
+      default: ''
+slots:
+  cards:
+    title: Cards
+    description: 'This group''s ministry and partner cards, from the mcc_ministries view.'

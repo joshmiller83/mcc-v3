@@ -1,0 +1,26 @@
+{#
+/**
+ * @file
+ * One group section of the /ministries listing.
+ */
+#}
+<section{{ attributes.addClass('mcc-ministry-group') }}>
+
+  <div class="mcc-ministry-group__header">
+    <div class="mcc-ministry-group__heading">
+      {% if eyebrow %}
+        <p class="mcc-ministry-group__eyebrow">{{ eyebrow }}</p>
+      {% endif %}
+      <h2 class="mcc-ministry-group__title"{% if heading_id %} id="{{ heading_id }}"{% endif %}>{{ heading }}</h2>
+    </div>
+
+    <div class="mcc-ministry-group__rule" aria-hidden="true"></div>
+
+    {% if blurb %}
+      <div class="mcc-ministry-group__blurb">{{ blurb }}</div>
+    {% endif %}
+  </div>
+
+  <div class="mcc-ministry-group__grid">{{ cards }}</div>
+
+</section>

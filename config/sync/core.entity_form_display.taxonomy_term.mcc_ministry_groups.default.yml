@@ -1,0 +1,68 @@
+uuid: b3d9a47b-5bef-4b85-b9b0-06da0737c0c3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.mcc_ministry_groups.field_group_eyebrow
+    - taxonomy.vocabulary.mcc_ministry_groups
+  module:
+    - path
+    - text
+id: taxonomy_term.mcc_ministry_groups.default
+targetEntityType: taxonomy_term
+bundle: mcc_ministry_groups
+mode: default
+content:
+  description:
+    type: text_textarea
+    weight: 2
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_group_eyebrow:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  name:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 3
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  relations:
+    type: entity_reference_autocomplete
+    weight: 4
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  simple_sitemap:
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    weight: 100
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+hidden:
+  publish_on: true
+  publish_state: true
+  unpublish_on: true
+  unpublish_state: true

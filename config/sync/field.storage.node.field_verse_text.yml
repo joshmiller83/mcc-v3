@@ -1,0 +1,19 @@
+uuid: b17a2942-6c25-4396-94d1-5d41b600db01
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_verse_text
+field_name: field_verse_text
+entity_type: node
+type: string_long
+settings:
+  case_sensitive: false
+module: core
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

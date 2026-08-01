@@ -1,0 +1,21 @@
+uuid: 04832ca2-53e7-4b47-b2c8-205a1b8ce7c6
+langcode: en
+status: true
+dependencies:
+  module:
+    - taxonomy
+id: taxonomy_term.field_group_eyebrow
+field_name: field_group_eyebrow
+entity_type: taxonomy_term
+type: string
+settings:
+  max_length: 255
+  case_sensitive: false
+  is_ascii: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

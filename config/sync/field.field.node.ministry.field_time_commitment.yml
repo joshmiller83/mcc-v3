@@ -1,0 +1,19 @@
+uuid: e69aed45-4887-4cca-8899-638012aa7b32
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_time_commitment
+    - node.type.ministry
+id: node.ministry.field_time_commitment
+field_name: field_time_commitment
+entity_type: node
+bundle: ministry
+label: 'Time commitment'
+description: 'What serving here actually asks of someone. Shown on the detail page only, never on a card.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

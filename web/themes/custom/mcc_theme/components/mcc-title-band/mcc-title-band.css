@@ -1,0 +1,140 @@
+/**
+ * The green title band.
+ *
+ * The band's own colour is set in mcc-landing-bands.css against the section
+ * id, so this file owns only the geometry and the on-dark type. That split is
+ * what lets a Canvas page and a node content template share the component
+ * without either of them carrying a colour.
+ */
+
+.mcc-title-band {
+  background: var(--green-900);
+  color: var(--text-on-inverse);
+  padding: var(--space-12) var(--space-6) var(--space-16);
+}
+
+.mcc-title-band__inner {
+  max-width: var(--container-max);
+  margin: 0 auto;
+}
+
+/* The trail comes either from the core breadcrumb block (Canvas pages) or
+   hand-written in a bundle template, and on the Canvas pages it renders through
+   caresphere's own breadcrumb template — which sets a dark body colour that
+   won on specificity and left "Home › Ministries" all but invisible on the
+   green. Everything inside the band inherits the band's colour, whatever
+   wrapper it arrives in. */
+.mcc-title-band__breadcrumb {
+  margin-bottom: 20px;
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.mcc-title-band__breadcrumb,
+.mcc-title-band__breadcrumb :is(nav, div, ol, ul, li, span, a) {
+  color: var(--text-on-inverse);
+}
+
+.mcc-title-band__breadcrumb :is(ol, ul) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mcc-title-band__breadcrumb a {
+  text-decoration: none;
+}
+
+.mcc-title-band__breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+/* Bottom-aligned so the button sits on the lede's baseline rather than
+   floating against the top of a three-line heading. */
+.mcc-title-band__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-6);
+}
+
+.mcc-title-band__main {
+  max-width: 640px;
+}
+
+.mcc-title-band__eyebrow {
+  display: inline-block;
+  margin: 0 0 var(--space-3);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: inherit;
+  opacity: 0.75;
+}
+
+a.mcc-title-band__eyebrow:hover {
+  color: inherit;
+  opacity: 1;
+  text-decoration: underline;
+}
+
+.mcc-title-band__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 48px;
+  line-height: 1.1;
+  color: inherit;
+  text-wrap: pretty;
+}
+
+.mcc-title-band__lede {
+  margin: var(--space-4) 0 0;
+  max-width: 620px;
+  font-size: 18px;
+  line-height: 1.65;
+  opacity: 0.9;
+}
+
+.mcc-title-band__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-6);
+  margin-top: var(--space-5);
+  font-size: 15px;
+  opacity: 0.9;
+}
+
+.mcc-title-band__meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mcc-title-band__meta-item .lucide {
+  flex: none;
+  opacity: 0.85;
+}
+
+.mcc-title-band__actions {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+@media (max-width: 767px) {
+  .mcc-title-band {
+    padding: var(--space-10) var(--space-5) var(--space-12);
+  }
+
+  .mcc-title-band__title {
+    font-size: 34px;
+  }
+}
