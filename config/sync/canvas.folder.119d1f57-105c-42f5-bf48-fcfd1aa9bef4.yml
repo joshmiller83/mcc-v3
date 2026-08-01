@@ -5,7 +5,8 @@ dependencies:
   config:
     - canvas.component.block.views_block.mcc_leadership-group_feature
     - canvas.component.block.views_block.mcc_leadership-group_people
-    - canvas.component.block.views_block.mcc_ministries-block_1
+    - canvas.component.block.views_block.mcc_ministries-group_ministries
+    - canvas.component.block.views_block.mcc_ministry_groups-block_1
     - canvas.component.block.views_block.mcc_missions-block_1
     - canvas.component.block.views_block.mcc_sermons-block_1
     - canvas.component.block.views_block.recent_pages-block_recent_pages
@@ -17,7 +18,8 @@ weight: 0
 items:
   - block.views_block.mcc_leadership-group_feature
   - block.views_block.mcc_leadership-group_people
-  - block.views_block.mcc_ministries-block_1
+  - block.views_block.mcc_ministries-group_ministries
+  - block.views_block.mcc_ministry_groups-block_1
   - block.views_block.mcc_missions-block_1
   - block.views_block.mcc_sermons-block_1
   - block.views_block.recent_pages-block_recent_pages

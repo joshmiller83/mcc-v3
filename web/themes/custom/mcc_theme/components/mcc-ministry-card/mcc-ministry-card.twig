@@ -1,0 +1,90 @@
+{#
+/**
+ * @file
+ * One ministry, as a card.
+ *
+ * The <a> wraps everything so the click target matches the hover affordance,
+ * which is also why nothing inside it is itself a link. `mcc_ministry` is
+ * built by _mcc_theme_ministry_context() in mcc_theme.theme.
+ *
+ * Icons come from core's Icon API — `icon(pack, name, settings)` — over the
+ * Lucide pack the `lucide` module installs. The prop is called `icon_id`
+ * rather than `icon` so it cannot be read as the Twig function of that name.
+ */
+#}
+{% set is_partner = variant|default('ministry') == 'partner' %}
+{% set icon_parts = icon_id|default('lucide:church')|split(':') %}
+
+<a href="{{ url }}"{{ attributes.addClass('mcc-ministry-card', is_partner ? 'mcc-ministry-card--partner') }}>
+
+  <div class="mcc-ministry-card__head">
+    {% if is_partner %}
+      <div class="mcc-ministry-card__logo">
+        {% if logo %}
+          {{ logo }}
+        {% else %}
+          {{ icon('lucide', 'handshake', { size: 22 }) }}
+        {% endif %}
+      </div>
+    {% else %}
+      <div class="mcc-ministry-card__tile">
+        {{ icon(icon_parts[0], icon_parts[1], { size: 22 }) }}
+      </div>
+    {% endif %}
+
+    <div class="mcc-ministry-card__headings">
+      {% if is_partner %}
+        <p class="mcc-ministry-card__eyebrow">{{ 'Partner'|t }}</p>
+      {% endif %}
+      <h3 class="mcc-ministry-card__title">{{ title }}</h3>
+      {% if subtitle %}
+        <p class="mcc-ministry-card__subtitle">{{ subtitle }}</p>
+      {% endif %}
+    </div>
+  </div>
+
+  {#
+    `margin: 0 0 auto` on the dek is what pins the meta footer to the bottom,
+    so cards in a row keep their footers on one line whatever the dek's length.
+  #}
+  {% if summary_missing %}
+    <p class="mcc-ministry-card__summary mcc-ministry-card__summary--missing">
+      {{ 'Ask about this ministry on a Sunday morning — a description is on the way.'|t }}
+    </p>
+  {% else %}
+    <p class="mcc-ministry-card__summary">{{ summary }}</p>
+  {% endif %}
+
+  <div class="mcc-ministry-card__meta">
+    {% if is_partner %}
+      {% if link_label %}
+        <span class="mcc-ministry-card__link-label">
+          {{ icon('lucide', 'external-link', { size: 14 }) }}{{ link_label }}
+        </span>
+      {% endif %}
+    {% else %}
+      {#
+        Two rows, not one wrapping row: at three-column width a single row
+        broke "Led by Pat Garland" across the middle of the name.
+      #}
+      {% if schedule or next_date %}
+        <div class="mcc-ministry-card__when">
+          {% if schedule %}
+            <span class="mcc-ministry-card__schedule">
+              {{ icon('lucide', 'clock', { size: 14 }) }}{{ schedule }}
+            </span>
+          {% endif %}
+          {% if next_date %}
+            <span class="mcc-ministry-card__next">
+              {{ icon('lucide', 'calendar', { size: 14 }) }}{{ next_date }}
+            </span>
+          {% endif %}
+        </div>
+      {% endif %}
+      {% if leader_name %}
+        <span class="mcc-ministry-card__leader">{{ 'Led by @name'|t({ '@name': leader_name }) }}</span>
+      {% endif %}
+    {% endif %}
+  </div>
+
+</a>

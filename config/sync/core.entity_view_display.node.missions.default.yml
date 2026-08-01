@@ -5,7 +5,11 @@ dependencies:
   config:
     - field.field.node.missions.field_content
     - field.field.node.missions.field_logo_image
+    - field.field.node.missions.field_ministry_group
     - field.field.node.missions.field_missions_website
+    - field.field.node.missions.field_subtitle
+    - field.field.node.missions.field_summary
+    - field.field.node.missions.field_weight
     - node.type.missions
   module:
     - link
@@ -52,4 +56,8 @@ content:
     third_party_settings: {  }
     weight: 100
     region: content
-hidden: {  }
+hidden:
+  field_ministry_group: true
+  field_subtitle: true
+  field_summary: true
+  field_weight: true

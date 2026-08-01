@@ -4,7 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.taxonomy_term.mcc_mission_category.field_category_color
-    - field.field.taxonomy_term.mcc_mission_category.field_icon
+    - field.field.taxonomy_term.mcc_mission_category.field_category_icon
     - field.field.taxonomy_term.mcc_mission_category.field_marker_shape
     - taxonomy.vocabulary.mcc_mission_category
   module:
@@ -23,5 +23,5 @@ content:
     region: content
 hidden:
   field_category_color: true
-  field_icon: true
+  field_category_icon: true
   field_marker_shape: true

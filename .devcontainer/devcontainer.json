@@ -8,10 +8,12 @@
     "ghcr.io/ddev/ddev/install-ddev:latest": {},
     "ghcr.io/devcontainers/features/node:1": {}
   },
+  "//": "These are the ports ddev actually binds on the host — check with `ddev describe` before changing them. 8080 was declared here for a long time and nothing ever listened on it, so port 80 was never forwarded and the site was unreachable from a browser outside the Codespace.",
+  "forwardPorts": [80, 8443, 8027, 3306],
   "portsAttributes": {
+    "80": { "label": "web http", "onAutoForward": "notify" },
     "3306": { "label": "database" },
     "8027": { "label": "mailpit" },
-    "8080": { "label": "web http" },
     "8443": { "label": "web https" }
   },
   "postCreateCommand": "bash .devcontainer/setup.sh"

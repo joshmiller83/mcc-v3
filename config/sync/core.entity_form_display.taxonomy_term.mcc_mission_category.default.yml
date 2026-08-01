@@ -4,14 +4,14 @@ status: true
 dependencies:
   config:
     - field.field.taxonomy_term.mcc_mission_category.field_category_color
-    - field.field.taxonomy_term.mcc_mission_category.field_icon
+    - field.field.taxonomy_term.mcc_mission_category.field_category_icon
     - field.field.taxonomy_term.mcc_mission_category.field_marker_shape
     - taxonomy.vocabulary.mcc_mission_category
   module:
     - color_field
-    - media_library
     - path
     - text
+    - ui_icons_field
 id: taxonomy_term.mcc_mission_category.default
 targetEntityType: taxonomy_term
 bundle: mcc_mission_category
@@ -32,12 +32,14 @@ content:
     settings:
       show_extra: false
     third_party_settings: {  }
-  field_icon:
-    type: media_library_widget
-    weight: 11
+  field_category_icon:
+    type: icon_widget
+    weight: 3
     region: content
     settings:
-      media_types: {  }
+      icon_selector: icon_autocomplete
+      result_format: list
+      max_result: 24
     third_party_settings: {  }
   field_marker_shape:
     type: options_select

@@ -1,0 +1,25 @@
+{#
+/**
+ * @file
+ * A ministry, as a card in the /ministries listing.
+ *
+ * Everything the card shows is assembled in _mcc_theme_ministry_context(), so
+ * this template only hands it over. The teaser view display deliberately
+ * renders no fields at all — it exists so the mcc_ministries view stops
+ * falling back to `default`, which is what used to put full-page field output
+ * with visible labels into the listing.
+ */
+#}
+{% include 'mcc_theme:mcc-ministry-card' with {
+  attributes: attributes,
+  variant: mcc_ministry.variant,
+  title: mcc_ministry.title,
+  subtitle: mcc_ministry.subtitle,
+  url: url,
+  summary: mcc_ministry.summary,
+  summary_missing: mcc_ministry.summary_missing,
+  icon_id: mcc_ministry.icon_id,
+  schedule: mcc_ministry.schedule,
+  next_date: mcc_ministry.next_date,
+  leader_name: mcc_ministry.leader.name|default(''),
+} only %}

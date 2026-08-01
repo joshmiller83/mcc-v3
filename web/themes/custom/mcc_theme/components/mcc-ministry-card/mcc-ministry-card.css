@@ -1,0 +1,201 @@
+/**
+ * Ministry card.
+ *
+ * Geometry is deliberately the same family as mcc-person-card and
+ * mcc-event-card: --surface-card, a --border-default hairline, --radius-md.
+ * The hover is a primary border plus --shadow-sm rather than person-card's
+ * --shadow-md lift, because eleven of these sit in one grid and the heavier
+ * shadow made the page feel like it was rippling.
+ *
+ * `min-height` plus the dek's `margin-bottom: auto` are what keep a row of
+ * cards aligned: the meta footer sits on the same line whether the dek runs to
+ * one line or four.
+ */
+
+.mcc-ministry-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 212px;
+  padding: var(--space-6);
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  color: var(--text-body);
+  text-decoration: none;
+  transition:
+    box-shadow var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard);
+}
+
+.mcc-ministry-card:hover,
+.mcc-ministry-card:focus-visible {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-sm);
+  color: var(--text-body);
+  text-decoration: none;
+}
+
+.mcc-ministry-card:focus-visible {
+  outline: 2px solid var(--color-secondary);
+  outline-offset: 2px;
+}
+
+/* A partner organisation is a different kind of thing from a ministry, and the
+   dashed hairline says so without needing a band of its own — which matters,
+   because Missions is the only ministry in its group and alone in a
+   three-column grid it left a two-thirds-empty row. */
+.mcc-ministry-card--partner {
+  background: var(--surface-page);
+  border-style: dashed;
+}
+
+/* Head row ---------------------------------------------------------------- */
+
+.mcc-ministry-card__head {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.mcc-ministry-card__tile,
+.mcc-ministry-card__logo {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-sm);
+}
+
+.mcc-ministry-card__tile {
+  background: var(--color-primary-subtle);
+  color: var(--color-primary);
+}
+
+.mcc-ministry-card__logo {
+  overflow: hidden;
+  color: var(--text-muted);
+}
+
+.mcc-ministry-card__logo :is(img, picture, svg) {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.mcc-ministry-card__headings {
+  min-width: 0;
+  padding-top: 1px;
+}
+
+.mcc-ministry-card__eyebrow {
+  margin: 0 0 5px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-secondary);
+}
+
+.mcc-ministry-card__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 21px;
+  line-height: 1.25;
+  color: var(--text-body);
+}
+
+.mcc-ministry-card--partner .mcc-ministry-card__title {
+  font-size: 19px;
+}
+
+.mcc-ministry-card__subtitle {
+  margin: 4px 0 0;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--text-muted);
+}
+
+/* Dek --------------------------------------------------------------------- */
+
+.mcc-ministry-card__summary {
+  margin: 0 0 auto;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+/* Deliberately visible rather than a blank line: the gap is real, and showing
+   it is what gets somebody to write the missing sentence. */
+.mcc-ministry-card__summary--missing {
+  font-style: italic;
+  color: var(--neutral-500);
+}
+
+/* Meta footer ------------------------------------------------------------- */
+
+.mcc-ministry-card__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-height: 52px;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.mcc-ministry-card--partner .mcc-ministry-card__meta {
+  flex-direction: row;
+  align-items: center;
+}
+
+/* Two rows, not one that wraps: at three-column width a single row broke
+   "Led by Pat Garland" across the middle of the name. */
+.mcc-ministry-card__when {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+}
+
+.mcc-ministry-card__schedule,
+.mcc-ministry-card__next,
+.mcc-ministry-card__link-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: var(--fw-bold);
+  white-space: nowrap;
+}
+
+.mcc-ministry-card__schedule {
+  color: var(--text-muted);
+}
+
+.mcc-ministry-card__next,
+.mcc-ministry-card__link-label {
+  color: var(--color-secondary);
+}
+
+.mcc-ministry-card__leader {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.mcc-ministry-card .lucide {
+  flex: none;
+}
+
+@media (max-width: 480px) {
+  /* One column at this width, so the nowrap that protects the three-column
+     layout is no longer buying anything and can only cause overflow. */
+  .mcc-ministry-card__schedule,
+  .mcc-ministry-card__next {
+    white-space: normal;
+  }
+}

@@ -10,8 +10,13 @@ description: >
   content templates, because content templates are shared by every node of a
   bundle+view mode — see AGENTS.md and scripts/about-*.php for why the About
   children opt in via `field_section_nav` instead of the bundle changing
-  wholesale (Kids Worship, Nursery, Sunday School and the rest stay on the
-  plain branch).
+  wholesale.
+
+  Kids Worship, Nursery and Sunday School used to be the examples of the plain
+  branch. They are `ministry` nodes now and render through
+  node--ministry--full.html.twig instead, so they get the level-2 metadata rail
+  rather than a scroll-spy nav — the intended consequence of the ministries
+  handoff's first decision, and the one worth flagging.
 props:
   type: object
   required:

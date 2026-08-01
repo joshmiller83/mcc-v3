@@ -1,0 +1,50 @@
+uuid: e9008e85-4c4a-4ab8-9469-c116b6410abf
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.ministry.field_bio_reference
+    - field.field.node.ministry.field_content
+    - field.field.node.ministry.field_display_title
+    - field.field.node.ministry.field_icon
+    - field.field.node.ministry.field_ministry_group
+    - field.field.node.ministry.field_ministry_structure
+    - field.field.node.ministry.field_mission_tags
+    - field.field.node.ministry.field_related_events
+    - field.field.node.ministry.field_schedule
+    - field.field.node.ministry.field_subtitle
+    - field.field.node.ministry.field_summary
+    - field.field.node.ministry.field_time_commitment
+    - field.field.node.ministry.field_verse
+    - field.field.node.ministry.field_verse_link
+    - field.field.node.ministry.field_verse_reference
+    - field.field.node.ministry.field_verse_text
+    - field.field.node.ministry.field_weight
+    - node.type.ministry
+  module:
+    - user
+id: node.ministry.teaser
+targetEntityType: node
+bundle: ministry
+mode: teaser
+content: {  }
+hidden:
+  field_bio_reference: true
+  field_content: true
+  field_display_title: true
+  field_icon: true
+  field_ministry_group: true
+  field_ministry_structure: true
+  field_mission_tags: true
+  field_related_events: true
+  field_schedule: true
+  field_subtitle: true
+  field_summary: true
+  field_time_commitment: true
+  field_verse: true
+  field_verse_link: true
+  field_verse_reference: true
+  field_verse_text: true
+  field_weight: true
+  links: true

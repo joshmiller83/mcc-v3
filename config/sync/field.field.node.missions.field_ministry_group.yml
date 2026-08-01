@@ -1,0 +1,28 @@
+uuid: 1470b30e-1ba0-4e01-a4d8-123f12c10766
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_ministry_group
+    - node.type.missions
+    - taxonomy.vocabulary.mcc_ministry_groups
+id: node.missions.field_ministry_group
+field_name: field_ministry_group
+entity_type: node
+bundle: missions
+label: 'Ministry group'
+description: 'Which group this appears under on /ministries. Manage the groups at /admin/structure/taxonomy/manage/mcc_ministry_groups/overview — their order there is the order on the page.'
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      mcc_ministry_groups: mcc_ministry_groups
+    sort:
+      field: weight
+      direction: ASC
+    auto_create: false
+field_type: entity_reference

@@ -173,6 +173,11 @@ function mcc_theme_preprocess_node(array &$variables): void {
 
   if ($node->bundle() === 'bio') {
     $variables['mcc_bio'] = _mcc_theme_bio_context($node, $view_mode, $variables);
+    return;
+  }
+
+  if (in_array($node->bundle(), ['ministry', 'missions'], TRUE)) {
+    $variables['mcc_ministry'] = _mcc_theme_ministry_context($node, $view_mode, $variables);
   }
 }
 
@@ -460,12 +465,19 @@ function _mcc_theme_event_neighbours(NodeInterface $node, DrupalDateTime $anchor
  * de-duplication rule.
  */
 function mcc_theme_preprocess_views_view(array &$variables): void {
-  if ($variables['view']->id() !== 'mcc_leadership_groups') {
+  $id = $variables['view']->id();
+
+  if ($id === 'mcc_leadership_groups') {
+    $variables['mcc_leadership'] = _mcc_theme_leadership_listing($variables);
+    $variables['mcc_breadcrumb'] = _mcc_theme_leadership_breadcrumb();
     return;
   }
 
-  $variables['mcc_leadership'] = _mcc_theme_leadership_listing($variables);
-  $variables['mcc_breadcrumb'] = _mcc_theme_leadership_breadcrumb();
+  // Same construction, one level down: /ministries is a list of *groups*, and
+  // mcc_ministries is embedded once per group to list its ministries.
+  if ($id === 'mcc_ministry_groups') {
+    $variables['mcc_ministry_groups'] = _mcc_theme_ministry_group_sections($variables);
+  }
 }
 
 /**
@@ -1025,4 +1037,319 @@ function _mcc_theme_newsletter_form(): array {
     'label_display' => FALSE,
   ]);
   return $plugin_block->build();
+}
+
+/**
+ * Builds the /ministries listing: one section per Ministry Group term.
+ *
+ * The same shape as _mcc_theme_leadership_listing() and for the same reason —
+ * each section carries its own embedded view, so a group's membership, sort
+ * order and access checks are all the view's business rather than this
+ * function's. What it buys is that the page is editable without a developer:
+ * reorder the terms and the sections reorder, add a term and a section
+ * appears, and a group with nothing published in it is skipped rather than
+ * rendered as a heading over a hole.
+ */
+function _mcc_theme_ministry_group_sections(array &$variables): array {
+  $repository = \Drupal::service('entity.repository');
+  $renderer = \Drupal::service('renderer');
+  $builder = \Drupal::entityTypeManager()->getViewBuilder('node');
+
+  $sections = [];
+
+  foreach ($variables['view']->result as $row) {
+    $term = $row->_entity ?? NULL;
+    if (!$term) {
+      continue;
+    }
+    $term = $repository->getTranslationFromContext($term);
+
+    $ministries = Views::getView('mcc_ministries');
+    if (!$ministries) {
+      continue;
+    }
+    $ministries->setDisplay('group_ministries');
+    $ministries->setArguments([$term->id()]);
+    $ministries->preExecute();
+    $ministries->execute();
+
+    if (!$ministries->result) {
+      continue;
+    }
+
+    $row_options = $ministries->getDisplay()->getOption('row');
+    $view_mode = $row_options['options']['view_mode'] ?? 'teaser';
+
+    $cards = [];
+    foreach ($ministries->result as $ministry_row) {
+      if (isset($ministry_row->_entity)) {
+        $cards[] = $builder->view($ministry_row->_entity, $view_mode);
+      }
+    }
+
+    // The rows are rendered outside the view, so its cache metadata has to be
+    // carried across by hand — including the events tag, because a card's
+    // "next date" comes from the calendar rather than from the ministry.
+    $renderer->addCacheableDependency($variables, $term);
+    $variables['#cache']['tags'][] = 'node_list:ministry';
+    $variables['#cache']['tags'][] = 'node_list:missions';
+    $variables['#cache']['tags'][] = 'node_list:calendar_event';
+
+    $sections[] = [
+      '#type' => 'component',
+      '#component' => 'mcc_theme:mcc-ministry-group',
+      '#props' => [
+        'heading' => $term->label(),
+        'heading_id' => 'group-' . $term->id(),
+        'eyebrow' => $term->hasField('field_group_eyebrow')
+          ? (string) $term->get('field_group_eyebrow')->value
+          : '',
+        'blurb' => $term->getDescription() ? trim(strip_tags($term->getDescription())) : '',
+      ],
+      '#slots' => ['cards' => $cards],
+    ];
+  }
+
+  return $sections;
+}
+
+/**
+ * Everything a ministry card and a ministry page render that is not a field.
+ *
+ * Both bundles come through here. `missions` nodes are the two supported
+ * partner organisations: they share the card's footprint but carry a logo and
+ * an outbound link instead of an icon, a schedule and a leader, which is what
+ * `variant` switches on.
+ */
+function _mcc_theme_ministry_context(NodeInterface $node, string $view_mode, array &$variables): array {
+  $is_partner = $node->bundle() === 'missions';
+
+  $value = fn(string $field): string => $node->hasField($field) && !$node->get($field)->isEmpty()
+    ? (string) $node->get($field)->value
+    : '';
+
+  $context = [
+    'variant' => $is_partner ? 'partner' : 'ministry',
+    // field_display_title exists because four titles are either legal-formal
+    // ("C.A.R.E. (Christians Are Reaching Everyone) MINISTRY") or too bare to
+    // stand alone in a heading ("Women's"). Falling back to the node title
+    // means only those four need the extra field filled in.
+    'title' => $value('field_display_title') ?: $node->label(),
+    'subtitle' => $value('field_subtitle'),
+    'summary' => $value('field_summary'),
+    'summary_missing' => $value('field_summary') === '',
+    'icon_id' => $node->hasField('field_icon') && !$node->get('field_icon')->isEmpty()
+      ? (string) $node->get('field_icon')->target_id
+      : '',
+    'schedule' => $value('field_schedule'),
+    'url' => $node->toUrl()->toString(),
+    'group' => _mcc_theme_ministry_group($node, $variables),
+    'leader' => _mcc_theme_ministry_leader($node, $variables),
+    'next_date' => '',
+    'link_label' => '',
+  ];
+
+  if ($is_partner && $node->hasField('field_missions_website') && !$node->get('field_missions_website')->isEmpty()) {
+    // The domain, not the full URL: it is a label inside a card that already
+    // links somewhere else, so it has to read as a name rather than an address.
+    $uri = $node->get('field_missions_website')->first()->getUrl()->toString();
+    $context['link_label'] = preg_replace('#^www\.#', '', parse_url($uri, PHP_URL_HOST) ?: $uri);
+  }
+
+  if (!$is_partner) {
+    /** @var \Drupal\mcc_core\EventContext $events */
+    $events = \Drupal::service('mcc_core.event_context');
+    $upcoming = $events->upcomingForMinistry((int) $node->id(), $view_mode === 'full' ? 3 : 1);
+
+    if ($upcoming) {
+      $tz = $events->timezone();
+      $next = DrupalDateTime::createFromTimestamp($upcoming[0]['start'], $tz);
+      $context['next_date'] = $next->format('D, M j');
+      $context['upcoming'] = _mcc_theme_ministry_dates($upcoming, $tz);
+    }
+    // Zero events is normal for a third of the ministries, so the card just
+    // omits the row — but the page still has to be rebuilt when one is added.
+    $variables['#cache']['tags'][] = 'node_list:calendar_event';
+  }
+
+  if ($view_mode === 'full') {
+    $context['time_commitment'] = $value('field_time_commitment');
+    $context['verses'] = _mcc_theme_ministry_verses($node);
+    $context['siblings'] = _mcc_theme_ministry_siblings($node, $variables);
+  }
+
+  return $context;
+}
+
+/**
+ * The ministry's theme scripture, as verse/reference pairs.
+ *
+ * The two fields are separate and both unlimited, paired by position: the
+ * reference at delta N belongs to the verse at delta N. That is why the form
+ * display keeps them adjacent, and why they are always written together by
+ * scripts/ministries-content.php rather than edited independently.
+ *
+ * A verse with no reference still renders; a reference with no verse does not,
+ * because a citation on its own is not scripture.
+ */
+function _mcc_theme_ministry_verses(NodeInterface $node): array {
+  if (!$node->hasField('field_verse_text') || $node->get('field_verse_text')->isEmpty()) {
+    return [];
+  }
+  $references = [];
+  if ($node->hasField('field_verse_reference')) {
+    foreach ($node->get('field_verse_reference') as $delta => $item) {
+      $references[$delta] = (string) $item->value;
+    }
+  }
+
+  $link = NULL;
+  if ($node->hasField('field_verse_link') && !$node->get('field_verse_link')->isEmpty()) {
+    $link = $node->get('field_verse_link')->first()->getUrl()->toString();
+  }
+
+  $verses = [];
+  foreach ($node->get('field_verse_text') as $delta => $item) {
+    $text = trim((string) $item->value);
+    if ($text === '') {
+      continue;
+    }
+    $verses[] = [
+      'text' => $text,
+      'reference' => $references[$delta] ?? '',
+      // Only the first reference gets the link: field_verse_link is single, so
+      // hanging it off every reference would point them all at one verse.
+      'url' => $delta === 0 ? $link : NULL,
+    ];
+  }
+  return $verses;
+}
+
+/**
+ * The other ministries in this one's group, for the sidebar rail.
+ *
+ * This is the level-2 counterpart of the "On this page" scroll-spy sidebar the
+ * About handoff specifies for level-3 pages: a ministry page's useful sideways
+ * link is its siblings, not its own headings.
+ */
+function _mcc_theme_ministry_siblings(NodeInterface $node, array &$variables): array {
+  if (!$node->hasField('field_ministry_group') || $node->get('field_ministry_group')->isEmpty()) {
+    return [];
+  }
+  $tid = (int) $node->get('field_ministry_group')->target_id;
+
+  $siblings = Views::getView('mcc_ministries');
+  if (!$siblings) {
+    return [];
+  }
+  $siblings->setDisplay('group_ministries');
+  $siblings->setArguments([$tid]);
+  $siblings->preExecute();
+  $siblings->execute();
+
+  $variables['#cache']['tags'][] = 'node_list:ministry';
+  $variables['#cache']['tags'][] = 'node_list:missions';
+
+  $rows = [];
+  foreach ($siblings->result as $row) {
+    $sibling = $row->_entity ?? NULL;
+    if (!$sibling || (int) $sibling->id() === (int) $node->id()) {
+      continue;
+    }
+    $rows[] = [
+      'title' => $sibling->hasField('field_display_title') && !$sibling->get('field_display_title')->isEmpty()
+        ? (string) $sibling->get('field_display_title')->value
+        : $sibling->label(),
+      'url' => $sibling->toUrl()->toString(),
+      'icon_id' => $sibling->hasField('field_icon') && !$sibling->get('field_icon')->isEmpty()
+        ? (string) $sibling->get('field_icon')->target_id
+        : 'lucide:circle-dot',
+    ];
+  }
+  return $rows;
+}
+
+/**
+ * The Ministry Group term a ministry belongs to, as name plus URL fragment.
+ */
+function _mcc_theme_ministry_group(NodeInterface $node, array &$variables): ?array {
+  if (!$node->hasField('field_ministry_group') || $node->get('field_ministry_group')->isEmpty()) {
+    return NULL;
+  }
+  $term = $node->get('field_ministry_group')->entity;
+  if (!$term) {
+    return NULL;
+  }
+  // The group's name and blurb are shown on the page, so a term edit has to
+  // invalidate it.
+  $variables['#cache']['tags'][] = 'taxonomy_term:' . $term->id();
+
+  return [
+    'id' => (int) $term->id(),
+    'label' => $term->label(),
+    'url' => Url::fromUserInput('/ministries', ['fragment' => 'group-' . $term->id()])->toString(),
+  ];
+}
+
+/**
+ * The person a ministry is led by, from field_bio_reference.
+ *
+ * field_role on the bio stays the person's own role line — it is what the
+ * leadership page reads — and is never the source for a ministry's leader,
+ * because several people hold a role whose wording does not match the ministry
+ * they actually lead.
+ *
+ * Contact details are deliberately absent. field_email and field_phone_number
+ * are gated behind field_publish_contact, which is off for everybody, and the
+ * detail page routes enquiries through the office form instead — see AGENTS.md.
+ */
+function _mcc_theme_ministry_leader(NodeInterface $node, array &$variables): ?array {
+  if (!$node->hasField('field_bio_reference') || $node->get('field_bio_reference')->isEmpty()) {
+    return NULL;
+  }
+  $bio = $node->get('field_bio_reference')->entity;
+  if (!$bio || !$bio->isPublished()) {
+    return NULL;
+  }
+  $variables['#cache']['tags'][] = 'node:' . $bio->id();
+
+  return [
+    'name' => $bio->label(),
+    'url' => $bio->toUrl()->toString(),
+    'role' => $bio->hasField('field_role') && !$bio->get('field_role')->isEmpty()
+      ? (string) $bio->get('field_role')->value
+      : '',
+    'initials' => _mcc_theme_initials($bio->label()),
+    'photo' => $bio->hasField('field_bio_pic') && !$bio->get('field_bio_pic')->isEmpty()
+      ? $bio->get('field_bio_pic')->view(['label' => 'hidden', 'type' => 'entity_reference_entity_view', 'settings' => ['view_mode' => '3_4_medium', 'link' => FALSE]])
+      : NULL,
+  ];
+}
+
+/**
+ * Formats upcoming occurrences for the detail page's date rows.
+ */
+function _mcc_theme_ministry_dates(array $upcoming, \DateTimeZone $tz): array {
+  $dates = [];
+  foreach ($upcoming as $entry) {
+    $start = DrupalDateTime::createFromTimestamp($entry['start'], $tz);
+    $event = $entry['node'];
+
+    // The design's third element was a location, but calendar_event has no
+    // location field — everything the church schedules is at the building
+    // unless the event title says otherwise. Weekday and time it is.
+    $meta = array_filter([
+      $start->format('l'),
+      $entry['occurrence']['all_day'] ? (string) t('All day') : $entry['occurrence']['short'],
+    ]);
+
+    $dates[] = [
+      'month' => strtoupper($start->format('M')),
+      'day' => $start->format('j'),
+      'title' => $event->label(),
+      'url' => $event->toUrl()->toString(),
+      'meta' => implode(' · ', $meta),
+    ];
+  }
+  return $dates;
 }

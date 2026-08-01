@@ -1,0 +1,41 @@
+{#
+/**
+ * @file
+ * The green title band shared by section landing pages and detail pages.
+ */
+#}
+<div{{ attributes.addClass('mcc-title-band') }}>
+  <div class="mcc-title-band__inner custom-container">
+
+    {% if breadcrumb %}
+      <div class="mcc-title-band__breadcrumb">{{ breadcrumb }}</div>
+    {% endif %}
+
+    <div class="mcc-title-band__row">
+      <div class="mcc-title-band__main">
+        {% if eyebrow %}
+          {% if eyebrow_url %}
+            <a href="{{ eyebrow_url }}" class="mcc-title-band__eyebrow">{{ eyebrow }}</a>
+          {% else %}
+            <p class="mcc-title-band__eyebrow">{{ eyebrow }}</p>
+          {% endif %}
+        {% endif %}
+
+        <h1 class="mcc-title-band__title">{{ title }}</h1>
+
+        {% if lede %}
+          <p class="mcc-title-band__lede">{{ lede }}</p>
+        {% endif %}
+
+        {% if meta %}
+          <div class="mcc-title-band__meta">{{ meta }}</div>
+        {% endif %}
+      </div>
+
+      {% if actions %}
+        <div class="mcc-title-band__actions">{{ actions }}</div>
+      {% endif %}
+    </div>
+
+  </div>
+</div>

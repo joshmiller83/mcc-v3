@@ -58,6 +58,9 @@ $RECYCLE.BIN/
 /.hp-regress-*
 /.about-design
 /.about-review
+/.ministries-design
+/.ministries-review
+/.config-stage
 
 # Handoff notes between agent threads — not part of the project itself.
 /.next-thread-brief.md

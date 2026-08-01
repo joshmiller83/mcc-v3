@@ -1,0 +1,113 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Ministry Card
+group: MCC Components
+description: >
+  One ministry in the /ministries listing. A sibling of mcc-person-card — same
+  surface, same hairline, same radius, whole card is one link — with a small
+  icon tile where that one has a portrait.
+
+  Typographic and not photographic on purpose: there is no image on any
+  ministry, and eleven cards each with a stock-photo hole read as unfinished in
+  a way eleven typographic cards do not. The icon tile is what carries the
+  visual weight instead, which is why the icon is a real field with a real
+  picker rather than a per-bundle map in a template — see AGENTS.md, "Icons".
+
+  `variant: partner` is the two `missions` nodes — same footprint and the same
+  grid cell, but a dashed border and the page surface instead of the card
+  surface, so a supported organisation reads as a different kind of thing
+  without needing a band of its own. It swaps the icon tile for the `logo`
+  slot and the meta footer for an outbound link label.
+
+  Everything except `title` and `url` has to render absent cleanly: five of the
+  eleven ministries are missing at least one of schedule, next date and leader,
+  and that is ordinary rather than a data problem to paper over. The one
+  exception is `summary` — an empty dek makes the grid look broken, so a
+  ministry with none gets `summary_missing` and a visible note asking for one.
+
+  There are deliberately no `leader_url` or `next_date_url` props even though
+  both would be useful links: the whole card is already an `<a>`, and an
+  anchor inside an anchor is invalid HTML that browsers resolve by closing the
+  outer one early. The leader's own page is one click further on, from the
+  detail page's sidebar.
+props:
+  type: object
+  required:
+    - title
+    - url
+  properties:
+    title:
+      type: string
+      title: Title
+      description: 'The display title where the ministry has one, otherwise the node title.'
+      examples:
+        - "Women's Ministry"
+    url:
+      type: string
+      title: Link to the ministry
+      examples:
+        - /ministries/womens
+    variant:
+      type: string
+      title: Variant
+      enum:
+        - ministry
+        - partner
+      default: ministry
+    subtitle:
+      type: string
+      title: Subtitle
+      description: 'An age range, or the expansion of an acronym. Often empty.'
+      default: ''
+      examples:
+        - 'Ages 4–12'
+    summary:
+      type: string
+      title: Dek
+      default: ''
+      examples:
+        - 'Bible study on Wednesday evenings, retreats, and friendship.'
+    summary_missing:
+      type: boolean
+      title: Show the missing-summary note
+      description: 'Set when the ministry has no summary. Renders a visible prompt rather than a blank line, so the gap gets fixed.'
+      default: false
+    icon_id:
+      type: string
+      title: Icon
+      description: >
+        A `pack:name` id for core's Icon API, straight off `field_icon`.
+        Ignored by the partner variant. Named `icon_id` rather than `icon` so
+        it cannot shadow the Twig function of that name.
+      default: ''
+      examples:
+        - lucide:heart-handshake
+    schedule:
+      type: string
+      title: When it meets
+      default: ''
+      examples:
+        - 'Wednesday evenings'
+    next_date:
+      type: string
+      title: Next date
+      description: 'The soonest future calendar event for this ministry, already formatted.'
+      default: ''
+      examples:
+        - 'Wed, Aug 5'
+    leader_name:
+      type: string
+      title: Leader
+      default: ''
+      examples:
+        - 'Pat Garland'
+    link_label:
+      type: string
+      title: Outbound link label
+      description: 'Partner variant only — the organisation''s domain, shown in the footer row.'
+      default: ''
+      examples:
+        - hangingrockcamp.org
+slots:
+  logo:
+    title: Partner logo
+    description: 'field_logo_image through a square media view mode. Partner variant only; falls back to a monogram tile when empty.'

@@ -1,0 +1,23 @@
+uuid: f0d049c8-187d-4524-8f72-f412b32f0bed
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_category_icon
+    - taxonomy.vocabulary.mcc_mission_category
+  module:
+    - ui_icons_field
+id: taxonomy_term.mcc_mission_category.field_category_icon
+field_name: field_category_icon
+entity_type: taxonomy_term
+bundle: mcc_mission_category
+label: Icon
+description: 'Shown beside the category name on an event page. Not used on the calendar itself — at 7pt in print an icon is a smudge.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_icon_pack:
+    lucide: lucide
+field_type: ui_icon

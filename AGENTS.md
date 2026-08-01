@@ -109,7 +109,9 @@ walked in, Get Involved is for someone deciding where to serve.
   `BlockComponentDiscovery::checkRequirements()` enforces — so this needs no glue code.
   Two deliberate exceptions: `/calendar` stays a controller (a Views display cannot produce the
   month grid), and `/about/leadership` keeps its Views page display because it is a two-view
-  construction with custom templates and per-term render cache keys.
+  construction with custom templates and per-term render cache keys. `/ministries` is the same
+  two-view construction as `/about/leadership` but stayed a Canvas page — the terms view is a
+  *block* display embedded in it, which is the shape to copy for anything similar.
 - **Every bundle has its own pathauto pattern.** The old `menu_path` pattern
   (`/[node:menu-link:parents:join-path]/[node:title]`) had *empty* selection criteria, so it
   applied to every bundle and tied each node's URL to its menu placement — adding a menu link
@@ -136,6 +138,14 @@ re-import re-applies the flat `/[node:title]` pattern and undoes the slugs:
 - `scripts/homepage-structure.php` — the front page's band tree plus the four
   photo-slot media entities.
 - `scripts/footer-menus.php` — the four footer column menus, declared in full.
+- `scripts/ministry-groups.php` — the Ministry Groups terms, their order and copy.
+- `scripts/ministries-content.php` — the five `page`→`ministry` bundle conversions,
+  plus every field value on all thirteen ministries and partners.
+- `scripts/ministries-cleanup.php` — Word/D7 residue out of the ministry bodies, the
+  time-commitment lift, the Youth calendar event repoint, and the duplicate aliases.
+- `scripts/ministries-page.php` — the /ministries Canvas band tree.
+- `scripts/ia-page-slugs.inc.php` — `mcc_retire_stale_aliases()`, shared by every
+  script that moves a URL. Include it; don't copy it.
 
 **Content lives in the database; only code is deployed by git.** A push to `main`
 deploys code to mcc2026, and does *nothing* to that environment's Canvas trees, media
@@ -164,6 +174,111 @@ with the code, and have the script copy it into the files directory.
 - **Duplicate people are merged in `BioDuplicateMerger`, never de-duplicated in a template.** Two legacy records per person fold into one node with two terms, on `POST_IMPORT` for `mcc_bio`. If you add a pair, add it to `PAIRS` with the person's name — the name is the guard that stops the merge running against a record somebody has since repurposed.
 - **Check pages while logged in, not just anonymously.** For a user with "access contextual links", Drupal wraps rendered entities in `.contextual-region`, which contextual.module gives `position: relative`. That wrapper becomes the containing block for anything absolutely positioned inside it — which collapsed every bio portrait to 0px tall for editors while the anonymous page looked perfect. `curl` and headless screenshots are both anonymous by default, so this class of bug is invisible to them. Use `ddev drush uli` and load the page with that session before believing a layout works.
 - **Watch the alias when retiring a node.** `pathauto.pattern.menu_path` has *empty* selection criteria, so it regenerates an alias for every bundle on every save, bios included. Anything that unpublishes a node has to retire the alias **after** that save, or pathauto hands it straight back — and a live alias silently shadows a redirect, because redirects are matched after inbound path processing has already turned the alias into `/node/N`.
+
+## Ministries
+
+`/ministries` and every ministry detail page are built from the *Ministry Groups*
+(`mcc_ministry_groups`) vocabulary and fields on the `ministry` and `missions` bundles — see the
+"Ministries" section of `README.md` for the shape of it. When working on them:
+
+- **Never hardcode a group's name, order, blurb or eyebrow.** Section order is the vocabulary's
+  term order, the blurb is the term `description`, the eyebrow is `field_group_eyebrow`. Adding a
+  fourth group or reordering the page must be possible from the admin UI alone — the same rule as
+  `mcc_leadership_structure`. The band this replaced was three hand-typed Canvas cards naming the
+  same three groups, which is exactly the duplication to avoid re-introducing.
+- **Keep the listing two views.** `mcc_ministry_groups` lists terms, `mcc_ministries` lists one
+  group's ministries from a contextual filter and is embedded per term by
+  `_mcc_theme_ministry_group_sections()`. It is a *block* display embedded in the Canvas page, not
+  a page display — no new view owns a route.
+- **`mcc_ministries` covers both `ministry` and `missions`.** Don't "fix" the bundle filter down to
+  one. The split is invisible to a visitor and was the reason the old listing showed six of eleven
+  ministries.
+- **Nothing is parsed out of `field_content` at render time.** Everything the card and the page
+  show is its own field. The one lift that *was* done — the "Time Commitment:" paragraph into
+  `field_time_commitment` — happened once, in `scripts/ministries-cleanup.php`, and the marker is
+  gone from the bodies now.
+- **`field_verse_text` and `field_verse_reference` are unlimited and pair by delta.** The reference
+  at delta N belongs to the verse at delta N. They are adjacent in the form display on purpose;
+  anything that writes one must write the other, which is why
+  `scripts/ministries-content.php` always sets both together.
+- **Sorting inside a group is `field_weight` ASC then title.** `field_weight` defaults to 0 so a
+  new ministry lands with everything else rather than NULL-first; without that default the
+  LEFT JOIN puts an unweighted ministry at the top of its group, which is the original
+  "Building & Grounds leads the page" bug in a new shape.
+- **The detail page is a bundle template, not a Canvas content template.** The handoff asked for
+  `canvas.content_template.node.ministry.full`; that works for `page` because every one of
+  mcc-page-body's props maps to a single field, and it does not work here — the group link, the
+  leader's portrait and role, the next occurrences and the sibling rail are all derived, and Canvas
+  prop expressions only address fields on the node. `node--ministry--full.html.twig` over
+  `_mcc_theme_ministry_context()` is the same shape `node--bio--full` and
+  `node--calendar-event--full` already use.
+- **The title band is one shared component.** `mcc_theme:mcc-title-band` is used by the Canvas
+  landing page *and* by the detail template, so the two cannot drift. Its slots are passed as
+  variables to `{% include %}`, not as `{% block %}`s to an `{% embed %}` — an embed's blocks can
+  only override blocks the embedded template declares, and the component prints `{{ breadcrumb }}`
+  directly, so the embed form silently renders an empty band.
+- **Canvas skips a component whose props it cannot build a widget for.** An `array`-typed prop is
+  enough to keep an SDC out of Canvas entirely, with no error — it just never appears in
+  `canvas.component.sdc.*`. If a component has to be placeable, its props must all be simple
+  scalars and anything list-shaped has to be a slot. Check with
+  `drush cr && drush sqlq "SELECT name FROM config WHERE name LIKE 'canvas.component.sdc.mcc_theme%'"`.
+- **Never surface a leader's own contact details.** The detail page's sidebar routes through the
+  office form, exactly like a bio page. `field_email` and `field_phone_number` sit behind
+  `field_publish_contact`, which is off for everybody, and this page must not become a second path
+  around that gate.
+- **Deploying this needs four script runs per environment, after the config import.** The Canvas
+  tree, the group terms, the field *values* and the bundle conversions all live in the database,
+  so a push to `main` deploys none of them. Once the Quicksilver `config:import` has landed the
+  fields and views:
+
+  ```sh
+  for s in ministry-groups ministries-content ministries-cleanup ministries-page; do
+    ddev exec terminus remote:drush mcc2026.dev -- php:script scripts/$s.php
+  done
+  # and the category icons, whose field was renamed rather than retyped:
+  ddev exec terminus remote:drush mcc2026.dev -- php:script scripts/mcc_setup_category_styles.php
+  ```
+
+  All five are idempotent, and `ministries-page.php` aborts with a readable message if the Canvas
+  components it needs are not registered yet (run `cache:rebuild` first if so).
+- **A field storage's `type` cannot change in place, so config:import cannot carry a retype.**
+  `FieldStorageConfig::preSave()` throws on it. Doing it locally through the API works and looks
+  fine; the failure surfaces on the next environment's import, which here is automatic and
+  server-side. Rename the field instead — a delete plus a create is something import handles —
+  and reseed the values with a script. This is how `taxonomy_term.field_icon` became
+  `field_category_icon`.
+- **A deleted Canvas component leaves its `canvas.folder` entry behind.** Folders track items by
+  id rather than through Drupal's config dependency system, so nothing cleans up after a
+  component delete and the stale reference rides into the next environment's import. Check
+  `grep -rn "<component-id>" config/sync/canvas.folder.*` after removing one.
+- **Moving a node between bundles is table surgery and there is no API for it.**
+  `scripts/ministries-content.php` does it for the five ex-`page` ministries: `node.type`,
+  `node_field_data.type`, and the `bundle` column on every `node__*` / `node_revision__*` table.
+  It aborts if any field holding data for those nodes is absent from the target bundle, rather
+  than stranding the rows. Aliases survive because `scripts/ia-page-slugs.php` pins them with
+  `PathautoState::SKIP` — re-run it after any bundle change to be sure.
+
+## Icons
+
+**One icon system: core's Icon API over the Lucide pack.** `drupal/lucide` provides the pack and
+`lucide-icons/lucide-static` the ~1,900 SVGs (a `type: drupal-library` package declared in the root
+`composer.json`'s `repositories`, so Pantheon's Integrated Composer installs it server-side too).
+`ui_icons_field` gives the `ui_icon` field type and `ui_icons_picker` the searchable widget.
+
+- **In a template it is `{{ icon('lucide', 'church', { size: 22 }) }}`.** Don't inline an `<svg>`,
+  don't add a Twig map of path data, don't add another icon library. Three separate mechanisms had
+  accumulated before this rule existed — editor-uploaded SVG media tinted through `mask-image` for
+  the calendar categories, hand-drawn media entities for the About cards, and one-off inline
+  `<svg>` in the header, the print button and the photo placeholder.
+- **Which icon is content; the drawing is code.** A bundle that needs an icon gets a `ui_icon`
+  field with `allowed_icon_pack: [lucide]`, not a `nid → icon` map in the theme. Values are stored
+  as a `pack:name` id (`lucide:heart-handshake`), and templates split on the colon.
+- **The output strokes in `currentColor`,** so a wrapper's `color` tints it. That is why the
+  category chip no longer needs `mask-image` and a `--icon-url` round trip.
+- **One system is still outstanding:** the About page's card icons are `svg_image` media entities
+  referenced from caresphere's `card-icon` Canvas prop, which expects media. Converting them means
+  changing that component's contract across ten Canvas pages, so it is deliberately not done yet.
+  Don't add a *fourth* mechanism in the meantime.
 
 ## Environment & Local Development
 

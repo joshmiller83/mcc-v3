@@ -1,0 +1,19 @@
+uuid: 715a46e2-f98a-44ca-9771-627eae80e7e7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_verse_text
+    - node.type.ministry
+id: node.ministry.field_verse_text
+field_name: field_verse_text
+entity_type: node
+bundle: ministry
+label: 'Theme scripture'
+description: 'The verse itself, without the citation. Add another for a second verse — the reference below at the same position is the one that pairs with it.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

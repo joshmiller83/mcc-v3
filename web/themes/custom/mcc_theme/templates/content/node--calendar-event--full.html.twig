@@ -39,10 +39,12 @@
 
       <div class="mcc-event__headings">
         {% if event.category %}
-          <a href="{{ event.category.url }}" class="mcc-event__category"
-             {% if event.category.icon_url %}style="--icon-url: url('{{ event.category.icon_url }}')"{% endif %}>
-            {% if event.category.icon_url %}
-              <span class="mcc-event__category-icon" aria-hidden="true"></span>
+          {# The icon strokes in currentColor, so the chip's own colour tints
+             it — no mask, no second copy of the category colour. #}
+          <a href="{{ event.category.url }}" class="mcc-event__category">
+            {% if event.category.icon_id %}
+              {% set category_icon = event.category.icon_id|split(':') %}
+              {{ icon(category_icon[0], category_icon[1], { size: 16 }) }}
             {% endif %}
             {{ event.category.label }}
           </a>

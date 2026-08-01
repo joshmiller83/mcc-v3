@@ -1,0 +1,19 @@
+uuid: 4016321e-774a-4457-ba3e-4c25ff33cad4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_group_eyebrow
+    - taxonomy.vocabulary.mcc_ministry_groups
+id: taxonomy_term.mcc_ministry_groups.field_group_eyebrow
+field_name: field_group_eyebrow
+entity_type: taxonomy_term
+bundle: mcc_ministry_groups
+label: Eyebrow
+description: 'The small uppercase line above this group''s heading on /ministries — e.g. "Sunday mornings".'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

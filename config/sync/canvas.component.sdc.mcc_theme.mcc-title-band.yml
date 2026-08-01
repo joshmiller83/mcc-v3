@@ -1,0 +1,72 @@
+uuid: 2a197ad7-67f7-48ea-ab35-1b0604c8573a
+langcode: en
+status: true
+dependencies:
+  theme:
+    - mcc_theme
+active_version: 2f22077b7cd85dc3
+versioned_properties:
+  active:
+    settings:
+      prop_field_definitions:
+        title:
+          required: true
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value:
+            -
+              value: 'Where people serve at MCC'
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+        eyebrow:
+          required: false
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value:
+            -
+              value: Serve
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+        eyebrow_url:
+          required: false
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value: null
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+        lede:
+          required: false
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value: null
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+    fallback_metadata:
+      slot_definitions:
+        breadcrumb:
+          title: Breadcrumb
+          description: 'The site breadcrumb block.'
+        meta:
+          title: 'Meta row'
+          description: |
+            Small facts under the lede — schedule, cadence, who leads it. A slot rather than a prop because Canvas can only represent props it can build a field widget for, and a list of icon/text pairs is not one of those; making it a prop would have kept this component out of Canvas entirely.
+        actions:
+          title: Actions
+          description: 'Buttons or links, pinned right on wide viewports.'
+label: 'Title Band'
+id: sdc.mcc_theme.mcc-title-band
+provider: mcc_theme
+source: sdc
+source_local_id: 'mcc_theme:mcc-title-band'
