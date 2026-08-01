@@ -6,7 +6,6 @@ dependencies:
     - canvas.component.sdc.mcc_theme.mcc-ask-band
     - canvas.component.sdc.mcc_theme.mcc-event-card
     - canvas.component.sdc.mcc_theme.mcc-events-grid
-    - canvas.component.sdc.mcc_theme.mcc-icon
     - canvas.component.sdc.mcc_theme.mcc-ministry-card
     - canvas.component.sdc.mcc_theme.mcc-ministry-group
     - canvas.component.sdc.mcc_theme.mcc-monogram
@@ -25,7 +24,6 @@ items:
   - sdc.mcc_theme.mcc-ask-band
   - sdc.mcc_theme.mcc-event-card
   - sdc.mcc_theme.mcc-events-grid
-  - sdc.mcc_theme.mcc-icon
   - sdc.mcc_theme.mcc-ministry-card
   - sdc.mcc_theme.mcc-ministry-group
   - sdc.mcc_theme.mcc-monogram
