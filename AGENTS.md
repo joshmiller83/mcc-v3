@@ -226,6 +226,31 @@ with the code, and have the script copy it into the files directory.
   office form, exactly like a bio page. `field_email` and `field_phone_number` sit behind
   `field_publish_contact`, which is off for everybody, and this page must not become a second path
   around that gate.
+- **Deploying this needs four script runs per environment, after the config import.** The Canvas
+  tree, the group terms, the field *values* and the bundle conversions all live in the database,
+  so a push to `main` deploys none of them. Once the Quicksilver `config:import` has landed the
+  fields and views:
+
+  ```sh
+  for s in ministry-groups ministries-content ministries-cleanup ministries-page; do
+    ddev exec terminus remote:drush mcc2026.dev -- php:script scripts/$s.php
+  done
+  # and the category icons, whose field was renamed rather than retyped:
+  ddev exec terminus remote:drush mcc2026.dev -- php:script scripts/mcc_setup_category_styles.php
+  ```
+
+  All five are idempotent, and `ministries-page.php` aborts with a readable message if the Canvas
+  components it needs are not registered yet (run `cache:rebuild` first if so).
+- **A field storage's `type` cannot change in place, so config:import cannot carry a retype.**
+  `FieldStorageConfig::preSave()` throws on it. Doing it locally through the API works and looks
+  fine; the failure surfaces on the next environment's import, which here is automatic and
+  server-side. Rename the field instead — a delete plus a create is something import handles —
+  and reseed the values with a script. This is how `taxonomy_term.field_icon` became
+  `field_category_icon`.
+- **A deleted Canvas component leaves its `canvas.folder` entry behind.** Folders track items by
+  id rather than through Drupal's config dependency system, so nothing cleans up after a
+  component delete and the stale reference rides into the next environment's import. Check
+  `grep -rn "<component-id>" config/sync/canvas.folder.*` after removing one.
 - **Moving a node between bundles is table surgery and there is no API for it.**
   `scripts/ministries-content.php` does it for the five ex-`page` ministries: `node.type`,
   `node_field_data.type`, and the `bundle` column on every `node__*` / `node_revision__*` table.
