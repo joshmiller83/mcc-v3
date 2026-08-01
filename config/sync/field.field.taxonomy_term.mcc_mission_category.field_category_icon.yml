@@ -1,14 +1,14 @@
-uuid: 8fc6a1b1-8af4-441e-9634-202c5ac8b241
+uuid: f0d049c8-187d-4524-8f72-f412b32f0bed
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.taxonomy_term.field_icon
+    - field.storage.taxonomy_term.field_category_icon
     - taxonomy.vocabulary.mcc_mission_category
   module:
     - ui_icons_field
-id: taxonomy_term.mcc_mission_category.field_icon
-field_name: field_icon
+id: taxonomy_term.mcc_mission_category.field_category_icon
+field_name: field_category_icon
 entity_type: taxonomy_term
 bundle: mcc_mission_category
 label: Icon

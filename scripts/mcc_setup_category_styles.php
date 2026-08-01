@@ -12,7 +12,7 @@
  * - field_marker_shape  — the small CSS-drawn shape beside each event. The
  *   office photocopies the printed calendar in black and white, where the
  *   shape is the only thing left distinguishing the categories.
- * - field_icon          — an icon shown on event detail pages. Deliberately not
+ * - field_category_icon — an icon shown on event detail pages. Deliberately not
  *   used on the calendar: at 7pt in print an icon is a smudge. This is core's
  *   Icon API field over the Lucide pack — the same field type and the same
  *   pack the ministries use, so there is one way to choose an icon on this
@@ -51,7 +51,7 @@ foreach ($categories as $name => [$color, $shape, $icon]) {
 
   $term->set('field_category_color', $color);
   $term->set('field_marker_shape', $shape);
-  $term->set('field_icon', ['target_id' => $icon]);
+  $term->set('field_category_icon', ['target_id' => $icon]);
   $term->save();
 
   printf("%-12s %-8s %-8s %s\n", $name, $color, $shape, $icon);

@@ -137,10 +137,10 @@ class EventContext {
    * rendered as markup.
    */
   protected function iconId($term): ?string {
-    if (!$term->hasField('field_icon') || $term->get('field_icon')->isEmpty()) {
+    if (!$term->hasField('field_category_icon') || $term->get('field_category_icon')->isEmpty()) {
       return NULL;
     }
-    return (string) $term->get('field_icon')->target_id ?: NULL;
+    return (string) $term->get('field_category_icon')->target_id ?: NULL;
   }
 
   /**

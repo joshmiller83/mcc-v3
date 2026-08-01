@@ -1,12 +1,12 @@
-uuid: 8b570d84-3d74-4144-b6f1-ea88679f39fe
+uuid: e288181c-b765-4b21-9cdb-07ecaec671de
 langcode: en
 status: true
 dependencies:
   module:
     - taxonomy
     - ui_icons_field
-id: taxonomy_term.field_icon
-field_name: field_icon
+id: taxonomy_term.field_category_icon
+field_name: field_category_icon
 entity_type: taxonomy_term
 type: ui_icon
 settings: {  }
