@@ -9,9 +9,9 @@ dependencies:
     - taxonomy.vocabulary.mcc_mission_category
   module:
     - color_field
-    - media_library
     - path
     - text
+    - ui_icons_field
 id: taxonomy_term.mcc_mission_category.default
 targetEntityType: taxonomy_term
 bundle: mcc_mission_category
@@ -33,11 +33,13 @@ content:
       show_extra: false
     third_party_settings: {  }
   field_icon:
-    type: media_library_widget
-    weight: 11
+    type: icon_widget
+    weight: 3
     region: content
     settings:
-      media_types: {  }
+      icon_selector: icon_autocomplete
+      result_format: list
+      max_result: 24
     third_party_settings: {  }
   field_marker_shape:
     type: options_select

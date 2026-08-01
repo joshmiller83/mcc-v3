@@ -1,17 +1,16 @@
-uuid: 2d6a4e36-4ebf-49e7-9124-79f02be108c8
+uuid: 8b570d84-3d74-4144-b6f1-ea88679f39fe
 langcode: en
 status: true
 dependencies:
   module:
-    - media
     - taxonomy
+    - ui_icons_field
 id: taxonomy_term.field_icon
 field_name: field_icon
 entity_type: taxonomy_term
-type: entity_reference
-settings:
-  target_type: media
-module: core
+type: ui_icon
+settings: {  }
+module: ui_icons_field
 locked: false
 cardinality: 1
 translatable: true

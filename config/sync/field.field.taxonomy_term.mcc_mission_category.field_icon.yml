@@ -1,24 +1,23 @@
-uuid: 6767b444-07db-453b-97c9-387362cd3655
+uuid: 8fc6a1b1-8af4-441e-9634-202c5ac8b241
 langcode: en
 status: true
 dependencies:
   config:
     - field.storage.taxonomy_term.field_icon
-    - media.type.svg_image
     - taxonomy.vocabulary.mcc_mission_category
+  module:
+    - ui_icons_field
 id: taxonomy_term.mcc_mission_category.field_icon
 field_name: field_icon
 entity_type: taxonomy_term
 bundle: mcc_mission_category
 label: Icon
-description: 'Small SVG icon representing this category.'
+description: 'Shown beside the category name on an event page. Not used on the calendar itself — at 7pt in print an icon is a smudge.'
 required: false
 translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: 'default:media'
-  handler_settings:
-    target_bundles:
-      svg_image: svg_image
-field_type: entity_reference
+  allowed_icon_pack:
+    lucide: lucide
+field_type: ui_icon

@@ -63,7 +63,7 @@ class EventContext {
    * adding or restyling a category never requires a code change.
    *
    * @return array|null
-   *   ['tid', 'label', 'color', 'shape', 'url', 'icon_url', 'weight'], or NULL
+   *   ['tid', 'label', 'color', 'shape', 'url', 'icon_id', 'weight'], or NULL
    *   when the event has no category.
    */
   public function category(NodeInterface $node): ?array {
@@ -81,7 +81,7 @@ class EventContext {
       'color' => $this->termColor($term),
       'shape' => $this->termShape($term),
       'url' => $term->toUrl()->toString(),
-      'icon_url' => $this->iconUrl($term),
+      'icon_id' => $this->iconId($term),
       'weight' => (int) $term->getWeight(),
     ];
   }
@@ -96,7 +96,7 @@ class EventContext {
       'color' => self::FALLBACK_COLOR,
       'shape' => self::FALLBACK_SHAPE,
       'url' => NULL,
-      'icon_url' => NULL,
+      'icon_id' => NULL,
       'weight' => 999,
     ];
   }
@@ -126,22 +126,21 @@ class EventContext {
   }
 
   /**
-   * Resolves a term's icon media to a plain file URL.
+   * A term's icon, as a `pack:name` id for core's Icon API.
    *
-   * Returned as a URL rather than inline markup because the icons are rendered
-   * through CSS `mask-image`, which both tints them with the category colour
-   * and avoids injecting editor-uploaded SVG markup into the page.
+   * This used to resolve an editor-uploaded SVG media entity to a file URL,
+   * which the event page then tinted through CSS `mask-image` — a way around
+   * both the tinting problem and the risk of printing uploaded SVG markup into
+   * the page. Neither applies now that the icon comes from a trusted pack:
+   * the Icon API prints inline SVG that strokes in `currentColor`, so the
+   * category colour tints it by inheritance and nothing user-supplied is
+   * rendered as markup.
    */
-  protected function iconUrl($term): ?string {
+  protected function iconId($term): ?string {
     if (!$term->hasField('field_icon') || $term->get('field_icon')->isEmpty()) {
       return NULL;
     }
-    $media = $term->get('field_icon')->entity;
-    if (!$media || !$media->hasField('field_media_svg_image')) {
-      return NULL;
-    }
-    $file = $media->get('field_media_svg_image')->entity;
-    return $file ? $this->fileUrlGenerator->generateString($file->getFileUri()) : NULL;
+    return (string) $term->get('field_icon')->target_id ?: NULL;
   }
 
   /**
@@ -168,6 +167,69 @@ class EventContext {
     $nids = $query->execute();
 
     return $nids ? $storage->loadMultiple($nids) : [];
+  }
+
+  /**
+   * The next occurrences of a ministry's events, soonest first.
+   *
+   * Reached through the reverse reference on `field_related_ministry`. Lives
+   * here rather than in the theme because three things want it — the listing
+   * card, the ministry detail page's "Upcoming dates", and anything added
+   * later — and the alternative is three slightly different ideas about what
+   * "upcoming" means.
+   *
+   * Smart Date stores one row per occurrence, so a weekly study is one node
+   * with fifty-odd deltas. The query narrows to nodes with *an* occurrence
+   * still to come; picking which occurrence is then done in PHP, because the
+   * row that matched the query is not necessarily the soonest future one.
+   *
+   * @param int $ministry_nid
+   *   The ministry to look up.
+   * @param int $limit
+   *   How many occurrences to return.
+   * @param int|null $now
+   *   Defaults to the request time.
+   *
+   * @return array[]
+   *   Each entry is ['node', 'start', 'end', 'occurrence'], where `occurrence`
+   *   is describeOccurrence() output. Empty is a normal answer: a third of the
+   *   ministries have no events at all, and a placeholder date would be a lie.
+   */
+  public function upcomingForMinistry(int $ministry_nid, int $limit = 3, ?int $now = NULL): array {
+    $now = $now ?? \Drupal::time()->getRequestTime();
+    $storage = $this->entityTypeManager->getStorage('node');
+
+    $nids = $storage->getQuery()
+      ->accessCheck(TRUE)
+      ->condition('type', 'calendar_event')
+      ->condition('status', 1)
+      ->condition('field_related_ministry', $ministry_nid)
+      ->condition('field_event_date.end_value', $now, '>=')
+      ->execute();
+    if (!$nids) {
+      return [];
+    }
+
+    $upcoming = [];
+    foreach ($storage->loadMultiple($nids) as $event) {
+      foreach ($event->get('field_event_date') as $item) {
+        $end = (int) $item->end_value;
+        if ($end < $now) {
+          continue;
+        }
+        $start = (int) $item->value;
+        $upcoming[] = [
+          'node' => $event,
+          'start' => $start,
+          'end' => $end,
+          'occurrence' => $this->describeOccurrence($start, $end),
+        ];
+      }
+    }
+
+    usort($upcoming, fn(array $a, array $b) => $a['start'] <=> $b['start']);
+
+    return array_slice($upcoming, 0, $limit);
   }
 
   /**

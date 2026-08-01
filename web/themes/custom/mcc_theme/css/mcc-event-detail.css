@@ -99,18 +99,19 @@
   text-decoration: none;
 }
 
+/* oklab, not oklch: the category colours are all warm and low-chroma, and
+   oklch's polar hue interpolation drifts them toward rose on the way to the
+   card surface. Same rule as the rest of the theme — see AGENTS.md. */
 .mcc-event__category:hover {
-  background: color-mix(in oklch, var(--evt) 24%, var(--surface-card, #f4efe4));
+  background: color-mix(in oklab, var(--evt) 24%, var(--surface-card, #f4efe4));
 }
 
-/* Icons are masked rather than inlined: one SVG tints to any category colour,
-   and editor-uploaded markup never reaches the page. */
-.mcc-event__category-icon {
+/* The icon is inline SVG from the Lucide pack, stroked in currentColor, so it
+   inherits the chip's colour with no mask and no --icon-url round trip. */
+.mcc-event__category .lucide {
   width: 1.05em;
   height: 1.05em;
-  background-color: currentColor;
-  -webkit-mask: var(--icon-url) center / contain no-repeat;
-  mask: var(--icon-url) center / contain no-repeat;
+  flex: none;
 }
 
 .mcc-event__title {

@@ -20,7 +20,7 @@
   color: var(--text-muted, #52514e);
 }
 
-.mcc-photo-placeholder__icon {
+.mcc-photo-placeholder .lucide {
   opacity: 0.6;
 }
 
