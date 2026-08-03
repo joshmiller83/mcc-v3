@@ -295,6 +295,33 @@ This project is developed in **GitHub Codespaces**, not on a local machine. DDEV
 
 Codespaces prebuilds are **not** configured. That's a repo Settings → Codespaces UI action, not something expressible in `devcontainer.json` or via `gh` — it's a manual, opt-in step (it consumes Codespaces storage quota) left to a human to decide on.
 
+### Google Drive sync (`~/gdrive`)
+
+`postCreateCommand` in `.devcontainer/setup.sh` mirrors a shared Google Drive folder — design
+handoffs, feedback recordings, anything that shouldn't go into git — down to `~/gdrive` on every
+rebuild, via `rclone` and a service account. No OAuth flow, no browser consent — it authenticates
+non-interactively with a service-account key, which is what makes it possible to run unattended in
+`postCreateCommand`.
+
+- **Two Codespaces secrets drive it:** `GDRIVE_SA_KEY` (the service account's JSON key, written to
+  `~/.config/rclone/gdrive-sa.json`) and `GDRIVE_FOLDER_ID` (the Drive folder's id, used as
+  `root_folder_id` in the generated `~/.config/rclone/rclone.conf`). If either is unset,
+  `setup.sh` skips the sync entirely rather than failing the rebuild.
+- **The target folder must be shared with the service account's email** — Viewer access is
+  enough — or the sync silently does nothing. Get the exact address from the key itself:
+  `jq -r .client_email ~/.config/rclone/gdrive-sa.json`.
+- **An empty `~/gdrive` after rebuild does not mean the script failed.** `setup.sh` swallows
+  `rclone sync` failures (`|| echo "..."`), so `postCreateCommand` reports success either way —
+  and even a direct `rclone lsjson gdrive:` returns an empty list with **no error** both when the
+  folder is genuinely empty *and* when `GDRIVE_FOLDER_ID` is wrong or was never shared with the
+  service account. Google's Drive API doesn't validate the parent id on a list-children call, so
+  the two cases look identical. Confirm sharing on the folder itself before assuming the sync
+  script is broken.
+- **To re-sync by hand** (no rebuild needed): `rclone sync gdrive: ~/gdrive --fast-list`.
+  `rclone about gdrive:` confirms the service account credentials are valid; it does not confirm
+  folder access, since `about` reports the service account's own tiny drive, not the shared
+  folder's contents.
+
 ### Local environment (DDEV)
 
 Run commands from the project root:

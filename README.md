@@ -45,6 +45,10 @@ After the installer is complete, you will land on the dashboard.
 
 **Codespaces prebuilds:** not yet enabled. This can only be configured through the repo's Settings → Codespaces UI (not as code), and it consumes Codespaces storage quota, so it's an opt-in decision rather than something set up automatically.
 
+### Google Drive sync
+
+Every codespace rebuild syncs a shared Google Drive folder — design handoffs, feedback recordings, anything that doesn't belong in git — down to `~/gdrive`, read-only. It's set up automatically via `.devcontainer/setup.sh`; see [AGENTS.md](file:///workspaces/mcc-v3/AGENTS.md) for how it works and what to check if `~/gdrive` comes up empty after a rebuild.
+
 ## Environments
 
 Terminus gives access to Pantheon's `dev`, `test`, and `live` environments via `ddev terminus`. See [AGENTS.md](file:///workspaces/mcc-v3/AGENTS.md) for rules on when/how those commands should be used.
