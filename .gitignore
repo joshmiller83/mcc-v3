@@ -64,3 +64,6 @@ $RECYCLE.BIN/
 
 # Handoff notes between agent threads — not part of the project itself.
 /.next-thread-brief.md
+
+# Local virtualenv for scripts/transcribe-feedback.py
+/.venv-whisper
