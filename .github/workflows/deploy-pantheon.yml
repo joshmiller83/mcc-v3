@@ -37,7 +37,21 @@ jobs:
       - name: Push to Pantheon (mcc2026, dev environment)
         run: |
           git remote add pantheon ssh://codeserver.dev.3e7034de-9912-4c4f-8856-5492a6770559@codeserver.dev.3e7034de-9912-4c4f-8856-5492a6770559.drush.in:2222/~/repository.git
-          git push pantheon HEAD:master
+          max_attempts=3
+          attempt=1
+          while [ "$attempt" -le "$max_attempts" ]; do
+            if git push pantheon HEAD:master; then
+              exit 0
+            fi
+            if [ "$attempt" -lt "$max_attempts" ]; then
+              sleep_seconds=$((attempt * 10))
+              echo "Pantheon push failed (attempt $attempt/$max_attempts). Retrying in ${sleep_seconds}s..."
+              sleep "$sleep_seconds"
+            fi
+            attempt=$((attempt + 1))
+          done
+          echo "Pantheon push failed after $max_attempts attempts."
+          exit 1
 
       - name: Clean up deploy key
         if: always()
