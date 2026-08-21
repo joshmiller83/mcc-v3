@@ -300,6 +300,15 @@ $overrides = [
   $MIN_BUTTON => [
     'disabled' => FALSE,
   ],
+  // Both hero CTAs were stored disabled:true, so they rendered as inert,
+  // half-opacity <button disabled> elements even though each already stores a
+  // valid href (/sermons and /im-new) — same defect as $MIN_BUTTON above.
+  $HERO_CTA_1 => [
+    'disabled' => FALSE,
+  ],
+  $HERO_CTA_2 => [
+    'disabled' => FALSE,
+  ],
   // "Plan your visit" pointed at /i-am-new-here, which 404s. The page is
   // /im-new (see AGENTS.md — I'm New and Get Involved are separate pages).
   $CTA_BUTTON_1 => [
@@ -331,6 +340,23 @@ $stored = [];
 foreach ($page->get('components') as $item) {
   $value = $item->getValue();
   $stored[$value['uuid']] = $value;
+}
+
+// caresphere's hero-card `media` prop was inert when this script was written
+// (its Twig rendered none of it), so the real hero photo an editor attached to
+// the card never conflicted with the band's placeholder background. The base
+// theme has since started rendering it, which double-exposed the hero: the
+// real photo painted inside the card, on top of the scrimmed placeholder
+// band. The band's background_image is where the design wants the photo (see
+// the header comment), so promote the card's photo to the band and clear it
+// from the card. Idempotent: once promoted, the card stores no media and this
+// block is a no-op.
+if (isset($stored[$HERO_CARD])) {
+  $card_inputs = json_decode($stored[$HERO_CARD]['inputs'] ?: '{}', TRUE) ?: [];
+  if (!empty($card_inputs['media']['target_id'])) {
+    $overrides[$SEC_HERO]['background_image'] = ['target_id' => (string) $card_inputs['media']['target_id']];
+    $overrides[$HERO_CARD]['media'] = NULL;
+  }
 }
 
 $items = [];
