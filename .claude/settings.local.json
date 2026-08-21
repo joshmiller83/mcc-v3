@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./vendor/bin/drush status *)",
+      "Bash(ddev drush *)",
+      "Skill(claude-in-chrome)",
+      "Bash(curl -sk https://literate-space-trout-v6jxqx4jqjhxr94-80.app.github.dev/home -o /tmp/home.html -w \"HTTP %{http_code}\\\\n\")",
+      "Read(//tmp/**)",
+      "Bash(curl -skL https://literate-space-trout-v6jxqx4jqjhxr94-80.app.github.dev/home -o /tmp/home.html -w \"HTTP %{http_code}\\\\n\")",
+      "Bash(ddev describe *)",
+      "Bash(echo \"exit: $?\")",
+      "Bash(env)",
+      "WebSearch",
+      "Bash(ddev exec *)",
+      "Bash(mkdir -p ~/.ssh)",
+      "Bash(ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N \"\" -C \"vscode@mcc-codespace-$\\(date +%s\\)\")",
+      "Bash(ddev auth *)",
+      "Bash(gh run *)"
+    ]
+  }
+}
