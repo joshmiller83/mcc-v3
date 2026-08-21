@@ -15,8 +15,9 @@
  * against the title we expect to find. If a title has since been edited by
  * hand, that row is skipped rather than silently overwritten.
  *
- * Node titles are not aliased by Pathauto for this bundle, so renaming a bio
- * does not change its URL. Nothing here touches an alias.
+ * Bios are aliased by Pathauto (bio_path: /about/leadership/[node:title]), so
+ * renaming a bio regenerates its alias on save and the redirect module keeps
+ * the old URL working. Nothing here touches an alias directly.
  *
  * Re-runnable, and worth re-running after a migration re-import: mcc_bio maps
  * the D7 title straight through, so an import puts the mixed titles back.
@@ -44,7 +45,10 @@ $bios = [
   503 => ['Aaron Lucas - Prayer/Outreach', 'Aaron Lucas', 'Prayer & Outreach'],
   504 => ['Alan Martin Finance ', 'Alan Martin', 'Finance'],
   1214 => ['Gary Allen', 'Gary Allen', ''],
-  1215 => ['John Weidman Buildings & Grounds', 'John Weidman', 'Buildings & Grounds'],
+  // The migration now emits every group name into this title ("Deacons &
+  // Buildings & Grounds"), not just the one the legacy site carried, so the
+  // expected-title guard has to match that or the row is skipped.
+  1215 => ['John Weidman Deacons & Buildings & Grounds', 'John Weidman', 'Buildings & Grounds'],
   1602 => ['Bob Kline', 'Bob Kline', ''],
   1603 => ['Maria Weidman - Youth', 'Maria Weidman', 'Youth'],
   1604 => ['Jon Culbertson - Finance', 'Jon Culbertson', 'Finance'],
