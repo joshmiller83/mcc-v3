@@ -45,6 +45,7 @@ process:
     plugin: migration_lookup
     migration: mcc_bio
     source: field_bio_reference/target_id
+    no_stub: true
   field_ministry_structure:
     plugin: migration_lookup
     migration: mcc_taxonomy
