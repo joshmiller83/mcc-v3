@@ -13,6 +13,52 @@ Newest entries at the top. Each entry: what changed, why, and what a re-import w
 
 ---
 
+## 2026-08-21 — content re-synced from mcc-church.live; `no_stub` added to four lookups
+
+Fresh pull of both sites: `mcc-church.live`'s database into the local `legacy` source DB
+(1006 → 1012 D7 nodes), `mcc2026.dev`'s database into `db`, and both sites' public files
+rsynced into `web/sites/default/files`. Then `migrate:import --group=mcc --update`.
+
+`track_changes` is not set on any migration, so a plain import would only pick up rows never
+seen before and would silently skip *edits* to D7 nodes. `--update` is the only way to carry
+the latest source across, which is why the helper scripts below have to be re-run after it.
+
+**What arrived:** five new bios — Larry Metzler, Kipper Freeman and Doug Ladika (Deacons),
+Joe Durham and Tom Dull (Elders), all correctly grouped and rendering on `/about/leadership`
+— plus one calendar event and six redirects.
+
+**What went wrong, and the fix.** Eighteen D7 bio nodes had been *deleted* upstream since the
+last pull, but 248 calendar-event speaker references still pointed at them. `migration_lookup`
+answers a miss by fabricating a stub, so the import minted eighteen lorem-ipsum bio nodes
+(`Random::sentences()` titles, uid 0) and a ministry stub at nid 1099 — the node
+`mcc_page` explicitly drops. `mcc_redirect.yml` already carried a comment warning about
+exactly this hazard; the bio and ministry lookups just never got the same guard:
+
+| File | Lookup | Change |
+| ---- | ------ | ------ |
+| `mcc_calendar_event.yml` | `mcc_bio`, `mcc_ministry` | `no_stub: true` |
+| `mcc_ministry.yml` | `mcc_bio` | `no_stub: true` |
+| `mcc_ministry_page.yml` | `mcc_bio` | `no_stub: true` |
+
+A dangling reference now drops rather than inventing a person. The stubs were purged and the
+calendar events re-imported; 893 processed, 0 failed, no stub errors.
+
+**The trash module makes `$storage->delete()` a soft delete.** Deleted nodes keep their rows
+with a `deleted` timestamp and vanish from `entityQuery` while raw SQL still counts them —
+which reads exactly like "the stubs came back". Purging for real needs:
+
+```php
+\Drupal::service('trash.manager')->executeInTrashContext('ignore', fn() => $storage->delete($nodes));
+```
+
+**Re-import safe** — this *is* the migration, and re-running it now reproduces this state
+rather than the stubs. Thirteen post-import scripts were re-run (the bio, ministries, IA-slug,
+landing, homepage and footer sets). One skip worth knowing about:
+`mcc_split_bio_name_role` left node **1215** alone because its title is now
+"John Weidman Deacons & Buildings & Grounds", which does not match the title the split table
+expects — if that title is correct, add the row; if not, fix the title.
+
+
 ## 2026-07-29 — footer menus reshaped into four columns
 
 The homepage design handoff's footer is a brand cell plus four link columns — **Visit ·

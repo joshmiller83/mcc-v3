@@ -59,6 +59,9 @@ process:
         plugin: migration_lookup
         migration: mcc_bio
         source: target_id
+        # A speaker whose D7 bio has since been deleted must drop the
+        # reference, not mint an empty node in its place.
+        no_stub: true
   field_mission_category:
     plugin: sub_process
     source: field_mission_category
@@ -75,6 +78,10 @@ process:
         plugin: migration_lookup
         migration: mcc_ministry
         source: target_id
+        # Same as the bio lookup above: an event pointing at a D7 node
+        # that is not a ministry here must lose the reference rather
+        # than mint a stub (this is what created a ministry at 1099).
+        no_stub: true
   field_event_date:
     -
       plugin: d7_dates_to_utc
