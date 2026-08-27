@@ -92,7 +92,8 @@ div[data-component-id="caresphere_theme:section-grid"] {
 
 .hero-card__heading {
   font-family: var(--font-display, 'Calistoga', serif);
-  font-size: 3rem;
+  /* 3rem flat wrapped the three-word headline one word per line at 375px. */
+  font-size: clamp(2.25rem, 8.5vw, 3rem);
   font-weight: 700;
   color: #ffffff;
   line-height: 1.15;

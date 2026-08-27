@@ -41,12 +41,36 @@ foreach ($nodes as $node) {
   $original = (string) $node->get('body')->value;
   $format = (string) $node->get('body')->format;
 
+  // Outlook's mobile signature separator — a "- -" line of mail-client
+  // furniture above the sign-off — is not biography text. Take the following
+  // <br> with it so the sign-off doesn't start with a blank line.
+  $cleaned = preg_replace(
+    '~<span[^>]*>\s*-\s?-\s*</span>\s*(?:<span[^>]*>\s*<br\s*/?>\s*</span>)?~i',
+    '',
+    $original
+  );
+  if ($cleaned === NULL) {
+    throw new \RuntimeException('Signature cleanup failed on node ' . $node->id() . ': ' . preg_last_error_msg());
+  }
+
+  // Word/Outlook paste builds its lines out of <div>s, but content_format's
+  // allowed-HTML filter drops div (and span) entirely, so every div-built
+  // line collapses into its neighbour: "In His love,Alex R. JonesMechanicsburg
+  // Christian Church". Rewrite divs as the paragraphs they stand for, then
+  // collapse the nesting Outlook's wrapper divs leave behind — <p><p> is not
+  // a structure the filter or a browser should be handed.
+  $cleaned = preg_replace('~<div\b[^>]*>~i', '<p>', $cleaned);
+  $cleaned = str_ireplace('</div>', '</p>', $cleaned);
+  do {
+    $cleaned = preg_replace(['~<p>\s*<p>~i', '~</p>\s*</p>~i'], ['<p>', '</p>'], $cleaned, -1, $collapsed);
+  } while ($collapsed);
+
   // Drop paragraphs that hold only whitespace, non-breaking spaces or breaks.
   // Delimited with ~ rather than # — the pattern contains a numeric entity.
   $cleaned = preg_replace(
     '~<p\b[^>]*>(?:\s|&nbsp;|&#160;|<br\s*/?>)*</p>~i',
     '',
-    $original
+    $cleaned
   );
   if ($cleaned === NULL) {
     throw new \RuntimeException('Paragraph cleanup failed on node ' . $node->id() . ': ' . preg_last_error_msg());

@@ -86,7 +86,7 @@
    own `--text-light` intro loses to it and the whole band goes dark-on-dark.
    ID specificity is what it takes to win that back. */
 #get-involved-hero :is(h1, h2, h3, p, span, li, a, button),
-#im-new-hero :is(h1, h2, h3, p, span, li, a, button), h2, h3, p, span, li, a, button),
+#im-new-hero :is(h1, h2, h3, p, span, li, a, button),
 #home-hero :is(h1, h2, h3, p, span, li, a, button),
 #home-cta :is(h1, h2, h3, p, span, li, a, button),
 #about-hero :is(h1, h2, h3, p, span, li, a, button),
@@ -349,6 +349,17 @@
   flex: 0 0 auto;
   align-self: center;
   margin-top: var(--space-10);
+}
+
+/* The calendar arrives wrapped in a block div, and that wrapper is the flex
+   item. Below 1024px the calendar's list view is narrower than the band, so
+   the wrapper stopped filling the row and the trailing button rode up beside
+   the list instead of wrapping under it. Span the row unconditionally — at
+   every width the calendar is this band's only block — so the button always
+   keeps its own centred row. */
+#home-events > [id^="block-"] {
+  flex-basis: 100%;
+  min-width: 0;
 }
 
 /* -----------------------------------------------------------------------
