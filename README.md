@@ -28,6 +28,77 @@ ddev drush si   # or drush updb / cim, depending on where the site is
 
 Site should then be reachable at the URL `ddev` prints out (`ddev launch` also works).
 
+### Reaching the codespace from your local terminal
+
+You don't have to work in the browser tab. As long as your `gh` CLI carries the
+`codespace` scope, you can drive the codespace from your own terminal as if it were an
+ordinary remote host:
+
+```bash
+gh auth status                                # look for 'codespace' under "Token scopes"
+gh auth refresh -h github.com -s codespace    # add it if it is missing
+```
+
+That scope rides on your GitHub token account-wide rather than per-repo — what limits you
+to *this* project's codespaces is your access to the repo itself, which the `repo` scope
+already covers. Then find the codespace and connect:
+
+```bash
+gh codespace list
+gh codespace ssh -c <codespace-name>          # e.g. literate-space-trout-v6jxqx4jqjhxr94
+```
+
+`gh codespace ssh` needs an SSH server running *inside* the container. The
+`mcr.microsoft.com/devcontainers/base:debian-12` image this project pins does not ship one
+— only the default Codespaces *universal* image does — which is why
+`.devcontainer/devcontainer.json` pulls in `ghcr.io/devcontainers/features/sshd:1`. If you
+ever get `failed to start SSH server: Please check if an SSH server is installed in the
+container`, that feature has gone missing: re-add it and rebuild the container. Changing
+the devcontainer is not enough on its own — the codespace has to `git pull` the change and
+then rebuild, since the rebuild reads the devcontainer from its own working tree, not from
+the remote.
+
+#### Bringing the site's URLs back to localhost
+
+`gh codespace ports forward` tunnels the container's ports to your machine. It runs over
+the same connection VS Code uses, so it works whether or not SSH is set up:
+
+```bash
+gh codespace ports forward -c <codespace-name> 80:8080 8027:8027 3306:3306
+```
+
+That gives you `http://localhost:8080` (the site), `http://localhost:8027` (Mailpit), and
+`127.0.0.1:3306` for pointing a GUI database client at (`db/db`, or `root/root`).
+
+Plain `localhost` is enough here because DDEV runs with **`Router: disabled`** under
+Codespaces — the web container binds straight to `127.0.0.1:80` with no ddev-router doing
+hostname matching, so there is no `mcc.ddev.site` to reproduce locally and nothing to add
+to `/etc/hosts`. Drupal accepts the rewritten `Host` header because `settings.ddev.php`
+sets `trusted_host_patterns` to `['.*']`. Confirm the current bindings with `ddev describe`
+before changing those port numbers.
+
+Two things to watch: local `3306` will collide silently if you are also running `ddev`
+locally on this repo (the pairs are `<remote>:<local>`, so use `3306:33306` to move it out
+of the way), and forwarding the HTTPS port will throw a certificate warning, since the
+container's cert is not issued for `localhost` — use the HTTP port.
+
+#### Making it a one-word command
+
+`gh codespace ssh` reconnects from scratch every time. Writing an OpenSSH block for the
+codespace instead gets you connection multiplexing — the difference is roughly five
+seconds versus a tenth of a second per command — and makes `scp`, `rsync`, and `sshfs`
+work against it like any other host:
+
+```bash
+gh codespace ssh --config -c <codespace-name> >> ~/.ssh/config
+```
+
+Rename the generated `Host` line to something short, add `ControlMaster auto` /
+`ControlPath ~/.ssh/cm/%r@%h-%p` / `ControlPersist 10m`, and you can then just
+`ssh <name>` or `scp file <name>:/tmp/`. Leave `RemoteCommand` out of that block — setting
+it breaks `scp` and `rsync`. This lives in your dotfiles, not in this repo, since the
+codespace name is per-developer.
+
 ### Run Locally (Outside Codespaces)
 If you want to use [DDEV](https://ddev.com) to run Drupal CMS locally on your host machine, follow these instructions:
 
