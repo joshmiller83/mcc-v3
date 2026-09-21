@@ -256,6 +256,13 @@ class EventContext {
     elseif ($multi_day) {
       $label = $start->format('M j, g:i A') . ' – ' . $end->format('M j, g:i A');
     }
+    elseif ($end_ts <= $start_ts) {
+      // No end was ever recorded. The D7 migration carried a start and nothing
+      // else for most of the archive, so the end equals the start on nearly
+      // nine occurrences in ten — and "6:00 PM – 6:00 PM" is a range that says
+      // nothing. A start time alone is what the record actually knows.
+      $label = $start->format('g:i A');
+    }
     else {
       $label = $start->format('g:i A') . ' – ' . $end->format('g:i A');
     }
