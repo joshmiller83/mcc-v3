@@ -35,7 +35,11 @@ process:
   #   41  superseded by ministry node 40 at /ministries/missions
   #  189  a page node duplicating bio content
   #  344  test fixture
-  nid:
+  #
+  # The filter hangs off a pseudo-field, not `nid`: skip_on_value returns the
+  # value it was given, so keyed as `nid` it also pinned the node id — see
+  # mcc_bio.yml for why nothing pins ids any more.
+  _row_filter:
     plugin: skip_on_value
     source: nid
     method: row

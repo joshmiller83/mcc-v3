@@ -258,6 +258,74 @@ with the code, and have the script copy it into the files directory.
   than stranding the rows. Aliases survive because `scripts/ia-page-slugs.php` pins them with
   `PathautoState::SKIP` — re-run it after any bundle change to be sure.
 
+## The D7 migration
+
+`mcc_migration` reads the `legacy` database (a copy of `mcc-church.live`, see
+[Refreshing local from both sites](#refreshing-local-from-both-sites)) and writes into this site.
+It can only run **locally** — Pantheon has no `legacy` database — so its result reaches
+`mcc2026.dev` by pushing the local database up. D7 is still the church's live site and its office
+still edits it, so this is a recurring sync, not a one-off.
+
+- **The tip is not a passive downstream any more, and a blanket `--update` destroys work on it.**
+  On 2026-08-28 and 2026-09-05 someone edited the calendar directly on `mcc2026.dev`: three events
+  created there, eight migrated ones edited (the Adult and Youth services merged into single
+  entries, the separate Facebook Live series ended, bodies trimmed). `migrate:import --group=mcc
+  --update` rewrites every mapped row from D7 whether or not D7 changed it, so it silently
+  reverted all eight. None of it was in `CONTENT_LOG.md`, so nothing warned of it.
+- **No migration pins a destination id, and none may.** They used to (`nid: nid`, `fid: fid`,
+  `tid: tid`), on the theory that this made a re-import update in place. It doesn't — the
+  **migrate map** does that, and always did. What the pin actually does is this: for a source row
+  with *no* map row yet, `EntityContentBase::getEntity()` takes the pinned id, finds an entity
+  already sitting at it, and **loads and overwrites it** instead of creating one. Both sites mint
+  ids from the same low range, so the first time D7's counter reached an id this site had already
+  used, D7's "Youth Sunday School" replaced this site's "MCC Serves at Shalom" (nid 1623), and five
+  D7 teaser images replaced the homepage hero placeholder and four About card icons (fids 1781,
+  1786–1789). Terms were next: D7's next tid is 81, which here is the first Ministry Group.
+  Every cross-reference already resolves through `migration_lookup`, so nothing depended on the
+  ids matching. Where `nid:` doubled as a `skip_on_value` row filter (`mcc_page`, `mcc_ministry`,
+  `mcc_ministry_page`), the filter now hangs off a `_row_filter` pseudo-field — `skip_on_value`
+  returns the value it was given, so keyed as `nid` it was a pin too.
+- **Import new rows plainly, and `--update` only the rows D7 actually edited.** `track_changes`
+  isn't set, which is why `--update` was used before — but D7's `node.changed` already says which
+  rows were edited, so the blanket isn't needed:
+
+  ```sh
+  ddev drush migrate:import --group=mcc                 # new rows only; seconds, not ten minutes
+  ddev mysql -e "SELECT nid, title, FROM_UNIXTIME(changed) FROM legacy.node
+    WHERE type='calendar_item' AND changed > UNIX_TIMESTAMP('<last import, UTC>') ORDER BY nid"
+  ddev drush migrate:import mcc_calendar_event --update --idlist=<those nids, minus any edited here>
+  ```
+
+  Terms, users and files have no `changed` column in D7; compare them through the map instead
+  (`legacy.taxonomy_term_data.name` against `taxonomy_term_field_data.name` joined on
+  `migrate_map_mcc_taxonomy`). Done this way no bio, page or ministry is rewritten, so the
+  thirteen post-import scripts have nothing to repair — they were run anyway on 2026-09-21 and a
+  before/after diff of titles, status, aliases, Canvas trees and menus came back identical.
+- **Before any `--update`, find what was edited here.** Load the tip's dump into a scratch database
+  and list nodes whose `changed` is later than the last import:
+  `ddev import-db --database=tip_before --file=.ddev/.downloads/db.sql.gz`. A node on both lists —
+  edited here *and* in D7 — is a real conflict; its first revision on the tip is the common base
+  for a three-way compare (`node_revision__field_*` by `revision_id`). An `--update` does not mint
+  a revision, so that first revision really is the imported state. Date conflicts on a real
+  congregation's calendar are the church's call, not an agent's.
+- **Two scripts make that list noisy.** `mcc_split_bio_name_role.php` re-saves Jon Culbertson (346)
+  and `ia-page-slugs.php` re-saves the nine retired pages on every run. No value changes, but
+  `changed` moves, so they show up as "edited on the tip" on the day the scripts last ran.
+- **Both sites entering the same event makes a duplicate, and nothing catches it.** "Women's Bible
+  Study" was created here on 08-28 and in D7 on 09-16; after the import both were published and two
+  Wednesdays showed it twice. Check with a `GROUP BY TRIM(title), field_event_date_value HAVING
+  COUNT(DISTINCT nid) > 1` over `node__field_event_date`. (The "Christmas Day" pair, 1330/1331, is an
+  old duplicate in D7 itself.)
+- **`migrate:status` prints "Last Imported" in the site's timezone, not UTC.** `10:36` there was
+  `14:36` UTC. Every `FROM_UNIXTIME()` in the ddev database is UTC, so a cutoff copied straight from
+  `migrate:status` lands four hours early and sweeps the import's own writes into "edited since".
+- **The import log is 4,000+ lines of one harmless warning.** Core's `d7_file` source reads
+  `constants.source_base_path`, which these migrations don't declare, once per row: `Undefined array
+  key "constants" File.php:105`. It changes nothing, but it buries real errors — read the log with
+  `grep -vE "File.php:105" | grep -E "done with|\[error\]|Exception|SQLSTATE"`, never with `tail`.
+- **`homepage_teaser` is not migrated**, on purpose — the front page is a Canvas page. D7 gaining
+  teasers is expected and needs nothing done.
+
 ## Icons
 
 **One icon system: core's Icon API over the Lucide pack.** `drupal/lucide` provides the pack and
@@ -374,10 +442,12 @@ ddev drush cache:rebuild && ddev drush config:status
   where a filename exists on both the new site's copy wins. No `--delete` — the directory is a
   union of two sites, and `--delete` against either one removes the other's files. Skip `css/`,
   `js/`, `php/` and `styles/`; they are generated and rebuild locally.
-- **Pulling is not migrating.** A fresh `legacy` changes nothing on the site until
-  `ddev drush migrate:import --group=mcc --update` is run, and that is a separate decision: it
-  overwrites node fields from D7 and has to be followed by the post-import scripts. Read the top
-  entry of `CONTENT_LOG.md` first.
+- **Pulling is not migrating.** A fresh `legacy` changes nothing on the site until an import is
+  run, and that is a separate decision with its own rules — see [The D7 migration](#the-d7-migration).
+  Do **not** reach for `migrate:import --group=mcc --update`.
+- **`ddev snapshot restore` replaces the whole database server, not just `db`.** `legacy` goes back
+  to what it was when the snapshot was taken, and any scratch database created since (a
+  `tip_before` loaded for comparison, say) is gone. Re-import it if you still need it.
 - **`config:status` after the pull is the cheap drift check.** Anything it lists is active config
   on the tip that `main` doesn't have; `scripts/sync-config-from-tip.sh` is what reconciles it.
 
@@ -413,7 +483,7 @@ ddev drush cache:rebuild && ddev drush config:status
 
 - `ddev drush <command>` — Drush, for site administration, config import/export, cache rebuilds, etc.
 - `ddev composer <command>` — Composer, for adding/updating modules, themes, and dependencies.
-- `node scripts/calendar-compare.mjs [YYYY-MM …]` — renders the `calendar_design.zip` reference and the live `/calendar` and `/calendar/print` pages in headless Chromium and diffs them side by side. It also asserts the print sheet is one Letter page with nothing clipped, and exits non-zero when it isn't. Run it after any change to the calendar components, `CalendarMonth`, or the print CSS. Runs on the Codespace host (no ddev); output lands in the gitignored `.calendar-compare/`.
+- `node scripts/calendar-compare.mjs [--month YYYY-MM …]` — renders the `calendar_design.zip` reference and the live `/calendar` and `/calendar/print` pages in headless Chromium and diffs them side by side. It also asserts the print sheet is one Letter page with nothing clipped, and exits non-zero when it isn't. Run it after any change to the calendar components, `CalendarMonth`, or the print CSS — and after an import that adds events, against the months that gained them, since a busier month is as able to break the one-page fit as a CSS change. Months are `--month` flags, repeatable; a bare `2026-11` throws `Unknown argument` (this line and the README both used to show the bare form). Runs on the Codespace host (no ddev); output lands in the gitignored `.calendar-compare/`.
 - `ddev exec terminus <command>` — Terminus, giving access both to the Pantheon `dev`, `test`, and `live` environments of the legacy site (`mcc-church` on Pantheon) that we're migrating content from, and to the **mcc2026** sandbox (this rebuild's `dev` environment only — it has no test/live). Treat `mcc-church` `test`/`live` with care — these are real environments, not scratch space. Prefer read-only Terminus commands on them unless a change has been explicitly requested. Terminus is installed inside the ddev `web` container, not on the Codespace host — `ddev terminus` (without `exec`) is not a valid command.
 - `ddev exec terminus drush <site>.<env> -- <command>` — run drush against a remote Pantheon environment over SSH without a manual `ssh` session. Useful for `status`, `cache:rebuild`, `watchdog:show`, `sql:query`, etc. Arbitrary shell commands over that same SSH channel are rejected ("exec request failed on channel 0") — only specific allowed commands (drush, git, sql-cli, rsync/sftp) work.
 - Creating a new Pantheon site (`terminus site:create <name> <label> <upstream-machine-name> --org=mcc`) requires `--org` — this account's sites live under the **mcc** organization (`terminus org:list` shows it, though it has been seen to report empty on a stale/first call in a session; retry before assuming there's no org). `terminus upstream:list` shows available upstreams; this project's composer.json matches `drupal-cms-composer-managed`.

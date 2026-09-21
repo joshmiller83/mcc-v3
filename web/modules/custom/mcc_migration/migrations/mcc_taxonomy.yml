@@ -4,7 +4,8 @@ migration_group: mcc
 source:
   plugin: d7_taxonomy_term
 process:
-  tid: tid
+  # tid is not pinned — see mcc_files.yml. D7's next tid is 81, which here is
+  # the first Ministry Groups term.
   name: name
   description: description
   format: format

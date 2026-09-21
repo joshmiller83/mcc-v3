@@ -4,7 +4,12 @@ migration_group: mcc
 source:
   plugin: d7_file
 process:
-  fid: fid
+  # fid is deliberately NOT pinned. The migrate map is what makes a re-import
+  # update in place; pinning adds nothing to that, and an unmapped row whose
+  # fid already exists here is *loaded and overwritten* rather than created.
+  # That turned the homepage hero photo (1781) and four About card icons
+  # (1786-1789) into D7 teaser images the first time D7 minted those fids.
+  # Everything that needs a file finds it through migration_lookup.
   uid: uid
   filename: filename
   uri: uri

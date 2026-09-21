@@ -11,9 +11,10 @@ source:
   plugin: d7_node
   node_type: bio
 process:
-  # nid is pinned deliberately so re-imports update in place rather than
-  # duplicating. Revision IDs are left to core.
-  nid: nid
+  # nid is not pinned. It used to be, "so re-imports update in place rather
+  # than duplicating" — but the migrate map already does that, and the pin's
+  # only other effect is that a new D7 node overwrites whatever node this site
+  # has created at the same nid. See mcc_files.yml for what that cost.
   title: title
   uid: node_uid
   status: status

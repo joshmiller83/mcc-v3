@@ -13,7 +13,9 @@ source:
   plugin: d7_node
   node_type: calendar_item
 process:
-  nid: nid
+  # nid is not pinned — see mcc_bio.yml. This is the bundle it bit: events are
+  # now created on this site as well as in D7, both counters had reached 1623,
+  # and D7's "Youth Sunday School" replaced this site's "MCC Serves at Shalom".
   title: title
   uid: node_uid
   status: status

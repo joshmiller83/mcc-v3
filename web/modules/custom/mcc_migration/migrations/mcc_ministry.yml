@@ -14,7 +14,9 @@ process:
   # ministry content and is imported by mcc_ministry_page. Dropping 1223 here
   # keeps /ministries/youth free for node 8 — otherwise pathauto hands the
   # clean slug to the empty record and the real one gets /ministries/youth-0.
-  nid:
+  # A pseudo-field rather than `nid`, so the filter doesn't pin the id — see
+  # mcc_page.yml.
+  _row_filter:
     plugin: skip_on_value
     source: nid
     method: row

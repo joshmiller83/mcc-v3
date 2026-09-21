@@ -9,7 +9,7 @@ source:
   plugin: d7_node
   node_type: missions
 process:
-  nid: nid
+  # nid is not pinned — see mcc_bio.yml.
   title: title
   uid: node_uid
   status: status

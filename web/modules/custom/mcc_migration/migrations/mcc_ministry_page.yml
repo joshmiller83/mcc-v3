@@ -19,8 +19,9 @@ source:
   plugin: d7_node
   node_type: page
 process:
-  # Keep only 8 and 11 — every other D7 page belongs to mcc_page.
-  nid:
+  # Keep only 8 and 11 — every other D7 page belongs to mcc_page. A pseudo-field
+  # rather than `nid`, so the filter doesn't pin the id — see mcc_page.yml.
+  _row_filter:
     plugin: skip_on_value
     source: nid
     method: row

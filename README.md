@@ -152,7 +152,8 @@ Note that *placement* is content, not config: the front page is a `canvas_page` 
 
 ```bash
 node scripts/calendar-compare.mjs             # defaults to a 5-week and a 6-week month
-node scripts/calendar-compare.mjs 2026-11     # a specific month
+node scripts/calendar-compare.mjs --month 2026-11                  # a specific month
+node scripts/calendar-compare.mjs --month 2026-09 --month 2026-10  # several
 ```
 
 It writes screenshots plus `compare.html` and `report.md` to the gitignored `.calendar-compare/`, and exits non-zero if the print assertions fail — so it doubles as a regression check after any calendar change.
