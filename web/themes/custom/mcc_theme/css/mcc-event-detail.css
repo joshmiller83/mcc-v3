@@ -25,22 +25,44 @@
   box-shadow: 0 12px 34px rgba(45, 31, 24, 0.08);
 }
 
+/* `overflow: hidden` is what makes this a well rather than a suggestion: the
+   box is 16:6 but the photo arrives as a 16:9 focal-point crop, and anything
+   that escapes here lands on the title. */
 .mcc-event__hero-media {
   position: relative;
   aspect-ratio: 16 / 6;
   background: var(--surface-sunken, #efe8da);
+  overflow: hidden;
 }
 
-.mcc-event__hero-media :is(img, svg, canvas) {
+/* Everything in the well fills it, whether that is the media entity's wrapper
+   or the placeholder component. Same construction as .mcc-person-card__photo,
+   and for the same reason: the media arrives wrapped in several static divs
+   (field, media article, field again, <picture>), so `height: 100%` on the
+   outermost one never reaches the <img>. It resolved to `auto`, the photo
+   rendered at its natural 16:9 — 656px tall in a 437px box — and because this
+   well is positioned it painted over the unpositioned title block below it. */
+.mcc-event__hero-media > * {
+  position: absolute;
+  inset: 0;
+}
+
+/* See mcc-person-card.css: contextual.module gives this wrapper
+   `position: relative` for editors only, which would make it the image's
+   containing block — a zero-height one. Invisible to anonymous checks. */
+.mcc-event__hero-media .contextual-region {
+  position: static;
+}
+
+/* `img` only. This used to match `svg` too, which caught the placeholder
+   component's 28px Lucide icon and stretched it to fill its flex column. */
+.mcc-event__hero-media img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-}
-
-/* The placeholder component brings its own box; make it fill the hero. */
-.mcc-event__hero-media > * {
-  height: 100%;
 }
 
 .mcc-event__hero-body {
@@ -50,8 +72,13 @@
   padding: 1.35rem 1.5rem 1.5rem;
 }
 
-/* Date chip mirrors the calendar's event-card badge so the two read as a set. */
+/* Date chip mirrors the calendar's event-card badge so the two read as a set.
+   It is pulled up over the media well by the negative margin, and the well is
+   positioned — so the chip has to be positioned too, or it paints underneath
+   and only its white text shows through. */
 .mcc-event__datechip {
+  position: relative;
+  z-index: 1;
   flex: 0 0 auto;
   margin: -3.75rem 0 0;
   width: 4.5rem;
@@ -177,27 +204,14 @@
   gap: 0.85rem;
 }
 
-.mcc-event__speaker-link {
-  display: block;
+/* The bio teaser is mcc-person-card, which is already a bordered card and
+   already one big link. This list only lays the cards out — it used to wrap
+   each in an <a> of its own, and a link inside a link is not something HTML
+   can represent: the parser closes the outer one early, which left an empty
+   padded box with the portrait spilled out underneath it. */
+.mcc-event__speaker,
+.mcc-event__speaker > .mcc-person-card {
   height: 100%;
-  padding: 0.85rem;
-  border: 1px solid var(--border-default, #d9d0bd);
-  border-radius: 10px;
-  background: var(--surface-card, #f4efe4);
-  text-decoration: none;
-  color: inherit;
-  transition: border-color .15s ease, box-shadow .15s ease;
-}
-
-.mcc-event__speaker-link:hover {
-  border-color: var(--evt);
-  box-shadow: 0 6px 18px rgba(45, 31, 24, 0.1);
-}
-
-.mcc-event__speaker-link img {
-  border-radius: 8px;
-  max-width: 100%;
-  height: auto;
 }
 
 /* -- Attachments --------------------------------------------------------- */

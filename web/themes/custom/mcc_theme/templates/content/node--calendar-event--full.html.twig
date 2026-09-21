@@ -75,11 +75,9 @@
           </h2>
           <ul class="mcc-event__speakers">
             {% for speaker in event.speakers %}
-              <li class="mcc-event__speaker">
-                <a href="{{ speaker.url }}" class="mcc-event__speaker-link">
-                  {{ speaker.rendered }}
-                </a>
-              </li>
+              {# No <a> here: the bio teaser is a person card, and the card is
+                 the link. Wrapping it nests one anchor in another. #}
+              <li class="mcc-event__speaker">{{ speaker.rendered }}</li>
             {% endfor %}
           </ul>
         </section>
