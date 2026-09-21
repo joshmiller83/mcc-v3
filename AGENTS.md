@@ -333,6 +333,54 @@ Run commands from the project root:
 
 DDEV project config lives in `.ddev/config.yaml`. Use `.ddev/config.local.yaml` for machine-specific overrides.
 
+### Refreshing local from both sites
+
+The local ddev database server holds **two** databases, and "pull the latest" means both:
+
+| Local database | Comes from | Read by |
+| -------------- | ---------- | ------- |
+| `db` | `mcc2026.dev` — the new site | Drupal itself |
+| `legacy` | `mcc-church.live` — the D7 source site | the `migrate` connection in `settings.php`, i.e. every `mcc_migration` source plugin |
+
+Both sites' public files land in the one `web/sites/default/files`, because the migrations read
+the D7 files from there too.
+
+```sh
+git pull --ff-only origin main
+ddev snapshot --name pre-pull-$(date +%Y%m%d)        # both pulls overwrite; this is the undo
+
+# 1. New site -> `db`. No SSH key needed; it dumps over the MySQL port.
+ddev pull pantheon --environment="DDEV_PANTHEON_SITE=mcc2026,DDEV_PANTHEON_ENVIRONMENT=dev" --skip-files -y
+
+# 2. Source site -> `legacy`. Read-only, and --single-transaction takes no locks on the real site.
+ddev exec bash -s <<'EOF'
+set -euo pipefail
+cd /var/www/html/.ddev/.downloads
+DUMP=$(terminus connection:info mcc-church.live --field=mysql_command \
+  | sed 's,^mysql,mysqldump --no-autocommit --single-transaction --opt -Q,')
+eval "$DUMP" | gzip > legacy.sql.gz
+zcat legacy.sql.gz | tail -1        # must print "-- Dump completed on …", or it was truncated
+EOF
+ddev import-db --database=legacy --file=.ddev/.downloads/legacy.sql.gz
+
+ddev drush cache:rebuild && ddev drush config:status
+```
+
+- **`ddev pull pantheon` can only ever fill `db`.** There is no provider flag for a second target
+  database, which is why the source site is a hand-rolled dump plus `ddev import-db --database=legacy`.
+  That dump is the same command the provider builds for itself, so the two stay equivalent.
+- **Files need the SSH key and agent** (see [Tooling reference](#tooling-reference)); the two
+  database pulls do not. Pull the **source site's files first and the new site's second**, so
+  where a filename exists on both the new site's copy wins. No `--delete` — the directory is a
+  union of two sites, and `--delete` against either one removes the other's files. Skip `css/`,
+  `js/`, `php/` and `styles/`; they are generated and rebuild locally.
+- **Pulling is not migrating.** A fresh `legacy` changes nothing on the site until
+  `ddev drush migrate:import --group=mcc --update` is run, and that is a separate decision: it
+  overwrites node fields from D7 and has to be followed by the post-import scripts. Read the top
+  entry of `CONTENT_LOG.md` first.
+- **`config:status` after the pull is the cheap drift check.** Anything it lists is active config
+  on the tip that `main` doesn't have; `scripts/sync-config-from-tip.sh` is what reconciles it.
+
 ## Common Drupal workflows
 
 - Add a module with `ddev composer require drupal/<project>`, then `ddev drush pm:enable --yes <module_machine_name>`, then `ddev drush cache:rebuild`.
@@ -371,13 +419,16 @@ DDEV project config lives in `.ddev/config.yaml`. Use `.ddev/config.local.yaml` 
 - Creating a new Pantheon site (`terminus site:create <name> <label> <upstream-machine-name> --org=mcc`) requires `--org` — this account's sites live under the **mcc** organization (`terminus org:list` shows it, though it has been seen to report empty on a stale/first call in a session; retry before assuming there's no org). `terminus upstream:list` shows available upstreams; this project's composer.json matches `drupal-cms-composer-managed`.
 - SSH access to Pantheon (git clone/push, `drush`, rsync) needs a key registered to the account via `terminus ssh-key:add`. A fresh Codespace's container has no keys in `~/.ssh` — generate one before first use. **Pantheon rejects ed25519 keys** ("SSH keys of type 'ed25519' are not yet supported") — use `ssh-keygen -t rsa -b 4096`.
 - The key has to live on the *Codespace host* (`~/.ssh/id_rsa`) and then be loaded into ddev's ssh-agent with `ddev auth ssh` — the web container doesn't mount the host's `~/.ssh`. `Permission denied (publickey)` from `terminus drush` almost always means the agent is empty, not that the key is unregistered. **`ddev auth ssh` recreates the containers**, so run it on its own and let them settle; a `ddev exec` issued in the same breath gets killed mid-flight (exit 143). The agent also empties whenever the containers restart, so re-run it after any `ddev restart`.
-- Importing a DB dump into a remote environment without uploading it first: `zcat dump.sql.gz | ssh -p 2222 <env>.<site-id>@appserver.<env>.<site-id>.drush.in drush sql-cli` (get the exact host/user from `terminus connection:info <site>.<env>`). Syncing `web/sites/default/files`: `rsync -rlz --ipv4 -e 'ssh -p 2222' web/sites/default/files/ <env>.<site-id>@appserver.<env>.<site-id>.drush.in:files/`.
+- Importing a DB dump into a remote environment without uploading it first: `zcat dump.sql.gz | ssh -p 2222 <env>.<site-id>@appserver.<env>.<site-id>.drush.in drush sql-cli` (get the exact host/user from `terminus connection:info <site>.<env>`). Syncing `web/sites/default/files`: `rsync -rltz --ipv4 -e 'ssh -p 2222' web/sites/default/files/ <env>.<site-id>@appserver.<env>.<site-id>.drush.in:files/`. **Keep the `-t`.** Without it rsync doesn't preserve mtimes, its size-plus-mtime quick check never matches, and every run re-transfers every file — a pull with `-rlz` moved all 351 MB of the legacy site's files onto a directory that already held nearly all of them.
+- **Anything with nested quotes goes to `ddev exec` over stdin, not as `bash -c '…'`.** `ddev exec` re-wraps its arguments in a double-quoted `bash -c "…"`, so a single-quoted `sed 's,a,b,'` inside your command arrives unquoted and `sed` parses the replacement as its own options. Use `ddev exec bash -s <<'EOF' … EOF` — the quoted heredoc reaches the container byte for byte, and as a bonus the script body never appears in the command line `ddev exec` prints on failure.
+- **Terminus's login does not survive the containers being recreated on a fresh Codespace** — `terminus auth:whoami` reporting "You are not logged in" after a rebuild is normal, not a revoked token. Log back in over stdin (see [Secrets & tokens](#secrets--tokens)). It *does* survive `ddev auth ssh`.
 
 ## Secrets & tokens
 
 Before asking the user to log in to a CLI interactively, check whether a token is already provisioned as a Codespaces secret:
 
-- Run `env | grep -iE "token|key|secret"` on the Codespace host to see what's already available (e.g. `PANTHEON_MACHINE_TOKEN`, `GITHUB_TOKEN`). Codespaces secrets land as host-level environment variables, not inside the ddev containers, so they need to be passed through explicitly, e.g. `ddev exec "terminus auth:login --machine-token=$PANTHEON_MACHINE_TOKEN"`.
+- Run `compgen -e | grep -iE "token|key|secret"` on the Codespace host to see what's already available (e.g. `PANTHEON_MACHINE_TOKEN`, `GITHUB_TOKEN`). **`compgen -e` prints names only — do not use `env | grep` for this.** This line used to say `env | grep`, which prints the values too, and piping it through `cut -d= -f1` does not save you: `GDRIVE_SA_KEY` is multi-line JSON, so every continuation line — the service account's private key included — has no `=` to cut on and is printed whole. That is how the key ended up in a session transcript. Codespaces secrets land as host-level environment variables, not inside the ddev containers, so they need to be passed through explicitly — over stdin, as below, never as an argument.
+- **`.ddev/config.local.yaml` holds a literal `TERMINUS_MACHINE_TOKEN`** (it is what `ddev pull pantheon`'s auth step reads inside the web container). It is gitignored, but `cat`-ing or grepping it puts the token in the transcript. If you need to know whether the key is set, `grep -c TERMINUS_MACHINE_TOKEN` it.
 - Never echo a token's value into a command you type out or into chat — reference it via its env var name so the literal value never appears in the transcript.
 - **`ddev exec` reconstructs and prints the full expanded command line (including argv) when the command fails.** Passing a secret as a command-line argument — even referenced via `$VAR` — risks that value being echoed verbatim into the error output the moment anything goes wrong (seen firsthand: a failed `ddev exec bash -c '...' _ "$TOKEN"` printed the literal token in the tool output). Pipe secrets via stdin instead: `ddev exec bash -c 'terminus auth:login --machine-token="$(cat)"' <<< "$TOKEN"`.
 - Only fall back to asking the user for a token/login if nothing suitable turns up in the environment.
