@@ -47,9 +47,15 @@ Our site should have a clean, warm, and professional country-church aesthetic:
   `position: static` so editors don't get a zero-height containing block.
 - **Anything pulled over a positioned well with a negative margin must be positioned too.** The
   date badge sat underneath the hero media for exactly this reason, and it showed even with no
-  photo: white "MAR" floating on the placeholder with the day cut off.
+  photo: white "MAR" floating on the then-placeholder with the day cut off.
+- **No photo means no photo area — never a placeholder.** Most events have no image, and the
+  church wants that to read as finished, not as a "Photo coming soon" box. The template leaves
+  the media well out entirely and adds `mcc-event__hero--no-photo`, which turns the header into
+  a title band: a rule in `--evt` on top, the date badge beside the headings with no pull-up.
+  `mcc-photo-placeholder` itself stays — `scripts/homepage-structure.php`'s Canvas photo slots
+  still use it.
 - **Match `img` in a media well, not `svg`.** The old `:is(img, svg, canvas)` rule also caught the
-  photo placeholder's 28px Lucide icon and stretched it.
+  photo placeholder's 28px Lucide icon and stretched it, back when the well had one.
 - **Never wrap a rendered teaser in an `<a>`.** `mcc-person-card` is already one big link. The
   speaker list wrapped each card in a second anchor; HTML cannot nest them, so the parser closed
   the outer one early, leaving an empty padded box with the portrait spilled out below it — over

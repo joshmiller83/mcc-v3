@@ -35,9 +35,9 @@
   overflow: hidden;
 }
 
-/* Everything in the well fills it, whether that is the media entity's wrapper
-   or the placeholder component. Same construction as .mcc-person-card__photo,
-   and for the same reason: the media arrives wrapped in several static divs
+/* The media entity's wrapper fills the well. Same construction as
+   .mcc-person-card__photo, and for the same reason: the media arrives wrapped
+   in several static divs
    (field, media article, field again, <picture>), so `height: 100%` on the
    outermost one never reaches the <img>. It resolved to `auto`, the photo
    rendered at its natural 16:9 — 656px tall in a 437px box — and because this
@@ -54,8 +54,8 @@
   position: static;
 }
 
-/* `img` only. This used to match `svg` too, which caught the placeholder
-   component's 28px Lucide icon and stretched it to fill its flex column. */
+/* `img` only — this used to match `svg` too, and stretched any icon that
+   found its way into the well. */
 .mcc-event__hero-media img {
   position: absolute;
   inset: 0;
@@ -159,6 +159,26 @@
 
 .mcc-event.is-past .mcc-event__hero-media {
   filter: saturate(0.65);
+}
+
+/* -- No photo ------------------------------------------------------------ */
+/* Most events have no photo, and the page has to look finished without one —
+   there is deliberately no placeholder. The template leaves the media well out
+   altogether, so the header is a title band: the date badge drops its pull-up
+   (there is nothing to overlap) and centres on the headings, and the band
+   takes a rule in the category colour so it still reads as this event's own.
+   `--evt` again, never a named colour. */
+.mcc-event__hero--no-photo {
+  border-top: 5px solid var(--evt);
+}
+
+.mcc-event__hero--no-photo .mcc-event__hero-body {
+  align-items: center;
+  padding-top: 1.5rem;
+}
+
+.mcc-event__hero--no-photo .mcc-event__datechip {
+  margin-top: 0;
 }
 
 /* -- Two-column layout --------------------------------------------------- */
@@ -374,6 +394,10 @@
   .mcc-event__datechip {
     margin-top: -3.25rem;
     width: 4rem;
+  }
+  /* The body is a column here, where `center` would mean horizontally. */
+  .mcc-event__hero--no-photo .mcc-event__hero-body {
+    align-items: flex-start;
   }
   .mcc-event__file { flex-wrap: wrap; }
 }

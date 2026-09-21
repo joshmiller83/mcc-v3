@@ -20,14 +20,20 @@
 
 <article{{ attributes.addClass('mcc-event').addClass(event.is_past ? 'is-past' : '') }} style="--evt: {{ event.category.color|default('#6B6257') }}">
 
-  <header class="mcc-event__hero">
-    <div class="mcc-event__hero-media">
-      {% if content.field_featured_image|render|trim is not empty %}
+  {#
+    Most events have no photo, and that is a finished state, not a gap waiting
+    to be filled — so there is no placeholder. Without a photo the media well
+    is not rendered at all and the header stands as a title band on its own;
+    the modifier class is what tells the date badge it has nothing to overlap.
+  #}
+  {% set has_photo = content.field_featured_image|render|trim is not empty %}
+
+  <header class="mcc-event__hero{{ has_photo ? '' : ' mcc-event__hero--no-photo' }}">
+    {% if has_photo %}
+      <div class="mcc-event__hero-media">
         {{ content.field_featured_image }}
-      {% else %}
-        {% include 'mcc_theme:mcc-photo-placeholder' with { label: 'Photo coming soon' } only %}
-      {% endif %}
-    </div>
+      </div>
+    {% endif %}
 
     <div class="mcc-event__hero-body">
       {% if event.date_badge %}
