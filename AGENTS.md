@@ -606,6 +606,18 @@ dependency tree. Check step 1 first since it fails fast; only move to step 2 onc
   `PluginNotFoundException` because Drupal's plugin discovery cache in the database is stale
   from before the new code landed — this isn't a build failure, just a cache that needs an
   explicit kick.
+- **A green "Sync code" does not mean the config import ran — check `config:status` on the
+  remote.** Seen 2026-09-21: every web request to mcc2026, a static PNG included, returned
+  Pantheon's edge page `504 - Target in maintenance`, with a `lock_trial_site` workflow in
+  `terminus workflow:list` from 13 days earlier. The code sync still succeeded and drush still
+  bootstrapped, so the PHP change was live — but the display config in the same push was not, and
+  `terminus drush mcc2026.dev -- config:status` listed it as Different. The Quicksilver import is a
+  `webphp` operation, so it most likely cannot run while the web tier is down; that link is
+  inferred, not confirmed. When this happens, **set the keys your own commit changed** with
+  `config:set` rather than running a full `config:import` by hand: the tip usually carries other
+  drift (two Canvas items that day), the tip is the source of truth, and a full import stomps it.
+  A 504 whose body says "Target in maintenance" is a Pantheon account matter, not a code one —
+  don't go looking for it in the diff.
 - `web/sites/default/settings.php` and `services.yml` are committed (not ddev-generated-only)
   specifically so Pantheon has something to boot from — don't re-gitignore them. The
   `IS_DDEV_PROJECT`-guarded block in `settings.php` is ddev-only; anything that must also apply
