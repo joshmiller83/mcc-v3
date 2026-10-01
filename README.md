@@ -269,6 +269,34 @@ ddev drush php:script scripts/ministries-page.php      # the /ministries Canvas 
 
 `node scripts/ministries-review.mjs --login "$(ddev drush uli --uri=http://127.0.0.1)"` screenshots both pages at three widths, anonymously and logged in, and fails on horizontal overflow or a collapsed icon tile. The logged-in pass is not optional — see the `.contextual-region` trap in [AGENTS.md](file:///workspaces/mcc-v3/AGENTS.md).
 
+## Announcements
+
+The front page's "Coming up at MCC" band. An **Announcement** is a title, a picture
+(`field_featured_image`, a media image), an optional link (`field_link`) and a body (`body`),
+with its own page at `/announcements/<title>`. The `mcc_announcements` view's block display
+(`flyers`) lists every published announcement that has a picture, sticky ones first and then
+newest first, as one row of `mcc-announcement-card`s — five across on a desktop, swiped sideways
+on a phone — each a picture at its own shape, the title, the first lines of the body, and a link
+to the announcement's page (or to `field_link` when one is set). The block sits in the front
+page's Canvas tree inside the `home-announcements` band, placed by
+`scripts/homepage-structure.php`; there is no page display and no route.
+
+To publish one: Content → Add content → Announcement. Attach a picture (no picture, no card),
+write the note in the body, tick "Sticky at top of lists" to pin it to the front of the band. The
+whole card links to the announcement's page; set a link to send it somewhere else instead.
+
+The old site's 47 "Homepage Teaser" nodes come in through the `mcc_announcement` migration (14
+published, 5 with a picture). Those five were rebuilt once by `scripts/announcements-content.php`
+— picture cropped out of the flyer, the flyer's text into the body — see `CONTENT_LOG.md`.
+
+```sh
+node scripts/homepage-review.mjs --login "$(ddev drush uli --uri=http://127.0.0.1)"
+```
+
+screenshots the band at 1280 and 390, anonymous and logged in, into `.homepage-review/`, and
+asserts it is healthy (no sideways scroll, every picture loaded and inside its card, no nested
+anchors).
+
 ## Ground rules
 
 - Keep it clear and straightforward. This is a small church site, not an enterprise platform — prefer boring, well-supported Drupal patterns over clever ones.

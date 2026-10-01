@@ -21,6 +21,13 @@ Our site should have a clean, warm, and professional country-church aesthetic:
   - **Headings & Emphasis:** `Calistoga` (a warm, friendly display serif with soft terminals).
   - **Body & default copy:** `Nunito` (a highly readable, rounded sans-serif). Leverage various weights (300 to 900) for visual hierarchy and readability.
 - **Logo:** Custom logo settings (assets to be provided by the user).
+- **Favicon:** `mcc_theme/favicon.svg` is the master — the logo mark (`images/logo-icon.svg`, a
+  cross over an open Bible) in warm white on the brand green. `favicon.ico` beside it is rendered
+  from the SVG at 16, 32 and 48px (Playwright screenshots, packed with ImageMagick `convert`),
+  and `mcc_theme.settings` points at the `.ico`, because that is the one format every browser
+  takes and Drupal emits a single `<link rel="icon">`. Until 2026-10-01 the site showed
+  caresphere's `favicon.png`, inherited through the base theme's settings. Regenerate the `.ico`
+  whenever the SVG changes.
 - **Subtheming:** Style customizations are encapsulated in the custom `mcc_theme` subtheme, overriding base theme design tokens.
 
 ## The calendar
@@ -302,6 +309,77 @@ with the code, and have the script copy it into the files directory.
   than stranding the rows. Aliases survive because `scripts/ia-page-slugs.php` pins them with
   `PathautoState::SKIP` — re-run it after any bundle change to be sure.
 
+## Announcements
+
+The front page's "Coming up at MCC" band is the D7 "Homepage Teaser" nodes, migrated into the
+`announcement` type — title, a picture in `field_featured_image`, an optional `field_link`, a
+body — and listed by the `mcc_announcements` view. See the "Announcements" section of
+`README.md` for the shape of it. When working on them:
+
+- **The band is a Views block in the Canvas tree, placed by `scripts/homepage-structure.php`.**
+  `section` `home-announcements`, directly after the hero, holds a `section-intro` heading and
+  `views_block:mcc_announcements-flyers`; the band's colour and rhythm are keyed to that id in
+  `mcc-landing-bands.css`. The view does the choosing — published, has a picture, sticky first,
+  then newest — so nothing in code names an announcement and the band empties itself when the
+  church has none. No page display, no route. The rows are Views' plain unformatted
+  `.views-row`s, laid out by `mcc-landing-bands.css` as **one row that never reflows**: five
+  across on a desktop, and narrower than that the row scrolls sideways with scroll snapping — a
+  carousel's behaviour with no JavaScript. The first cut was core's Responsive Grid at three
+  columns; the cards were huge and the five reflowed to 3 + 2, and the church asked for one row.
+- **The card is `mcc_theme:mcc-announcement-card`: scalar props and two slots.** `title`, `url`,
+  `link_label`, `heading_level`; the picture and the body are slots filled from the node's
+  teaser display, so which image style and which text format apply stay admin settings. An
+  `array`-typed prop would keep it out of Canvas entirely (see Ministries).
+- **The picture renders uncropped, at its own shape, through the media `medium` view mode**,
+  which is the `uncropped_medium` responsive style. The pictures are whatever an editor attached
+  (a book cover, a road sign, a square graphic), and a 16:9 or 3:4 crop takes the title line off
+  a cover. Nothing in the well is positioned, so an editor's `.contextual-region` wrapper changes
+  nothing here.
+- **Every card links somewhere, and the anchor never wraps the picture or the text.**
+  `field_link` when the editor gave one, the announcement's own page otherwise: the card shows
+  the first six lines of the body (a CSS line clamp — nothing touches the text) and the page has
+  the rest. The title is the `<a>`, stretched over the card with `::after`. The first cut
+  wrapped the whole card in the anchor; it was fine anonymously, and logged in the media entity's
+  contextual links rendered *inside* it — two nested anchors per linked card. A body can carry
+  links of its own, too. `scripts/homepage-review.mjs` counts `#home-announcements a a` in both
+  sessions; keep it at zero.
+- **Nothing is parsed out of the body at render time,** and the link is read in
+  `_mcc_theme_announcement_context()` rather than rendered through the link formatter, which
+  would hand the component a second anchor.
+- **The five that came over with a flyer were rebuilt once, by `scripts/announcements-content.php`.**
+  D7's "image" was a 1275×1650 page of Word text with a picture in one corner, unreadable at card
+  size, so the church asked for the picture cropped out and the words moved into the body. The
+  crops ship in `mcc_theme/images/announcements/`; the script copies them into the files
+  directory (and puts a missing file back, which is what makes a database dump plus the script a
+  complete hand-off), mints the media by name, and writes the body. Idempotent, keyed by D7 nid
+  through the migrate map with the title as a guard. The flyer media stay in the library. A
+  `migrate:import mcc_announcement --update` reverts all five; re-run the script after one.
+- **`scripts/homepage-review.mjs` is the check:** the front page at 1280 and 390, anonymous and
+  through a `drush uli` session, asserting no horizontal scroll, every picture loaded and inside
+  its card, no overlapping cards, no nested anchors. Lazy-loaded pictures below the fold report
+  `naturalWidth` 0 until scrolled to, so it scrolls each card into view before measuring — the
+  first version failed the anonymous phone pass on exactly that, with nothing wrong on the page.
+- **Deploying this to the tip is the dump, not the migration.** `migrate:import` cannot run on
+  Pantheon (no `legacy` database), so `.ddev/.downloads/db-post-announcements-2026-10-01.sql.gz`
+  is what carries the 47 announcements, their migrate map, the rebuilt five, the Canvas tree and
+  the config. The tip was frozen (504) when this was built; nothing here waits on it. Once it
+  answers, in this order:
+
+  ```sh
+  # 1. code — already there: the push to main deployed it, and the Quicksilver hook ran drush deploy
+  # 2. the database
+  zcat .ddev/.downloads/db-post-announcements-2026-10-01.sql.gz \
+    | ssh -p 2222 <env>.<site-id>@appserver.<env>.<site-id>.drush.in drush sql-cli
+  # 3. the five pictures — the dump carries the media entities, not the files; the script
+  #    restores them from the theme and is a no-op for everything else
+  ddev exec terminus remote:drush mcc2026.dev -- php:script scripts/announcements-content.php
+  # 4. the band — a no-op if the dump landed, and the check that it did; then the config
+  #    (also a no-op: the dump was taken after the last config change) and the caches
+  ddev exec terminus remote:drush mcc2026.dev -- php:script scripts/homepage-structure.php
+  ddev exec terminus remote:drush mcc2026.dev -- config:import -y
+  ddev exec terminus remote:drush mcc2026.dev -- cache:rebuild
+  ```
+
 ## The D7 migration
 
 `mcc_migration` reads the `legacy` database (a copy of `mcc-church.live`, see
@@ -392,8 +470,12 @@ still edits it, so this is a recurring sync, not a one-off.
   `constants.source_base_path`, which these migrations don't declare, once per row: `Undefined array
   key "constants" File.php:105`. It changes nothing, but it buries real errors — read the log with
   `grep -vE "File.php:105" | grep -E "done with|\[error\]|Exception|SQLSTATE"`, never with `tail`.
-- **`homepage_teaser` is not migrated**, on purpose — the front page is a Canvas page. D7 gaining
-  teasers is expected and needs nothing done.
+- **`homepage_teaser` is migrated, as the `announcement` type** (`mcc_announcement`, since
+  2026-10-01). It was skipped before on the theory that the Canvas front page had no place for the
+  teasers; it does now, the `home-announcements` band — see [Announcements](#announcements). A new
+  D7 teaser comes in with the plain `migrate:import --group=mcc`. A `--update` of this migration
+  hands the five rebuilt announcements their flyers and empty bodies back (`CONTENT_LOG.md`,
+  2026-10-01), so re-run `scripts/announcements-content.php` after one.
 
 ## Icons
 

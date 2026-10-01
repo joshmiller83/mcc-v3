@@ -13,6 +13,52 @@ Newest entries at the top. Each entry: what changed, why, and what a re-import w
 
 ---
 
+## 2026-10-01 — Announcements: the D7 homepage teasers migrated; the five with a flyer rebuilt
+
+**Migrated.** The new `mcc_announcement` migration imported all 47 D7 `homepage_teaser` nodes into
+the new `announcement` type: 47 created, 0 failed; 14 published; 5 published with an image, which
+is what the front page shows — Adult Sunday School Class (node 1678, D7 1624), Women's Bible
+Study (1677 / 1621), Young Adult Bible Study (1676 / 1611), Shalom Meals (1674 / 1208), Highway
+52 Youth Group (1673 / 1156). Aliases are `/announcements/<title>`. The front page (Canvas page 9)
+gained the `home-announcements` band directly after the hero, declared in
+`scripts/homepage-structure.php`, listing them through the `mcc_announcements` view. Its heading
+("Announcements / Coming up at MCC") is a `section-intro` the script created once; edit it in
+Canvas, the script never rewrites a stored component. `mcc_announcement`'s last-imported time is
+2026-10-01 ~15:30 UTC (read the exact value from `key_value`); the group cutoff recorded in the
+entry below stands for every other migration.
+
+**Edited in D11 — the five with a flyer** (`scripts/announcements-content.php`, run once at the
+user's request). D7's images were 1275×1650 Word-page flyers: a picture in one corner, a block of
+text, white space below, unreadable at card size. Each of the five now has the picture cropped out
+as its own media ("Announcement — <title>", files under `public://announcements/`, the crops
+shipped in `mcc_theme/images/announcements/`) and the flyer's words as its body
+(`content_format`). Sentence case where a flyer was all caps, "@" written as "at", the two longer
+texts split into paragraphs; wording otherwise verbatim, including the members' names the flyers
+already published. The five nodes got a new revision, so their `changed` moved today. The original
+flyer media (2670, 2883, 2941, 3933, 3934) are still in the media library, now unreferenced.
+*A re-import with `--update` puts the flyers and the empty bodies back*; re-run the script after one.
+
+**Decisions left to the church** (defaults applied, nothing lost):
+
+- **Shalom Meals' link is the old site's calendar.** D7's `field_link` was migrated verbatim:
+  `https://mechanicsburgchristian.com/events/month`. Eighteen teasers carry a link in D7, every one
+  an absolute URL on the old domain; Shalom Meals is the only one on a card today. Repoint it to
+  `/calendar` on the node when ready, or leave it until the domain moves.
+- **Alt text.** The migrated flyer media carry their filename as alt text (`mcc_media_image` does
+  that for every D7 image); the five rebuilt pictures have real alt text.
+- **Unpublished teasers** (33) came in unpublished, as in D7, and are reachable at
+  `/admin/content?type=announcement`.
+
+**Favicon.** `mcc_theme.settings` (new) points at `themes/custom/mcc_theme/favicon.ico`, the logo
+mark on the brand green. Until today the site showed caresphere's `favicon.png`, inherited through
+the base theme's settings. Content-wise this is config, so it travels with the code *and* the dump.
+
+**Hand-off.** `.ddev/.downloads/db-post-announcements-2026-10-01.sql.gz` is the local `db` after
+all of the above, taken after the last config change (dump completed 2026-10-01 16:01:33 UTC, so its active config matches `main`'s `config/sync` and a `config:import` after loading it is a no-op). The tip was answering 504 all day and was not touched; the
+steps it needs are in AGENTS.md under "Announcements".
+
+---
+
 ## 2026-10-01 — D7 content re-synced into `db` (new rows plus per-id updates); tip edits kept
 
 **Cutoff.** The plan named the last import as 2026-09-21 22:24:24 UTC. The destination database
