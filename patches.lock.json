@@ -1,0 +1,29 @@
+{
+    "_hash": "695f641e543ada5046b64cdf81cb3dab2283a2962ffd235e3aa1a0eecde12427",
+    "patches": {
+        "drupal/caresphere_theme": [
+            {
+                "package": "drupal/caresphere_theme",
+                "description": "Restore subtitle/side_media on hero-card",
+                "url": "patches/local/caresphere_theme-hero-card-subtitle.patch",
+                "sha256": "9039f6420f8919662053e84c3d9ad8a4d4a4c327c5b072f7bfa83b99b0baa8ea",
+                "depth": 1,
+                "extra": {
+                    "provenance": "root"
+                }
+            }
+        ],
+        "drupal/project_browser": [
+            {
+                "package": "drupal/project_browser",
+                "description": "#3622921 Implement getModulesToInstall in TestModuleInstaller",
+                "url": "https://git.drupalcode.org/issue/project_browser-3622921/-/commit/9afcce0676ca61ca1514a14b6d882cbd081c0045.diff",
+                "sha256": "56fb6668c88cf2d6dc81d91a2cc85d0dae112d5d83053230fe18402674cfdf8a",
+                "depth": 1,
+                "extra": {
+                    "provenance": "dependency:drupal/project_browser"
+                }
+            }
+        ]
+    }
+}
