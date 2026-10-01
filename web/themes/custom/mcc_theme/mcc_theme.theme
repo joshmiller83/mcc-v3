@@ -199,11 +199,16 @@ function _mcc_theme_announcement_context(NodeInterface $node): array {
   $context = [
     'url' => $node->toUrl()->toString(),
     'link_label' => (string) t('Read more'),
+    // field_link alone, for the page: its button is shown only for a real
+    // link, never for the page's own address.
+    'link' => '',
+    'eyebrow' => (string) t('Announcement'),
   ];
   if ($node->hasField('field_link') && !$node->get('field_link')->isEmpty()) {
     /** @var \Drupal\link\LinkItemInterface $link */
     $link = $node->get('field_link')->first();
     $context['url'] = $link->getUrl()->toString();
+    $context['link'] = $context['url'];
     $context['link_label'] = (string) ($link->get('title')->getValue() ?: t('Learn more'));
   }
   return $context;

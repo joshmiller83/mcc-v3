@@ -1,0 +1,71 @@
+{#
+/**
+ * @file
+ * A single announcement's page.
+ *
+ * `mcc_announcement` (the link, its label, the eyebrow) is built by
+ * _mcc_theme_announcement_context() in mcc_theme.theme; the picture and the
+ * body come through the default view display, so the image style and the
+ * text format stay admin settings. Same shape as the ministry, bio and event
+ * pages — a bundle template over a preprocess-built context — with the shared
+ * mcc-title-band on top so this page cannot drift from the rest of the site.
+ *
+ * A clamped two-column layout under the band: the picture in the narrower
+ * left column at its own shape, the text in the wider right column at a
+ * reading measure, and the link, when the editor gave one, as a button. The
+ * card on the front page links here, so this is where a visitor lands after
+ * "Read more".
+ *
+ * Slots are passed as variables to {% include %}, not as blocks to an embed —
+ * see node--ministry--full.html.twig for why the embed form renders an empty
+ * band. The breadcrumb is written here: there is no /announcements listing
+ * page, so "Home › this announcement" is what the page means.
+ */
+#}
+{% set a = mcc_announcement %}
+{% set picture = content.field_featured_image|render|trim is not empty ? content.field_featured_image : null %}
+{% set body = content.body|render|trim is not empty ? content.body : null %}
+
+<article{{ attributes.addClass('mcc-announcement') }}>
+
+  {% set band_breadcrumb %}
+    <nav aria-label="{{ 'Breadcrumb'|t }}">
+      <ol>
+        <li><a href="/">{{ 'Home'|t }}</a></li>
+        <li aria-current="page">{{ node.label }}</li>
+      </ol>
+    </nav>
+  {% endset %}
+
+  {% include 'mcc_theme:mcc-title-band' with {
+    title: node.label,
+    eyebrow: a.eyebrow,
+    breadcrumb: band_breadcrumb,
+  } only %}
+
+  <div class="mcc-announcement__layout custom-container">
+    {% if picture %}
+      <div class="mcc-announcement__picture">{{ picture }}</div>
+    {% endif %}
+
+    <div class="mcc-announcement__content">
+      {% if body %}
+        <div class="mcc-announcement__body">{{ body }}</div>
+      {% else %}
+        <p class="mcc-announcement__empty">{{ 'Ask at the church office for the details.'|t }}</p>
+      {% endif %}
+
+      {% if a.link %}
+        <div class="mcc-announcement__actions">
+          {% include 'caresphere_theme:button' with {
+            label: a.link_label,
+            href: a.link,
+            variant: 'primary',
+            size: 'medium',
+          } only %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+</article>

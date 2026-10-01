@@ -1,0 +1,98 @@
+/**
+ * A single announcement's page.
+ *
+ * Sibling of mcc-ministry-detail.css: same surfaces, same hairlines, same
+ * radius. The title band is the shared mcc-title-band component and owns its
+ * own styling, so nothing here touches it.
+ *
+ * The page is a clamped two-column layout: the picture in the narrower
+ * left column at its own shape (uncropped, like the card), the text in the
+ * wider right column at a reading measure, and the link, when there is one,
+ * as a button under the text. On a phone the columns stack, picture first.
+ */
+
+/* Layout ------------------------------------------------------------------ */
+
+.mcc-announcement__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: var(--space-16);
+  align-items: start;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: var(--space-16) var(--space-6) var(--space-20);
+}
+
+/* Picture ----------------------------------------------------------------- */
+
+.mcc-announcement__picture {
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+/* Nothing in the well is positioned, so an editor's `.contextual-region`
+   wrapper (position: relative) changes nothing — see mcc-announcement-card. */
+.mcc-announcement__picture img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Text -------------------------------------------------------------------- */
+
+.mcc-announcement__content {
+  min-width: 0;
+  max-width: 64ch;
+}
+
+.mcc-announcement__body {
+  font-family: var(--font-body);
+  font-size: 18px;
+  line-height: 1.65;
+  color: var(--text-body);
+  text-wrap: pretty;
+}
+
+.mcc-announcement__body :is(p, ul, ol) {
+  margin: 0 0 1em;
+}
+
+.mcc-announcement__body > :last-child {
+  margin-bottom: 0;
+}
+
+.mcc-announcement__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin-top: var(--space-8);
+}
+
+/* A plain-text announcement (no body yet) still reads as a finished page:
+   the picture carries it, and the note says where to ask. */
+.mcc-announcement__empty {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 16px;
+  color: var(--text-muted);
+}
+
+/* Phone ------------------------------------------------------------------- */
+
+@media (max-width: 860px) {
+  .mcc-announcement__layout {
+    grid-template-columns: 1fr;
+    gap: var(--space-10);
+    padding-block: var(--space-10) var(--space-16);
+  }
+
+  .mcc-announcement__picture {
+    max-width: 520px;
+  }
+
+  .mcc-announcement__body {
+    font-size: 17px;
+  }
+}
