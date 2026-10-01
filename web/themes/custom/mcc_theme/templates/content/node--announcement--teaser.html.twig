@@ -1,0 +1,27 @@
+{#
+/**
+ * @file
+ * An announcement, as a notice-board card.
+ *
+ * Rendered by the mcc_announcements view for the front page band. The picture
+ * and the text both come through the teaser view display — the media "medium"
+ * view mode, which is the uncropped responsive style, and the body's own text
+ * format — so neither the image style nor the format is a template decision.
+ * The link is read in _mcc_theme_announcement_context(); the component makes
+ * the title the anchor only when there is one.
+ *
+ * Emptiness is tested on the rendered string but the render array is what is
+ * passed on — the same reason as node--bio--teaser.html.twig.
+ */
+#}
+{% set image = content.field_featured_image|render|trim is not empty ? content.field_featured_image : null %}
+{% set text = content.body|render|trim is not empty ? content.body : null %}
+
+{% include 'mcc_theme:mcc-announcement-card' with {
+  attributes: attributes,
+  title: node.label,
+  url: mcc_announcement.url,
+  link_label: mcc_announcement.link_label,
+  image: image,
+  text: text,
+} only %}

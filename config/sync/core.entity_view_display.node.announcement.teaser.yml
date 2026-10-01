@@ -9,12 +9,20 @@ dependencies:
     - field.field.node.announcement.field_link
     - node.type.announcement
   module:
+    - text
     - user
 id: node.announcement.teaser
 targetEntityType: node
 bundle: announcement
 mode: teaser
 content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
   field_featured_image:
     type: entity_reference_entity_view
     label: hidden
@@ -25,6 +33,5 @@ content:
     weight: 0
     region: content
 hidden:
-  body: true
   field_link: true
   links: true

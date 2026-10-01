@@ -1,0 +1,26 @@
+uuid: e248eb41-d661-4e3f-876a-09d8f98f3efc
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.mcc_announcements
+  module:
+    - views
+active_version: 232aa1800e313d75
+versioned_properties:
+  active:
+    settings:
+      default_settings:
+        id: 'views_block:mcc_announcements-flyers'
+        label: 'Announcement flyers'
+        label_display: '0'
+        provider: views
+        views_label: ''
+        items_per_page: null
+    fallback_metadata:
+      slot_definitions: null
+label: 'Announcement flyers'
+id: block.views_block.mcc_announcements-flyers
+provider: views
+source: block
+source_local_id: 'views_block:mcc_announcements-flyers'

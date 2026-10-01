@@ -1,0 +1,51 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Announcement Card
+description: >
+  One announcement in the front page's notice-board band: its picture at the
+  picture's own shape, never cropped, with the title and the announcement's
+  first lines of its text beneath. The title is the anchor, stretched over the
+  whole card, so the card is one hit target and no anchor ever contains
+  another — the picture's markup (which for an editor includes contextual
+  links) stays outside it. The text is clamped to six lines; the destination
+  has the rest. Without a url it is a plain card. Props are scalars and both
+  the picture and the text are slots, which is what keeps it placeable in
+  Canvas.
+group: MCC Components
+props:
+  type: object
+  required:
+    - title
+  properties:
+    title:
+      type: string
+      title: Title
+      examples:
+        - "Women's Bible Study"
+    url:
+      type: string
+      title: Link
+      description: 'Where the card points: the announcement page, or its link field. Leave empty and the card is not a link.'
+      default: ''
+      examples:
+        - '/calendar'
+    link_label:
+      type: string
+      title: Link label
+      description: 'The line under the text when the card is a link, e.g. "Read more" or "Learn more".'
+      default: ''
+      examples:
+        - 'See the calendar'
+    heading_level:
+      type: string
+      title: Heading level
+      enum:
+        - h2
+        - h3
+      default: h3
+slots:
+  image:
+    title: Picture
+    description: 'field_featured_image rendered through an uncropped responsive style (the media "medium" view mode). Leave empty for a text-only card.'
+  text:
+    title: Text
+    description: 'The body, rendered through its text format. Rich text is fine: any links in it sit above the stretched title link.'

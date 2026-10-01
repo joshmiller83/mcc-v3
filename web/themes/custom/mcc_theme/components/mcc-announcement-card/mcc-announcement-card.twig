@@ -1,0 +1,41 @@
+{#
+  When there is a link, the title is the anchor and CSS stretches it over the
+  whole card (::after covering the article), so the hit target is the card
+  without the anchor having to wrap the picture or the text. That is what keeps
+  anchors from nesting: a rendered media entity carries contextual links for an
+  editor, and the body can carry links of its own, and neither is inside the
+  title's <a>. Without a link the title is plain text — an <a> with no href is
+  not a link to anything.
+#}
+{% set level = heading_level|default('h3') %}
+{% set classes = ['mcc-announcement-card'] %}
+{% if url %}
+  {% set classes = classes|merge(['mcc-announcement-card--linked']) %}
+{% endif %}
+
+<article{{ attributes.addClass(classes) }}>
+  {% if image %}
+    <div class="mcc-announcement-card__image">{{ image }}</div>
+  {% endif %}
+
+  <div class="mcc-announcement-card__body">
+    <{{ level }} class="mcc-announcement-card__title">
+      {%- if url -%}
+        <a href="{{ url }}" class="mcc-announcement-card__link">{{ title }}</a>
+      {%- else -%}
+        {{ title }}
+      {%- endif -%}
+    </{{ level }}>
+
+    {% if text %}
+      <div class="mcc-announcement-card__text">{{ text }}</div>
+    {% endif %}
+
+    {% if url %}
+      <p class="mcc-announcement-card__more">
+        <span>{{ link_label|default('Learn more'|t) }}</span>
+        {{ icon('lucide', 'arrow-right', { size: 16 }) }}
+      </p>
+    {% endif %}
+  </div>
+</article>

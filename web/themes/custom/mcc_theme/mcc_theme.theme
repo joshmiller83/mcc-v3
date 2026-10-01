@@ -178,7 +178,35 @@ function mcc_theme_preprocess_node(array &$variables): void {
 
   if (in_array($node->bundle(), ['ministry', 'missions'], TRUE)) {
     $variables['mcc_ministry'] = _mcc_theme_ministry_context($node, $view_mode, $variables);
+    return;
   }
+
+  if ($node->bundle() === 'announcement') {
+    $variables['mcc_announcement'] = _mcc_theme_announcement_context($node);
+  }
+}
+
+/**
+ * Where an announcement card points.
+ *
+ * Every card has a destination: field_link when the editor gave one, the
+ * announcement's own page otherwise — the card shows only the first lines of
+ * the body and the page has the rest. Read here rather than rendered through
+ * the link formatter so the component gets a plain href for the card's own
+ * anchor: the formatter would hand it a second <a>, and anchors cannot nest.
+ */
+function _mcc_theme_announcement_context(NodeInterface $node): array {
+  $context = [
+    'url' => $node->toUrl()->toString(),
+    'link_label' => (string) t('Read more'),
+  ];
+  if ($node->hasField('field_link') && !$node->get('field_link')->isEmpty()) {
+    /** @var \Drupal\link\LinkItemInterface $link */
+    $link = $node->get('field_link')->first();
+    $context['url'] = $link->getUrl()->toString();
+    $context['link_label'] = (string) ($link->get('title')->getValue() ?: t('Learn more'));
+  }
+  return $context;
 }
 
 /**

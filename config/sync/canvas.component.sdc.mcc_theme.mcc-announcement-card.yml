@@ -1,0 +1,126 @@
+uuid: 1c234f45-f0b9-4f12-b1b1-4430287a2db6
+langcode: en
+status: true
+dependencies:
+  module:
+    - options
+  theme:
+    - mcc_theme
+active_version: f8ac3583033315fa
+versioned_properties:
+  active:
+    settings:
+      prop_field_definitions:
+        title:
+          required: true
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value:
+            -
+              value: "Women's Bible Study"
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+        url:
+          required: false
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value:
+            -
+              value: /calendar
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+        link_label:
+          required: false
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value:
+            -
+              value: 'See the calendar'
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+        heading_level:
+          required: false
+          field_type: list_string
+          field_storage_settings:
+            allowed_values_function: canvas_load_allowed_values_for_component_prop
+          field_instance_settings: {  }
+          field_widget: options_select
+          default_value: null
+          expression: ℹ︎list_string␟value
+          derived_schema_metadata: {  }
+    fallback_metadata:
+      slot_definitions:
+        image:
+          title: Picture
+          description: 'field_featured_image rendered through an uncropped responsive style (the media "medium" view mode). Leave empty for a text-only card.'
+        text:
+          title: Text
+          description: 'The body, rendered through its text format. Rich text is fine: any links in it sit above the stretched title link.'
+  b6b33a65b3a06269:
+    settings:
+      prop_field_definitions:
+        title:
+          required: true
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value:
+            -
+              value: "Women's Bible Study"
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+        url:
+          required: false
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value:
+            -
+              value: /calendar
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+        link_label:
+          required: false
+          field_type: string
+          field_storage_settings: {  }
+          field_instance_settings: {  }
+          field_widget: string_textfield
+          default_value:
+            -
+              value: 'See the calendar'
+          expression: ℹ︎string␟value
+          derived_schema_metadata:
+            string_shape: {  }
+        heading_level:
+          required: false
+          field_type: list_string
+          field_storage_settings:
+            allowed_values_function: canvas_load_allowed_values_for_component_prop
+          field_instance_settings: {  }
+          field_widget: options_select
+          default_value: null
+          expression: ℹ︎list_string␟value
+          derived_schema_metadata: {  }
+    fallback_metadata:
+      slot_definitions:
+        flyer:
+          title: Flyer
+          description: 'The flyer media, rendered through an uncropped responsive style (the media "medium" view mode). Leave empty for a title-only card.'
+label: 'Announcement Card'
+id: sdc.mcc_theme.mcc-announcement-card
+provider: mcc_theme
+source: sdc
+source_local_id: 'mcc_theme:mcc-announcement-card'
