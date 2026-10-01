@@ -363,6 +363,31 @@ still edits it, so this is a recurring sync, not a one-off.
 - **`migrate:status` prints "Last Imported" in the site's timezone, not UTC.** `10:36` there was
   `14:36` UTC. Every `FROM_UNIXTIME()` in the ddev database is UTC, so a cutoff copied straight from
   `migrate:status` lands four hours early and sweeps the import's own writes into "edited since".
+- **Read the cutoff from the destination database, never from a plan, a log or memory.** The
+  09-21 import ran locally and was never pushed to the tip; `scripts/sync-config-from-tip.sh`
+  then replaced the local `db` with the tip's on 2026-10-01, and the "last import" the day's
+  plan carried (09-21 22:24 UTC) was a month later than the one the database had actually seen
+  (08-21 14:36 UTC). Used as written it would have left three D7 edits behind and hidden three
+  real conflicts. `migrate:status` shows the time in site time; per migration in UTC it is
+  `SELECT name, FROM_UNIXTIME(CAST(SUBSTRING_INDEX(SUBSTRING(value,3),';',1) AS UNSIGNED) DIV 1000)
+  FROM key_value WHERE collection='migrate_last_imported'` — the values are PHP-serialised
+  milliseconds, `d:1787323014915;`. Each sync's entry in `CONTENT_LOG.md` now ends with the
+  cutoff for the next one.
+- **A zero-row `mcc_bio` import still fires its `POST_IMPORT` subscribers.** `BioDuplicateMerger`
+  re-saves Jon Culbertson (346) on every pass, so his `changed` moves and he lands on the
+  "edited on the tip" list — and it disagrees with `mcc_split_bio_name_role.php`: the split
+  script empties `field_role` on 346 (his own title carries no " - Role"), the merger refills it
+  with "Finance" from record 1604, and whichever ran last wins. The tip showed it blank from
+  08-21; after the 10-01 sync it reads "Finance" again. The same pass retires 1604's regenerated
+  alias into a redirect, and the focal-point conversion runs over any new image. Expect those
+  three notices in the watchdog after any import; they are not errors.
+- **"Months that gained an event" is a node × month diff, and one D7 edit can make it sixty.**
+  Take the (nid, YYYY-MM) pairs from `node__field_event_date` before and after the import and
+  keep the difference; "months with any occurrence of a touched node" is wrong for an edit that
+  only changed a body. On 2026-10-01 a D7 edit turned "September 11/Patriot Day" from one
+  occurrence into fifty yearly ones through 2075, so the honest list was 61 months.
+  `scripts/calendar-compare.mjs` takes them all as repeated `--month` flags; run the whole list
+  rather than trimming it by hand.
 - **The import log is 4,000+ lines of one harmless warning.** Core's `d7_file` source reads
   `constants.source_base_path`, which these migrations don't declare, once per row: `Undefined array
   key "constants" File.php:105`. It changes nothing, but it buries real errors — read the log with
@@ -478,6 +503,15 @@ ddev import-db --database=legacy --file=.ddev/.downloads/legacy.sql.gz
 ddev drush cache:rebuild && ddev drush config:status
 ```
 
+- **The `cache:rebuild` at the end is load-bearing, not hygiene.** The pulled database carries
+  Pantheon's discovery caches, and the SDC component definitions in them hold absolute paths under
+  `/code/web/…`. Until the rebuild, every component render logs
+  `file_get_contents(/code/web/themes/custom/mcc_theme/components/…): Failed to open stream` and
+  the page comes out without that component — the calendar print sheet, the footer. Skipped on
+  2026-10-01, this failed the first `calendar-compare` run on all 61 months ("no sheet element
+  matching .mcc-print-sheet", 428 warnings in the watchdog) for a reason that had nothing to do
+  with the calendar. Drush itself is unaffected, so the migration ran fine on the same caches;
+  only rendered pages lie. Rebuild first, then render anything.
 - **`ddev pull pantheon` can only ever fill `db`.** There is no provider flag for a second target
   database, which is why the source site is a hand-rolled dump plus `ddev import-db --database=legacy`.
   That dump is the same command the provider builds for itself, so the two stay equivalent.
@@ -486,6 +520,19 @@ ddev drush cache:rebuild && ddev drush config:status
   where a filename exists on both the new site's copy wins. No `--delete` — the directory is a
   union of two sites, and `--delete` against either one removes the other's files. Skip `css/`,
   `js/`, `php/` and `styles/`; they are generated and rebuild locally.
+- **Pulling the files, as run on 2026-10-01** — inside the web container, where the agent and
+  Terminus both are (`ddev exec bash -s <<'EOF'`), with `U` and `H` read from
+  `terminus connection:info mcc-church.live --field=sftp_username` and `--field=sftp_host`:
+
+  ```sh
+  rsync -rltz --ipv4 -e 'ssh -p 2222 -o StrictHostKeyChecking=accept-new' \
+    --exclude=css/ --exclude=js/ --exclude=php/ --exclude=styles/ \
+    "$U@$H:files/" web/sites/default/files/          # then once more for mcc2026.dev
+  ```
+
+  A locked tip does not close any of these doors: on 2026-10-01 every web request to mcc2026.dev
+  still answered the `504` edge page, and `ddev pull pantheon`, `connection:info` and the SFTP
+  rsync all worked against it anyway. "Frozen" means the web tier, not the data.
 - **Pulling is not migrating.** A fresh `legacy` changes nothing on the site until an import is
   run, and that is a separate decision with its own rules — see [The D7 migration](#the-d7-migration).
   Do **not** reach for `migrate:import --group=mcc --update`.
