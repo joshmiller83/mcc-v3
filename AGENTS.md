@@ -505,7 +505,8 @@ ddev drush cache:rebuild && ddev drush config:status
 ## Dependency updates
 
 How the 2026-10-01 update went (core 11.4.4→11.4.8, Canvas 1.8→1.12, 82 updates and 14
-installs in all, inside the existing constraints), and what to repeat next time:
+installs in all, inside the existing constraints, then four major bumps on top), and what to
+repeat next time:
 
 - **Reconcile the tip first, then snapshot, then update.** `scripts/sync-config-from-tip.sh`
   found two Canvas items of drift that day; merged first, the update's own `config:export`
@@ -526,10 +527,22 @@ installs in all, inside the existing constraints), and what to repeat next time:
   walked past it. The fix is a `hook_update_N` in `mcc_core` (`mcc_core_update_11101`) that
   installs the current definition — it deploys through `drush deploy` to every environment —
   never a one-off `php:eval`, which leaves the tip mismatched.
-- **"Update readiness checks" stays red until `cweagans/composer-patches` is on 2.x.** Package
-  Manager's validator calls 1.x unsupported and also wants `composer-exit-on-patch-failure`
-  set. That is one of four major bumps left for a human (composer-patches 2, editoria11y 3,
-  tagify 2, ui_icons 2); do each as its own change, not inside a routine update.
+- **"Update readiness checks" is about `cweagans/composer-patches`, and no version of it
+  clears the error on its own.** Package Manager trusts a fixed list of plugins
+  (`ComposerPluginsValidator`), composer-patches is not on it at any version, so it has to be
+  named in `package_manager.settings: additional_trusted_composer_plugins` — config, exported
+  and committed on 2026-10-01. Its own validator then wants the plugin as a root dependency
+  with `extra.composer-exit-on-patch-failure: true` in `composer.json`. Both are in place; if
+  the error comes back, those two are what to check first.
+- **Patches go through composer-patches 2.x now, and `patches.lock.json` is part of the
+  repo.** Patches still live under `extra.patches`, but 2.x applies them from the lock: after
+  adding, removing or editing a patch run `composer patches-relock`, then `composer install`,
+  and commit the lock, or Pantheon's build applies the old set. 2.x writes no `PATCHES.txt`;
+  check the patched file itself (the hero-card component YAML has `subtitle:` and
+  `side_media:`). The four majors first left for a human — composer-patches 2, editoria11y 3,
+  tagify 2, ui_icons 2 — went in the same day once allowed: one `ui_icons` update hook, no
+  config change, `pack:name` icon values untouched, tagify's one form display (sermon) and
+  the icon picker both still render. editoria11y is installed code only; it is not enabled.
 - **Take the watchdog marker (`MAX(wid)`) *after* any database pull.** A pull replaces the
   whole table, so a marker from before it compares the new history against the wrong number.
 
