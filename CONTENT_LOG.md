@@ -13,6 +13,117 @@ Newest entries at the top. Each entry: what changed, why, and what a re-import w
 
 ---
 
+## 2026-10-01 — D7 content re-synced into `db` (new rows plus per-id updates); tip edits kept
+
+**Cutoff.** The plan named the last import as 2026-09-21 22:24:24 UTC. The destination database
+disagreed: `db` is mcc2026.dev's database (pulled 14:33 UTC today), every `migrate_last_imported`
+value in it is 2026-08-21 (14:06:46–14:36:54 UTC), and the eight D7 events created between 08-21
+and 09-21 had no map rows. The 09-21 import ran locally and never reached the tip, and
+`scripts/sync-config-from-tip.sh` replaced the local `db` with the tip's on 10-01. The lists below
+therefore use the database's own cutoff, **2026-08-21 14:06:46 UTC**; the plan's cutoff is shown
+alongside. **Next sync's cutoff: 2026-10-01 14:43:50 UTC** — this import's first migration start,
+shown as `10:43:50` in `migrate:status`.
+
+**Refresh.** Snapshot `pre-sync-2026-10-01`. `ddev pull pantheon` of mcc2026.dev into `db`
+succeeded. `mcc-church.live` dumped (1.9 MB, "Dump completed on 2026-10-01 14:36:47") into
+`legacy`: 1,022 D7 nodes, newest edit 2026-09-26 16:25:49 UTC. Files rsynced `-rltz`, no
+`--delete`, skipping css/ js/ php/ styles/: source site 18 files (1 new — the Ministry Fair
+image), then mcc2026.dev (nothing new). `config:status` listed seven items, all from the
+2026-10-01 dependency update that `main` carries and the tip has not imported yet — left alone
+during the sync itself: `ai.html_to_markdown.settings`,
+`canvas.component.block.project_browser_block.eca_guide_library`,
+`canvas.component.marker.page_content`, `canvas.settings` (only in sync dir);
+`canvas.folder.0a6fed28-…`, `canvas.folder.eefc23e1-…`, `package_manager.settings` (different).
+Afterwards, at the user's request, `drush deploy -y` was run locally against this `db` — the 27
+pending updates the tip never got (ai 15001–15003 and three post-updates, eca 8012 and two
+post-updates, trash 11301–11303 and two post-updates, ui_icons 11201, mcc_core 11101, Canvas
+post-updates 0023–0030), then `config:import` and a cache rebuild — after which `updatedb:status`
+and `config:status` were both clean and `config:export` reported the active configuration
+identical to `config/sync`. Nothing config-side to commit; the dump below carries the upgraded
+schema and config, so the tip's own `drush deploy` becomes a no-op once this database is pushed.
+
+**Edited on the tip since its last import** (read from `db` before importing). After the plan's
+09-21 cutoff: nothing. After 08-21 14:06:46: the eleven calendar edits `AGENTS.md` already
+records — created 1621 Women's Bible Study (08-28), 1622 Snacks before Sunday School for everyone
+and 1623 MCC Serves at Shalom (09-05); edited 526, 1154, 1177, 1325, 1500, 1523, 1553, 1554
+(09-05) — plus the 08-21 14:47 re-saves by the post-import scripts (16 bios, 9 ministries,
+9 pages, 11 terms) and media 3932 `mcc-map.jpg` (08-28).
+
+**Edited in D7 since that import** (`legacy.node`). After the plan's cutoff: 1629 Pastor
+Appreciation Sunday, 1630 Set up for Ministry Fair, 1631 Ministry Fair — all new rows. After
+08-21: eight new `calendar_item`s (1623, 1625–1631), six edited ones already in the map, and two
+`homepage_teaser`s (1621, 1624 — not migrated, by design). No bio, page, ministry, missions,
+term or user changed in D7.
+
+**Conflicts — edited on both sides, NOT updated, for the church to decide.** The tip's version
+stands in `db`; D7's is in `legacy` for a side-by-side.
+
+| nid  | Title                                   | Tip edit (UTC)   | D7 edit (UTC)    |
+| ---- | --------------------------------------- | ---------------- | ---------------- |
+| 1154 | Highway 52 Youth Groups - All Ages      | 2026-09-05 14:16 | 2026-09-16 17:30 |
+| 1177 | Ministry Heads Servant Leaders Meetings | 2026-09-05 14:09 | 2026-09-16 16:10 |
+| 1500 | Youth Church Services                   | 2026-09-05 14:35 | 2026-09-16 17:34 |
+
+**Import.** `migrate:import --group=mcc` (no `--update`), then
+`migrate:import mcc_calendar_event --update --idlist=1297,1318,1549` — the D7-edited events minus
+the three conflicts. Zero error lines (the group log's 36 `File.php:105` warnings are the known
+harmless ones), zero unprocessed, no messages.
+
+| Migration            | Created | Updated | Ignored |
+| -------------------- | ------- | ------- | ------- |
+| mcc_files            | 6       | 0       | 0       |
+| mcc_media_image      | 6       | 0       | 0       |
+| mcc_media_document   | 6       | 0       | 0       |
+| mcc_calendar_event   | 8       | 3       | 0       |
+| mcc_redirect         | 8       | 0       | 2       |
+| all others           | 0       | 0       | 0       |
+
+New events 1624–1631 (D7 nid in brackets): 1624 Youth Sunday School [1623], one occurrence
+2026-10-04; 1625 Women's Bible Study [1625], 12 Wednesdays 09-09 → 11-25; 1626 Missions Ministry
+Meeting (10-08); 1627 Senior Health & Wellness Expo (10-03); 1628 Trunk or Treat (10-24); 1629
+Pastor Appreciation Sunday, yearly 2026-10-11 → 2035; 1630 Set up for Ministry Fair (10-17);
+1631 Ministry Fair, 10-18 → 11-01. Updated: 1297 September 11/Patriot Day went from one
+occurrence to fifty yearly ones (2026 → 2075); 1318 retitled "Happy 185th Birthday MCC!" →
+"Happy Birthday MCC!" (alias regenerated, redirect 2842 minted from the old one); 1549 Light The
+Night, body and image. `mcc_media_document` also minted a `document` media for each of the six
+JPEGs (3939–3944), as it has for every file before — observed, not changed.
+
+**Side effects of the post-import subscribers**, not edits: `BioDuplicateMerger` re-saved Jon
+Culbertson (346) — `field_role` reads "Finance" again (the 08-21 split script had emptied it)
+and 1604's stray alias `/about/leadership/jon-culbertson-0` was retired into redirect 2833; one
+redirect was repointed from 1607 to 1214 (Gary Allen); Manual Crop → Focal Point converted the
+six new images. See the new notes in `AGENTS.md`.
+
+**Duplicates** (`GROUP BY TRIM(title), field_event_date_value HAVING COUNT(DISTINCT nid) > 1`).
+Nothing deleted or unpublished. One pair is new from this sync: **Women's Bible Study 1621 (tip,
+created 08-28, 4 Wednesdays 09-09 → 09-30) and 1625 (D7, created 09-16, 12 Wednesdays 09-09 →
+11-25, same 6:45 PM, with the "Song of Songs" image)** — recommendation: unpublish 1621 and keep
+1625, the longer and illustrated series. 1624 Youth Sunday School (one-off, 10-04) and 1554
+(series ended 08-23) share a title but no date. Thirteen other pairs are old duplicates inside D7
+itself (Christmas Day 1330/1331 recurring to 2032, Valentine's Day 1237/1342, Summer Begins
+1357/1359, Ministry Fair 1132/1134, and nine from 2013–2022); the Christmas Day pair is the only
+one still producing visible double entries.
+
+**Calendar check.** Months that gained an occurrence (node × month, after minus before): 61 —
+2026-09, 2026-10 and 2026-11 carry the real new content; the other 58 are one annual all-day
+entry each, from 1297 and 1629. The first `scripts/calendar-compare.mjs` run over all 61 failed every month with "no sheet element
+matching .mcc-print-sheet": it ran before the cache rebuild the refresh recipe ends with, and the
+pulled database still carried Pantheon's discovery caches, so every SDC path resolved to
+`/code/web/…` (428 `file_get_contents` warnings in the watchdog, 14:53–14:58 UTC; see the new
+note in `AGENTS.md`). After `drush deploy`'s cache rebuild the run was repeated: exit 0 after ten minutes, all 61 print sheets
+"1pp fit ok" and `PASS: print sheet is one Letter page with nothing clipped`; output in the
+gitignored `.calendar-compare/`.
+
+**Hand-off.** Snapshots `post-sync-2026-10-01` (content state right after the import) and
+`post-deploy-2026-10-01` (after the `drush deploy` above). Dump
+`.ddev/.downloads/db-post-sync-2026-10-01.sql.gz`, re-taken after the deploy (3.7 MB, 247 tables,
+"Dump completed on 2026-10-01 15:00:31", sha256 `f92b5bfa…010d400`, gitignored), ready to push to
+the tip. The push itself was not done.
+
+**What a re-import does to this.** A plain `--group=mcc` import changes nothing. `--update` of
+1154, 1177 or 1500 reverts the tip's 09-05 edits. 1621–1623 have no D7 row, so no `--update` can
+touch them. Any `mcc_bio` import re-saves 346 as above.
+
 ## 2026-08-21 — content re-synced from mcc-church.live; `no_stub` added to four lookups
 
 Fresh pull of both sites: `mcc-church.live`'s database into the local `legacy` source DB
