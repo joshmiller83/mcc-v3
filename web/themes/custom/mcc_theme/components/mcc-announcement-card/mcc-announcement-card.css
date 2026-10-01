@@ -55,15 +55,13 @@
   height: auto;
 }
 
-/* The band is a centred section, which cascades `text-align: center` into
-   the card. A paragraph of details reads as a paragraph only when it is
-   left-aligned, so the card sets its own alignment. */
+/* Text alignment is left to the band: a centred section centres it with
+   caresphere's `!important`, and centred reads fine at this card width. */
 .mcc-announcement-card__body {
   display: flex;
   flex-direction: column;
   flex: 1;
   padding: var(--space-4) var(--space-5) var(--space-5);
-  text-align: left;
 }
 
 .mcc-announcement-card__title {

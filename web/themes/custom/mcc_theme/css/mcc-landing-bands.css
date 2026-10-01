@@ -343,6 +343,16 @@
    columns; the cards were huge and the five reflowed to 3 + 2. The view's
    rows are Views' plain unformatted `.views-row`s, so the block renders as a
    stacked list anywhere this rule does not reach. */
+/* A centred section lays its children out with `align-items: center`, so a
+   child is shrink-to-fit: the block's wrapper took the width of the five
+   un-shrinkable cards (632px in a 390px viewport), the band clipped it, and
+   the heading above was cut off at the left — with the document's
+   scrollWidth reporting nothing wrong. A definite width on that wrapper is
+   what makes the row below a scroll container of the band's width. */
+#home-announcements > div:has(> .views-element-container) {
+  width: 100%;
+}
+
 #home-announcements .view-content {
   display: flex;
   align-items: stretch;

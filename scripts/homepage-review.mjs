@@ -105,6 +105,14 @@ async function shoot(context, label) {
         spilled,
         overlapping,
         columns: new Set(rects.map((r) => Math.round(r.left))).size,
+        // The scroll row must be sized by the band, never by its own cards:
+        // a wider row pushes the band's content track past the viewport and
+        // the heading above it is clipped, with document scrollWidth
+        // reporting nothing wrong.
+        rowOverflow: (() => {
+          const row = document.querySelector('#home-announcements .view-content');
+          return row ? row.clientWidth > document.documentElement.clientWidth : false;
+        })(),
       };
     });
 
@@ -135,6 +143,7 @@ for (const row of report) {
   const problems = [];
   if (row.status !== 200) problems.push(`HTTP ${row.status}`);
   if (row.overflow) problems.push('horizontal overflow');
+  if (row.rowOverflow) problems.push('row wider than the viewport');
   if (!row.band) problems.push('no #home-announcements band');
   if (row.cards === 0) problems.push('no cards');
   if (row.images !== row.cards) problems.push(`${row.cards - row.images} card(s) without a picture`);
