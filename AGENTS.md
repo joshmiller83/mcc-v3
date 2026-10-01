@@ -502,6 +502,37 @@ ddev drush cache:rebuild && ddev drush config:status
 - Import repository configuration into the site with `ddev drush config:import --yes`.
 - Export site configuration back to the repo with `ddev drush config:export --yes`.
 
+## Dependency updates
+
+How the 2026-10-01 update went (core 11.4.4→11.4.8, Canvas 1.8→1.12, 82 updates and 14
+installs in all, inside the existing constraints), and what to repeat next time:
+
+- **Reconcile the tip first, then snapshot, then update.** `scripts/sync-config-from-tip.sh`
+  found two Canvas items of drift that day; merged first, the update's own `config:export`
+  held only the update. `ddev snapshot --name pre-update-<date>` is the undo. The order of
+  work after that: `composer update --with-all-dependencies`, check `PATCHES.txt` in each
+  patched package, `updatedb -y`, `updatedb:status`, `cache:rebuild`, `config:export -y`, then
+  the page checks, `scripts/calendar-compare.mjs`, every idempotent script in this file, and
+  the Canvas editor plus a node edit form through a `drush uli` session.
+- **Expect `config:export` to show Canvas discovery, not drift.** Canvas registers every block
+  plugin and component source it finds as a `canvas.component.*` config entity and files it in
+  a `canvas.folder.*`, so a module update that adds a block plugin (eca 3.1.9's
+  `project_browser_block:eca_guide_library`) or Canvas adding a source (1.12's `marker`)
+  arrives as new config. Commit it; left out, Canvas recreates it on the next cache rebuild
+  and `config:status` on the tip reads Different forever.
+- **A contrib update hook can skip this site and leave "Mismatched entity and/or field
+  definitions" on the status report.** trash 3.1.0's hooks only touch a `deleted` field whose
+  installed definition names `trash` as its provider; node's here says `node`, so both hooks
+  walked past it. The fix is a `hook_update_N` in `mcc_core` (`mcc_core_update_11101`) that
+  installs the current definition — it deploys through `drush deploy` to every environment —
+  never a one-off `php:eval`, which leaves the tip mismatched.
+- **"Update readiness checks" stays red until `cweagans/composer-patches` is on 2.x.** Package
+  Manager's validator calls 1.x unsupported and also wants `composer-exit-on-patch-failure`
+  set. That is one of four major bumps left for a human (composer-patches 2, editoria11y 3,
+  tagify 2, ui_icons 2); do each as its own change, not inside a routine update.
+- **Take the watchdog marker (`MAX(wid)`) *after* any database pull.** A pull replaces the
+  whole table, so a marker from before it compares the new history against the wrong number.
+
 ## Guardrails
 
 - Do not commit secrets or machine-local overrides such as `.env`, `settings.local.php`, or `.ddev/config.local.yaml`.
@@ -568,6 +599,11 @@ testing this migration/rebuild; it is not the church's production site.
 # 1. GitHub Actions — did the push reach Pantheon?
 gh run list --repo joshmiller83/mcc-v3 --workflow=deploy-pantheon.yml -L 3
 gh run watch <run-id> --repo joshmiller83/mcc-v3 --exit-status   # follow one to completion
+#    gh was not installed on the Codespace host on 2026-10-01. The Actions API answers the
+#    same question with the ambient token (reference it by name; never print the value):
+curl -s -H "Authorization: Bearer $GITHUB_TOKEN" \
+  "https://api.github.com/repos/joshmiller83/mcc-v3/actions/runs?per_page=3" \
+  | grep -E '"(display_title|status|conclusion)"'
 
 # 2. Pantheon build — did composer install / the site build succeed?
 ddev exec terminus workflow:list mcc2026 --format=table | head -6   # look for "Sync code on dev"
@@ -624,6 +660,15 @@ dependency tree. Check step 1 first since it fails fast; only move to step 2 onc
   drift (two Canvas items that day), the tip is the source of truth, and a full import stomps it.
   A 504 whose body says "Target in maintenance" is a Pantheon account matter, not a code one —
   don't go looking for it in the diff.
+- **A push that carries update hooks needs `updatedb` before `config:import`, which is why the
+  Quicksilver hook runs `drush deploy`** (see [Config sync](#config-sync)). When the web tier
+  is down and the hook cannot run, do the same by hand, in the same order, once the environment
+  is back: `ddev exec terminus drush mcc2026.dev -- deploy -y`, or step by step `updatedb -y`,
+  `config:import -y`, `cache:rebuild`. Run the descending sync first if the tip may have been
+  edited since `main` was last reconciled with it, because that import is a full one.
+  `updatedb:status` and `config:status` should both come back empty afterwards. Learned from
+  the 2026-10-01 dependency update, the first push to carry both update hooks and the config
+  those hooks create, while the tip was still answering 504.
 - `web/sites/default/settings.php` and `services.yml` are committed (not ddev-generated-only)
   specifically so Pantheon has something to boot from — don't re-gitignore them. The
   `IS_DDEV_PROJECT`-guarded block in `settings.php` is ddev-only; anything that must also apply
@@ -656,19 +701,30 @@ directions are handled now, so neither should require remembering to do it by ha
     versus something that shouldn't be sitting in that environment's database at all.
 - **`main` → tip (ascending), automatic:** a Pantheon Quicksilver hook in `pantheon.yml`
   (`workflows.sync_code` and `workflows.deploy`) runs
-  `private/scripts/quicksilver/config-import.php` — `drush config:import -y` then
-  `drush cache:rebuild` — server-side after every code sync (push to `main`, today) and every
-  environment promotion (dev→test, test→live, once that starts happening). There's no manual
-  `drush cim` step anymore. Caveats:
-  - `config:import` is idempotent, so it's harmless if `sync_code` ever fires twice for one
+  `private/scripts/quicksilver/config-import.php`, which is `drush deploy -y` — `updatedb`,
+  then `config:import`, then `deploy:hook`, then `cache:rebuild`, in that order — server-side
+  after every code sync (push to `main`, today) and every environment promotion (dev→test,
+  test→live, once that starts happening). There's no manual `drush updatedb` or `drush cim`
+  step anymore. Caveats:
+  - **It is `drush deploy`, not `config:import` alone, and must stay that way.** Until
+    2026-10-01 the hook ran only `config:import` and `cache:rebuild`, which held up while no
+    push carried a `hook_update_N`. The 2026-10-01 dependency update was the first that did —
+    ai 1.5.0, eca 3.1.9 and trash 3.1.0 all ship update hooks, and ai's is what *creates*
+    `ai.html_to_markdown.settings` — so the old hook would have imported that config over a
+    database whose updates had not run, and left them pending on the tip until somebody read
+    the status report. `deploy` runs the four steps in the order core documents.
+  - `drush deploy` is idempotent, so it's harmless if `sync_code` ever fires twice for one
     push (a known Integrated Composer quirk).
   - This makes the descending sync load-bearing: the hook applies whatever `main` has, no
     questions asked. If `main` wasn't actually reconciled with the tip before a feature
     merged, the auto-import ships that gap right along with the feature.
-  - `webphp` Quicksilver operations have a 120s timeout — fine for this project's config set
-    today, worth watching if it ever grows enough to matter.
+  - `webphp` Quicksilver operations have a 120s timeout, and `updatedb` now counts against
+    it. The 2026-10-01 update's ten hooks ran in seconds locally; a slow data-migrating hook
+    is the thing to watch for.
   - Check it fired: `ddev exec terminus workflow:list mcc2026 --format=table` after a push,
-    look for "Import configuration..." under the `Sync code on "dev"` workflow.
+    look for "Deploy (updatedb, config import, cache rebuild)..." under the
+    `Sync code on "dev"` workflow. If the web tier was down when the push landed (the 504 in
+    [Deploys](#deploys)), assume it did not run and run `drush deploy -y` there by hand.
 
 ## References
 
