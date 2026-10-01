@@ -1,0 +1,11 @@
+uuid: 478903bf-abae-4ce9-bec4-49f8c713a8bd
+langcode: en
+status: true
+dependencies: {  }
+name: Announcement
+type: announcement
+description: 'A flyer for the front page: an image, an optional link and a short note. Published announcements that have a flyer appear in the front page band, pinned ones first, then newest first.'
+help: null
+new_revision: true
+preview_mode: 1
+display_submitted: false
