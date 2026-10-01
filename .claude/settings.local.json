@@ -15,7 +15,8 @@
       "Bash(mkdir -p ~/.ssh)",
       "Bash(ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N \"\" -C \"vscode@mcc-codespace-$\\(date +%s\\)\")",
       "Bash(ddev auth *)",
-      "Bash(gh run *)"
+      "Bash(gh run *)",
+      "Bash(curl -sIL https://dev-mcc2026.pantheonsite.io/)"
     ]
   }
 }
