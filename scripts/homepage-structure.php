@@ -54,6 +54,18 @@
  *     renders any of it — the prop is inert. Worth reporting upstream.)
  *   - The closing photo is an image block in its own zero-padding band.
  *
+ * The announcements band
+ * ----------------------
+ * Directly under the hero: the D7 "Homepage Teaser" nodes, migrated into the
+ * `announcement` type, as a static grid of flyers. It is a `section` carrying
+ * `section_id` home-announcements (colour and padding keyed to that id in
+ * mcc-landing-bands.css) holding a section-intro heading and the
+ * mcc_announcements view's block display. The view does the choosing —
+ * published, has a flyer, pinned first, newest first — so nothing here names
+ * an announcement, and the band empties itself when the church has none.
+ * No carousel: the old site's slideshow showed one flyer at a time and the
+ * rest were invisible unless you waited.
+ *
  * Idempotent: the tree is declared in full and replaces whatever is stored, and
  * the media lookup is by name, so re-running after a migration re-import
  * restores the same result.
@@ -180,10 +192,14 @@ $SEC_EVENTS     = 'aa000004-0000-4000-8000-000000000004';
 $SEC_MISSION    = 'aa000005-0000-4000-8000-000000000005';
 $SEC_CTA        = 'aa000006-0000-4000-8000-000000000006';
 $SEC_PHOTO      = 'aa000007-0000-4000-8000-000000000007';
+$SEC_ANNOUNCE   = 'aa000008-0000-4000-8000-000000000008';
 // New — image blocks.
 $IMG_STAT_1     = 'bb000001-0000-4000-8000-000000000001';
 $IMG_STAT_2     = 'bb000002-0000-4000-8000-000000000002';
 $IMG_CLOSING    = 'bb000003-0000-4000-8000-000000000003';
+// New — the announcements band's heading and flyer grid.
+$ANN_INTRO      = 'cc000001-0000-4000-8000-000000000001';
+$ANN_BLOCK      = 'cc000002-0000-4000-8000-000000000002';
 
 $tree = [
   // 1. Hero — photo behind, green scrim over, content left.
@@ -194,7 +210,13 @@ $tree = [
     ]],
   ]],
 
-  // 2. Impact mosaic. Column-major: the grid stacks each slot, so slot_1 is
+  // 2. Announcements — the migrated homepage teasers, as a grid of flyers.
+  [$SEC_ANNOUNCE, NULL, [
+    [$ANN_INTRO, 'content', []],
+    [$ANN_BLOCK, 'content', []],
+  ]],
+
+  // 3. Impact mosaic. Column-major: the grid stacks each slot, so slot_1 is
   // the left column, not the top row.
   [$SEC_IMPACT, NULL, [
     [$IMPACT_INTRO, 'content', []],
@@ -208,7 +230,7 @@ $tree = [
     ]],
   ]],
 
-  // 3. Ministries.
+  // 4. Ministries.
   [$SEC_MINISTRIES, NULL, [
     [$MIN_INTRO, 'content', []],
     [$MIN_GRID, 'content', [
@@ -219,19 +241,19 @@ $tree = [
     [$MIN_BUTTON, 'content', []],
   ]],
 
-  // 4. This week at MCC.
+  // 5. This week at MCC.
   [$SEC_EVENTS, NULL, [
     [$EVENTS_INTRO, 'content', []],
     [$EVENTS_BLOCK, 'content', []],
     [$EVENTS_BUTTON, 'content', []],
   ]],
 
-  // 5. Mission statement.
+  // 6. Mission statement.
   [$SEC_MISSION, NULL, [
     [$MISSION_QUOTE, 'content', []],
   ]],
 
-  // 6. Closing CTA.
+  // 7. Closing CTA.
   [$SEC_CTA, NULL, [
     [$CTA_INTRO, 'content', [
       [$CTA_BUTTON_1, 'ctas', []],
@@ -239,7 +261,7 @@ $tree = [
     ]],
   ]],
 
-  // 7. Full-bleed closing photo.
+  // 8. Full-bleed closing photo.
   [$SEC_PHOTO, NULL, [
     [$IMG_CLOSING, 'content', []],
   ]],
@@ -286,6 +308,32 @@ $created = [
   $SEC_CTA => $band('home-cta', 'black'),
   // Full bleed: no padding, the photo is the band.
   $SEC_PHOTO => $band('home-closing-photo', 'white', 'center', 0, 0),
+
+  // The announcements band and its two children. Like every other created
+  // component, these inputs are written once: a component that is already
+  // stored keeps whatever an editor has since typed into it.
+  $SEC_ANNOUNCE => $band('home-announcements', 'gray-light'),
+  $ANN_INTRO => [
+    'component_id' => 'sdc.caresphere_theme.section-intro',
+    'inputs' => [
+      'tagline' => 'Announcements',
+      'heading' => ['value' => 'Coming up at MCC', 'format' => 'canvas_html_inline'],
+      'heading_level' => 2,
+      'textcolor' => 'dark',
+    ],
+  ],
+  // The flyer grid is the mcc_announcements view's block display. Canvas
+  // validates block inputs strictly: items_per_page is null or an integer,
+  // never the string 'none' (see scripts/ministries-page.php).
+  $ANN_BLOCK => [
+    'component_id' => 'block.views_block.mcc_announcements-flyers',
+    'inputs' => [
+      'label' => '',
+      'label_display' => '0',
+      'views_label' => '',
+      'items_per_page' => NULL,
+    ],
+  ],
 
   $IMG_STAT_1 => $image_block($media_ids['stat-photo-1'] ?? NULL, '1:1'),
   $IMG_STAT_2 => $image_block($media_ids['stat-photo-2'] ?? NULL, '1:1'),
@@ -423,7 +471,7 @@ $page->set('components', $items);
 $page->save();
 
 printf(
-  "rebuilt the front page: %d components in 7 nested bands (was %d, %d of them top level)\n",
+  "rebuilt the front page: %d components in 8 nested bands (was %d, %d of them top level)\n",
   count($items),
   count($stored),
   count(array_filter($stored, fn($v) => empty($v['parent_uuid'])))

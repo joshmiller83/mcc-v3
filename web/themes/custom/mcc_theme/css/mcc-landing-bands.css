@@ -69,6 +69,7 @@
 #get-involved-ministry,
 #im-new-expect,
 #home-ministries,
+#home-announcements,
 #about-cards {
   background-color: var(--neutral-50);
   border-block: 1px solid var(--border-subtle);
@@ -119,6 +120,7 @@
 #home-impact .section-intro__tagline,
 #home-ministries .section-intro__tagline,
 #home-events .section-intro__tagline,
+#home-announcements .section-intro__tagline,
 #about-vision .section-intro__tagline,
 #about-cards .section-intro__tagline,
 #about-glance .section-intro__tagline {
@@ -138,6 +140,7 @@
 #home-impact .section-intro__tagline,
 #home-ministries .section-intro__tagline,
 #home-events .section-intro__tagline,
+#home-announcements .section-intro__tagline,
 #about-vision .section-intro__tagline,
 #about-cards .section-intro__tagline,
 #about-glance .section-intro__tagline {
@@ -153,7 +156,8 @@
 #ministries-verse .section-intro__heading,
 #home-impact .section-intro__heading,
 #home-ministries .section-intro__heading,
-#home-events .section-intro__heading {
+#home-events .section-intro__heading,
+#home-announcements .section-intro__heading {
   color: var(--color-primary);
 }
 
@@ -170,6 +174,7 @@
 #home-impact .section-intro__description,
 #home-ministries .section-intro__description,
 #home-events .section-intro__description,
+#home-announcements .section-intro__description,
 #about-vision .section-intro__description,
 #about-cards .section-intro__description,
 #about-glance .section-intro__description {
@@ -314,6 +319,51 @@
   border: 1px solid var(--border-default);
   border-radius: var(--radius-md);
   padding: var(--space-8);
+}
+
+/* Announcements: a notice board under the hero, not a chapter, so a touch
+   tighter than the 80px bands around it. section-intro carries no bottom
+   margin of its own and the view block sits straight under it, so the grid
+   is spaced off the heading here. The cards' own styling lives in the
+   mcc-announcement-card component; the grid is core Views' responsive grid. */
+#home-announcements {
+  --section-pt: var(--space-16) !important;
+  --section-pb: var(--space-20) !important;
+}
+
+#home-announcements .views-element-container {
+  margin-top: var(--space-10);
+}
+
+/* One row that never reflows. Five across on a desktop — a fifth of the
+   measure each, clamped so a card is never narrower than a readable paragraph
+   nor wider than a poster — and narrower than that the row scrolls sideways
+   with scroll snapping: a carousel's behaviour with no JavaScript, the
+   browser's own swipe. The first cut was core's responsive grid at three
+   columns; the cards were huge and the five reflowed to 3 + 2. The view's
+   rows are Views' plain unformatted `.views-row`s, so the block renders as a
+   stacked list anywhere this rule does not reach. */
+#home-announcements .view-content {
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-6);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--space-6);
+  padding-block: 4px var(--space-3);
+  scrollbar-width: thin;
+}
+
+#home-announcements .view-content > .views-row {
+  flex: 0 0 clamp(200px, calc((100% - 4 * var(--space-6)) / 5), 300px);
+  scroll-snap-align: start;
+}
+
+@media (max-width: 480px) {
+  #home-announcements .view-content > .views-row {
+    flex-basis: min(78vw, 300px);
+  }
 }
 
 /* Closing photo: a full-bleed band, no padding, fixed height. */
