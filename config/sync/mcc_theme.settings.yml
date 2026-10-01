@@ -1,0 +1,4 @@
+favicon:
+  mimetype: image/vnd.microsoft.icon
+  path: themes/custom/mcc_theme/favicon.ico
+  use_default: false
