@@ -1,0 +1,42 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the MCC core module.
+ */
+
+/**
+ * Implements hook_update_dependencies().
+ */
+function mcc_core_update_dependencies(): array {
+  // Let trash's own 3.1.0 hooks run first, so this one only has to pick up
+  // what they skipped.
+  return [
+    'mcc_core' => [
+      11101 => ['trash' => 11303],
+    ],
+  ];
+}
+
+/**
+ * Apply trash 3.1's changes to node's "deleted" field, which trash's hooks skipped.
+ *
+ * trash_update_11301() adds an index to the field and trash_update_11303()
+ * makes it translatable, but both only touch a "deleted" field whose installed
+ * definition names "trash" as its provider. On this site node's was installed
+ * with the provider recorded as "node", so both hooks walked past it, and the
+ * status report flagged "The Deleted field needs to be updated" after the
+ * 2026-10-01 dependency update. Installing the current definition is exactly
+ * what the two hooks would have done. Where the provider is "trash" the hooks
+ * already did the work, and this is a no-op.
+ */
+function mcc_core_update_11101(): void {
+  $manager = \Drupal::entityDefinitionUpdateManager();
+  $installed = $manager->getFieldStorageDefinition('deleted', 'node');
+  $current = \Drupal::service('entity_field.manager')
+    ->getFieldStorageDefinitions('node')['deleted'] ?? NULL;
+  if (!$installed || !$current || $installed->getProvider() === 'trash') {
+    return;
+  }
+  $manager->updateFieldStorageDefinition($current);
+}
