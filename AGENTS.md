@@ -343,6 +343,12 @@ body — and listed by the `mcc_announcements` view. See the "Announcements" sec
   contextual links rendered *inside* it — two nested anchors per linked card. A body can carry
   links of its own, too. `scripts/homepage-review.mjs` counts `#home-announcements a a` in both
   sessions; keep it at zero.
+- **The announcement page is `node--announcement--full.html.twig` over the same context,** styled
+  by `css/mcc-announcement-detail.css`: the shared `mcc-title-band`, then a layout clamped to the
+  container — picture left at its own shape, text right at a reading measure, the link as a
+  button only when `field_link` is set (the context carries `link` apart from `url`, which falls
+  back to the page's own address for the card). Same shape as the ministry, bio and event pages.
+  The church asked for it once the card led here.
 - **Nothing is parsed out of the body at render time,** and the link is read in
   `_mcc_theme_announcement_context()` rather than rendered through the link formatter, which
   would hand the component a second anchor.

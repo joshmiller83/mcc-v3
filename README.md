@@ -283,7 +283,9 @@ page's Canvas tree inside the `home-announcements` band, placed by
 
 To publish one: Content → Add content → Announcement. Attach a picture (no picture, no card),
 write the note in the body, tick "Sticky at top of lists" to pin it to the front of the band. The
-whole card links to the announcement's page; set a link to send it somewhere else instead.
+whole card links to the announcement's page; set a link to send it somewhere else instead. The
+announcement's own page is the shared title band over a clamped two-column layout — picture
+left, text right, the link as a button.
 
 The old site's 47 "Homepage Teaser" nodes come in through the `mcc_announcement` migration (14
 published, 5 with a picture). Those five were rebuilt once by `scripts/announcements-content.php`
