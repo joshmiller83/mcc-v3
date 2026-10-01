@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - canvas.component.block.dashboard_placeholder
+    - canvas.component.block.views_block.mcc_ministries-group_ministries
 _core:
   default_config_hash: IVMxo74ExhakrKqEeOFR42N6L1wgm7KMKgVYwgSI3FE
 name: Block
@@ -11,3 +12,4 @@ configEntityTypeId: component
 weight: 0
 items:
   - block.dashboard_placeholder
+  - block.views_block.mcc_ministries-group_ministries
