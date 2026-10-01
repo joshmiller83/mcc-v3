@@ -1,0 +1,57 @@
+id: mcc_announcement
+label: 'MCC Announcements (D7 homepage teasers)'
+migration_group: mcc
+migration_dependencies:
+  required:
+    - mcc_user
+    - mcc_media_image
+source:
+  plugin: d7_node
+  node_type: homepage_teaser
+process:
+  # nid is not pinned — see mcc_bio.yml. Both sites mint ids from the same low
+  # range, and a pinned id overwrites whatever this site already has there.
+  title: title
+  uid: node_uid
+  status: status
+  created: created
+  changed: changed
+  promote: promote
+  # The front page band sorts pinned first, then newest first, which is the
+  # order D7's homepage_teaser view used; sticky is the pin.
+  sticky: sticky
+
+  # d7_node exposes every Field API value delta-indexed, so each property
+  # needs its delta or it resolves to NULL and imports empty without an error
+  # (see mcc_bio.yml). Most teasers carry no body at all: the flyer image is
+  # the content, and the body is a note shown only on the announcement's own
+  # page.
+  body/value: body/0/value
+  body/summary: body/0/summary
+  body/format:
+    plugin: static_map
+    source: body/0/format
+    map:
+      filtered_html: content_format
+      # 11 of the 15 bodies are marked full_html in D7 — Word pastes, not
+      # hand-written HTML, the same call as mcc_bio and mcc_page.
+      full_html: content_format
+    default_value: content_format
+
+  # The flyer. 1275x1650 portrait JPGs; the files and their media entities are
+  # already here through mcc_files and mcc_media_image, so this is a lookup,
+  # never a second copy.
+  field_featured_image:
+    plugin: migration_lookup
+    migration: mcc_media_image
+    source: field_big_image/0/fid
+    no_stub: true
+
+  # D7 link module columns arrive as url/title/attributes. Every value in the
+  # source is an absolute http(s) URL, which the link field stores as-is;
+  # the title is NULL on all of them.
+  field_link/uri: field_link/0/url
+  field_link/title: field_link/0/title
+destination:
+  plugin: 'entity:node'
+  default_bundle: announcement
