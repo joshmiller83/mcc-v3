@@ -13,6 +13,31 @@ Newest entries at the top. Each entry: what changed, why, and what a re-import w
 
 ---
 
+## 2026-10-03 — Women's Bible Study duplicate: 1621 unpublished, 1625 kept
+
+**Retired in D11.** Node 1621 Women's Bible Study — created on the tip on 2026-08-28, four
+Wednesdays 09-09 → 09-30, 6:45–7:45 PM, no D7 row — is unpublished, by
+`scripts/calendar-dedupe-womens-bible-study.php`. Node 1625, the same series imported from D7
+on 10-01 (D7 nid 1625: twelve Wednesdays 09-09 → 11-25, the "Song of Songs" picture, Worship
+category), stays. This is the pair the 10-01 entry flagged; every September Wednesday had shown
+the study twice. 1621's alias `/calendar/womens-bible-study` is retired into redirect 2843, a
+301 to `/node/1625`; the node keeps revision 5029 with the reason in its log, and republishing
+it is the undo. After the run `/calendar?year=2026&month=9` lists the study once per Wednesday
+and `scripts/calendar-compare.mjs --month 2026-09` passes. The only double entry left on the
+calendar is D7's own Christmas Day pair, 1330/1331.
+
+**What a re-import does to this.** Nothing. 1621 has no D7 row, so no `migrate:import` can reach
+it; a `--update` of 1625 rewrites it from D7, which is what is wanted.
+
+**The tip has not had this yet, and the script will refuse to do it there until the 10-01 dump
+lands.** mcc2026.dev's database still predates that sync: it holds 1621 as the series' only copy
+and no 1625, and the script aborts on a missing survivor rather than remove the series. Run it
+right after the dump push in the 10-01 hand-off, with the other post-dump scripts.
+
+Checked first, the same day: October 2026 against the live D7 site. 41 of 42 local occurrences
+identical; every difference is one of the 09-05 tip edits recorded in the entry below (the
+1553/1554 and 1325/1523 merges, 1500's removed Sundays, 1177's hour). Recipe in `AGENTS.md`.
+
 ## 2026-10-01 — Announcements: the D7 homepage teasers migrated; the five with a flyer rebuilt
 
 **Migrated.** The new `mcc_announcement` migration imported all 47 D7 `homepage_teaser` nodes into

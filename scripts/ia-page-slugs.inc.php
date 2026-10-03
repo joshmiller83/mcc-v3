@@ -15,6 +15,10 @@ use Drupal\redirect\Entity\Redirect;
 /**
  * Retires every alias for a node except the one it should now have, 301ing each.
  *
+ * The redirects point at the node's own /node/N by default. Pass $redirect_to
+ * when the node is being retired in favour of another one, so its old URLs
+ * land on the survivor rather than on an unpublished page.
+ *
  * Setting the `path` field *inserts* a new path_alias row rather than updating
  * the existing one, so the old alias stays live alongside the new one. That
  * matters twice: redirect.auto_redirect hooks redirect_path_alias_update(),
@@ -25,8 +29,10 @@ use Drupal\redirect\Entity\Redirect;
  * The redirects created here are ordinary redirect-module entities, editable by
  * an admin at /admin/config/search/redirect like any hand-made one.
  */
-function mcc_retire_stale_aliases(int $nid, string $keep): void {
+function mcc_retire_stale_aliases(int $nid, string $keep, ?int $redirect_to = NULL): void {
   $system_path = '/node/' . $nid;
+  // A retired node sends its old URLs to its replacement instead of to itself.
+  $target = '/node/' . ($redirect_to ?? $nid);
   $redirect_storage = \Drupal::entityTypeManager()->getStorage('redirect');
 
   foreach (\Drupal::entityTypeManager()->getStorage('path_alias')
@@ -47,10 +53,10 @@ function mcc_retire_stale_aliases(int $nid, string $keep): void {
     // Point at /node/N, not the new alias, so this survives future slug changes.
     Redirect::create([
       'redirect_source' => ['path' => $source, 'query' => []],
-      'redirect_redirect' => ['uri' => 'internal:' . $system_path],
+      'redirect_redirect' => ['uri' => 'internal:' . $target],
       'status_code' => 301,
       'language' => 'und',
     ])->save();
-    print "        301: $old -> $system_path\n";
+    print "        301: $old -> $target\n";
   }
 }

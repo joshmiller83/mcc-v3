@@ -196,7 +196,10 @@ re-import re-applies the flat `/[node:title]` pattern and undoes the slugs:
   time-commitment lift, the Youth calendar event repoint, and the duplicate aliases.
 - `scripts/ministries-page.php` — the /ministries Canvas band tree.
 - `scripts/ia-page-slugs.inc.php` — `mcc_retire_stale_aliases()`, shared by every
-  script that moves a URL. Include it; don't copy it.
+  script that moves a URL. Include it; don't copy it. Its third argument is the nid the
+  redirects should land on, for a node retired in favour of another one.
+- `scripts/calendar-dedupe-womens-bible-study.php` — unpublishes the tip-created
+  duplicate of the Women's Bible Study series in favour of the D7 import.
 
 **Content lives in the database; only code is deployed by git.** A push to `main`
 deploys code to mcc2026, and does *nothing* to that environment's Canvas trees, media
@@ -379,6 +382,8 @@ body — and listed by the `mcc_announcements` view. See the "Announcements" sec
   # 3. the five pictures — the dump carries the media entities, not the files; the script
   #    restores them from the theme and is a no-op for everything else
   ddev exec terminus remote:drush mcc2026.dev -- php:script scripts/announcements-content.php
+  #    and the Women's Bible Study duplicate, which the dump still carries published
+  ddev exec terminus remote:drush mcc2026.dev -- php:script scripts/calendar-dedupe-womens-bible-study.php
   # 4. the band — a no-op if the dump landed, and the check that it did; then the config
   #    (also a no-op: the dump was taken after the last config change) and the caches
   ddev exec terminus remote:drush mcc2026.dev -- php:script scripts/homepage-structure.php
@@ -443,7 +448,11 @@ still edits it, so this is a recurring sync, not a one-off.
   Study" was created here on 08-28 and in D7 on 09-16; after the import both were published and two
   Wednesdays showed it twice. Check with a `GROUP BY TRIM(title), field_event_date_value HAVING
   COUNT(DISTINCT nid) > 1` over `node__field_event_date`. (The "Christmas Day" pair, 1330/1331, is an
-  old duplicate in D7 itself.)
+  old duplicate in D7 itself.) The Women's Bible Study pair was settled on 2026-10-03 by
+  `scripts/calendar-dedupe-womens-bible-study.php`: the tip-created 1621 unpublished, its alias
+  301'd to the D7 import 1625. The script aborts unless the survivor exists and is published, so
+  on an environment that has not received the 10-01 sync it does nothing — run it there *after*
+  the dump push, never before.
 - **`migrate:status` prints "Last Imported" in the site's timezone, not UTC.** `10:36` there was
   `14:36` UTC. Every `FROM_UNIXTIME()` in the ddev database is UTC, so a cutoff copied straight from
   `migrate:status` lands four hours early and sweeps the import's own writes into "edited since".
