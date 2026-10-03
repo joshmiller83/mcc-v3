@@ -476,6 +476,20 @@ still edits it, so this is a recurring sync, not a one-off.
   `constants.source_base_path`, which these migrations don't declare, once per row: `Undefined array
   key "constants" File.php:105`. It changes nothing, but it buries real errors — read the log with
   `grep -vE "File.php:105" | grep -E "done with|\[error\]|Exception|SQLSTATE"`, never with `tail`.
+- **To confirm a month against the live D7 site, diff occurrences by D7 nid, in UTC, and
+  expect the tip's own edits to show up as differences.** Both databases store UTC — D7's
+  `field_data_field_date` as `datetime`, this site's `node__field_event_date` as a timestamp —
+  so compare `FROM_UNIXTIME(field_event_date_value)` against `field_date_value` directly, and
+  key on the D7 nid through `migrate_map_mcc_calendar_event` (`destid1` → `sourceid1`), never
+  on the title: a tip-side retitle is not a date change. Read D7 straight from the live site
+  (`terminus drush mcc-church.live -- sql:query …` over `ddev exec bash -s <<'EOF'`, after
+  `ddev auth ssh`) rather than from `legacy`, which is only as fresh as the last pull; a
+  `changed > <copy's newest change>` query on `legacy.node`'s live counterpart says whether the
+  copy is current. Done for October 2026 on 2026-10-03: 41 of 42 local occurrences identical
+  to live, and every difference was one of the 2026-09-05 tip edits already in
+  `CONTENT_LOG.md` — the 1553/1554 and 1325/1523 merges, the 1500 Sundays removed on the tip,
+  and the 1177 time (7:00 PM on the tip, 6:00 PM in D7). A mismatch on that list is the
+  church's unresolved choice, not a migration bug; anything *off* that list is.
 - **`homepage_teaser` is migrated, as the `announcement` type** (`mcc_announcement`, since
   2026-10-01). It was skipped before on the theory that the Canvas front page had no place for the
   teasers; it does now, the `home-announcements` band — see [Announcements](#announcements). A new
