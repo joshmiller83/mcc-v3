@@ -2,8 +2,9 @@
 
 /**
  * @file
- * The five announcements that came over from D7 with a flyer: each one's
- * picture cropped out of the flyer, and the flyer's text typed into the body.
+ * The announcements that came over from D7 with a flyer — five on 2026-10-01,
+ * two more on 2026-10-24: each one's picture cropped out of the flyer, and the
+ * flyer's text typed into the body.
  *
  * Run with:
  *   ddev drush php:script scripts/announcements-content.php
@@ -23,7 +24,7 @@
  * than a hand edit for the same reason every other content change here is:
  * content lives in the database and does not deploy with code, and a
  * mcc_announcement --update would hand the flyers and the empty bodies
- * straight back. Re-running this after that restores the five.
+ * straight back. Re-running this after that restores them.
  *
  * The crops ship in the theme (images/announcements/) so they travel with the
  * code; this copies them into the files directory and mints one media entity
@@ -80,6 +81,26 @@ $announcements = [
     'media_name' => 'Announcement — Highway 52 Youth Group',
     'alt' => 'A US Highway 52 route shield.',
     'body' => '<p>Highway 52 Youth Group meets on the second Sunday of each month, immediately following church. Lunch will be provided. Contact Maria Weidman if you have any questions.</p>',
+  ],
+  // The two below arrived with the 2026-10-24 sync, flyers of the same shape.
+  1634 => [
+    'slug' => 'ministry-fair',
+    'title' => 'Ministry Fair',
+    'media_name' => 'Announcement — Ministry Fair',
+    'alt' => 'Planted to Serve: "That person is like a tree planted by streams of water, which yields its fruit in season and whose leaf does not wither — whatever they do prospers." Psalm 1:3. Sign-up for the Ministry Fair will be Oct 12 thru Oct 26th.',
+    'body' => '<p><strong>Come Discover Your Place to Serve!</strong> God has given each of us unique gifts and talents to build His church and serve others. Join us at our Ministry Fair to learn about the many opportunities to get involved and make a difference.</p>'
+      . '<p>Whether you enjoy welcoming guests, working with children, serving behind the scenes, helping those in need, or sharing your creative talents, there is a place for you! Visit the ministry booths, meet ministry leaders, and sign up to serve. We look forward to helping you find where God is calling you to minister.</p>'
+      . '<p><em>"Now you are the body of Christ, and each one of you is a part of it."</em> — 1 Corinthians 12:27</p>'
+      . '<p>Ministry Fair will begin on Sunday, October 18. Please visit the displays in the Sanctuary through November 1 and sign up to be a part of God\'s Church. We will have information at the ministry sites describing the duties of each ministry.</p>'
+      . '<p><strong>October 18 – November 1</strong></p>',
+  ],
+  1635 => [
+    'slug' => 'light-the-night',
+    'title' => 'Light the Night',
+    'media_name' => 'Announcement — Light the Night',
+    'alt' => 'Light the Night: food, fun, fellowship, all for His glory. October 24th, 5:30–8:00, at Mechanicsburg Christian Church, 650 W. Horton Rd, Kirklin, IN. Trunk or treating, games, costume contests, pumpkin decorating, music and prizes.',
+    'body' => '<p>Light the Night on Saturday, October 24. Trunk or Treat is from 5:30 to 6 PM in front of the Gathering Place. Join us in the Gathering Place shelter house for all of the fun activities.</p>'
+      . '<p>Everyone is welcome to the community-wide event!</p>',
   ],
 ];
 
