@@ -13,6 +13,35 @@ Newest entries at the top. Each entry: what changed, why, and what a re-import w
 
 ---
 
+## 2026-10-24 — Ministry Fair and Light the Night rebuilt from their flyers
+
+**Edited in D11** (`scripts/announcements-content.php`, at the user's request, the same
+treatment as the five on 2026-10-01). Both arrived with the sync below as 1275×1650 Word-page
+flyers with no body. Each picture was cropped out at its native size: Ministry Fair 534×697 from
+(7,6), Light the Night 512×768 from (12,4). The crops ship as
+`mcc_theme/images/announcements/ministry-fair.jpg` and `light-the-night.jpg`, and the flyer's
+words are now the body (`content_format`). Wording is verbatim; Light the Night was all caps and
+is now sentence case. The words printed inside each picture (the Psalm 1:3 verse and sign-up
+dates; the time, address and activities) are its alt text.
+
+| Node | D7 | Revision | New media | Flyer media, now unreferenced |
+| ---- | -- | -------- | --------- | ----------------------------- |
+| 1679 Ministry Fair | 1634 | 5037 | 3960 | 3953 |
+| 1680 Light the Night | 1635 | 5038 | 3961 | 3954 |
+
+Both live at `public://announcements/`. A second run reported all seven unchanged. The front
+page check passes in both sessions at both widths, six cards, and both pages render with no
+overflow or nested anchors at 1280 and 390.
+
+**For the office:** the Ministry Fair flyer disagrees with itself. The picture says sign-up runs
+"Oct 12 thru Oct 26th"; the text beside it says the fair runs October 18 to November 1. Both are
+kept as the flyer had them. Light the Night is today, 2026-10-24. Nothing takes an announcement
+down by date, so it stays on the front page until someone unpublishes it in D7 and the next sync
+carries that over.
+
+*A `migrate:import mcc_announcement --update` puts the flyers and empty bodies back*; re-run the
+script after one.
+
 ## 2026-10-24 — D7 calendar re-synced into `db`; youth entries retired; two teasers in
 
 **Cutoffs.** Read from `db`: every migration last ran 2026-10-01 14:43:50 UTC, as the entry

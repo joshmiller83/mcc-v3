@@ -288,8 +288,9 @@ announcement's own page is the shared title band over a clamped two-column layou
 left, text right, the link as a button.
 
 The old site's 47 "Homepage Teaser" nodes come in through the `mcc_announcement` migration (14
-published, 5 with a picture). Those five were rebuilt once by `scripts/announcements-content.php`
-— picture cropped out of the flyer, the flyer's text into the body — see `CONTENT_LOG.md`.
+published, 5 with a picture). Those five were rebuilt by `scripts/announcements-content.php`
+— picture cropped out of the flyer, the flyer's text into the body — and two more that arrived
+the same way on 2026-10-24; see `CONTENT_LOG.md`.
 
 ```sh
 node scripts/homepage-review.mjs --login "$(ddev drush uli --uri=http://127.0.0.1)"

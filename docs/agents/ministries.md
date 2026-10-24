@@ -75,7 +75,9 @@ _Part of the agent guidance indexed in [AGENTS.md](../../AGENTS.md). Read it bef
 - **A deleted Canvas component leaves its `canvas.folder` entry behind.** Folders track items by
   id rather than through Drupal's config dependency system, so nothing cleans up after a
   component delete and the stale reference rides into the next environment's import. Check
-  `grep -rn "<component-id>" config/sync/canvas.folder.*` after removing one.
+  `grep -rn "<component-id>" config/sync/canvas.folder.*` after removing one. An item in *two*
+  folders is worse than a stale one: Canvas's cron health check throws on it (see
+  [dependency-updates.md](dependency-updates.md)).
 - **Moving a node between bundles is table surgery and there is no API for it.**
   `scripts/ministries-content.php` does it for the five ex-`page` ministries: `node.type`,
   `node_field_data.type`, and the `bundle` column on every `node__*` / `node_revision__*` table.

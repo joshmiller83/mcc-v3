@@ -11,14 +11,33 @@ repeat next time:
   held only the update. `ddev snapshot --name pre-update-<date>` is the undo. The order of
   work after that: `composer update --with-all-dependencies`, check `PATCHES.txt` in each
   patched package, `updatedb -y`, `updatedb:status`, `cache:rebuild`, `config:export -y`, then
-  the page checks, `scripts/calendar-compare.mjs`, every idempotent script in this file, and
-  the Canvas editor plus a node edit form through a `drush uli` session.
+  the page checks, `scripts/calendar-compare.mjs`, every idempotent script in this file, the
+  Canvas Doctor (below), and the Canvas editor plus a node edit form through a `drush uli`
+  session.
 - **Expect `config:export` to show Canvas discovery, not drift.** Canvas registers every block
   plugin and component source it finds as a `canvas.component.*` config entity and files it in
   a `canvas.folder.*`, so a module update that adds a block plugin (eca 3.1.9's
   `project_browser_block:eca_guide_library`) or Canvas adding a source (1.12's `marker`)
   arrives as new config. Commit it; left out, Canvas recreates it on the next cache rebuild
   and `config:status` on the tip reads Different forever.
+- **Every Canvas item sits in exactly one folder, and each folder name appears once per type.
+  Check with `vendor/bin/dr canvas:doctor --checks=config --no-cache --details` after any
+  Canvas update or folder change.** Canvas 1.12 brought a health check, the Doctor, which
+  cron runs 50 items at a time. Validating a folder *throws* rather than reporting when an
+  item is in two folders: `RuntimeException: It is impossible for an item to exist in multiple
+  Folders.` A throwing cron window never advances its cursor (`canvas.doctor.cron_cursor` in
+  state), so from 2026-10-03 every cron run logged the same error, and the CLI Doctor died on
+  it too, never reaching the rest of the config. The duplicates were there from install day:
+  the Caresphere recipe ships 44 folder configs, six of them "core", six "Block" and six
+  "Announcements", and Canvas added a seventh of each. 49 folders came down to 23 on
+  2026-10-24, by merging each name into the folder holding the most items. A second way in is
+  a component that Canvas rediscovers and files in its default folder while it still sits in
+  the one you moved it to. That is how `views_block:mcc_ministries-group_ministries` ended up
+  in both "Block" and "Lists (Views)", arriving with the 2026-10-01 export from the tip.
+  Merging deletes folders, which `config:import` carries on its own: tested from a pre-merge
+  snapshot, import alone gave the same 23. The Doctor is core's console runner
+  (`vendor/bin/dr`), not drush; `ddev drush canvas:doctor` says "no commands defined".
+  Seven findings it reports are known and inert: see the 2026-10-24 update.
 - **A contrib update hook can skip this site and leave "Mismatched entity and/or field
   definitions" on the status report.** trash 3.1.0's hooks only touch a `deleted` field whose
   installed definition names `trash` as its provider; node's here says `node`, so both hooks

@@ -43,14 +43,22 @@ body — and listed by the `mcc_announcements` view. See the "Announcements" sec
 - **Nothing is parsed out of the body at render time,** and the link is read in
   `_mcc_theme_announcement_context()` rather than rendered through the link formatter, which
   would hand the component a second anchor.
-- **The five that came over with a flyer were rebuilt once, by `scripts/announcements-content.php`.**
+- **The ones that come over with a flyer are rebuilt by `scripts/announcements-content.php`**:
+  five on 2026-10-01, two more on 2026-10-24.
   D7's "image" was a 1275×1650 page of Word text with a picture in one corner, unreadable at card
   size, so the church asked for the picture cropped out and the words moved into the body. The
   crops ship in `mcc_theme/images/announcements/`; the script copies them into the files
   directory (and puts a missing file back, which is what makes a database dump plus the script a
   complete hand-off), mints the media by name, and writes the body. Idempotent, keyed by D7 nid
   through the migrate map with the title as a guard. The flyer media stay in the library. A
-  `migrate:import mcc_announcement --update` reverts all five; re-run the script after one.
+  `migrate:import mcc_announcement --update` reverts them all; re-run the script after one.
+- **A new D7 teaser that arrives as a flyer gets an entry in that script, not a hand edit.**
+  The office keeps making them the same way, so expect more. Crop the picture at its native size;
+  nothing is scaled. The trim gives the box: `convert "<flyer>" -crop 600x900+0+0 +repage
+  -fuzz 10% -trim -format '%wx%h%O' info:`. If the result runs into the text, narrow the
+  600 until the column beside it reads pure white (`-format '%[fx:mean]'` = 1). Save with
+  `-strip -quality 90`. Type the words in sentence case. Words printed *inside* the picture go
+  in its alt text, since the crop keeps them as pixels.
 - **`scripts/homepage-review.mjs` is the check:** the front page at 1280 and 390, anonymous and
   through a `drush uli` session, asserting no horizontal scroll, every picture loaded and inside
   its card, no overlapping cards, no nested anchors. Lazy-loaded pictures below the fold report
@@ -58,7 +66,7 @@ body — and listed by the `mcc_announcements` view. See the "Announcements" sec
   first version failed the anonymous phone pass on exactly that, with nothing wrong on the page.
 - **Deploying this to the tip is the dump, not the migration.** `migrate:import` cannot run on
   Pantheon (no `legacy` database), so a local database dump is what carries the announcements,
-  their migrate map, the rebuilt five, the Canvas tree and the config. Which dump, and the steps
+  their migrate map, the rebuilt flyers, the Canvas tree and the config. Which dump, and the steps
   in order, are in the dated update that "Open items" in [AGENTS.md](../../AGENTS.md) points at.
   The 10-01 recipe that stood here never copied the files the dump's media point at; the
   2026-10-24 one does.

@@ -96,7 +96,8 @@ Read the latest one or two at the start of a session; older ones only when their
 
 - [2026-10-24](docs/agents/updates/2026-10-24-calendar-sync-php-85-docs-split.md) — D7
   calendar sync (field-level conflict compare, D7 deletions); PHP 8.5.12 and that month's
-  security advisories; this file split into topics.
+  security advisories; this file split into topics; two more flyer announcements rebuilt;
+  Canvas's duplicate folders merged, which ended a cron error and let `canvas:doctor` run.
 - Earlier sessions wrote straight into the rules, which are now the topic files. Their content
   changes are in `CONTENT_LOG.md`, and `git log -- AGENTS.md` is the history.
 

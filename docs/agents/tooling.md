@@ -4,6 +4,11 @@ _Part of the agent guidance indexed in [AGENTS.md](../../AGENTS.md). Read it bef
 
 - `ddev drush <command>` — Drush, for site administration, config import/export, cache rebuilds, etc.
 - `ddev composer <command>` — Composer, for adding/updating modules, themes, and dependencies.
+- `vendor/bin/dr canvas:doctor --checks=config --no-cache --details`, inside the web container
+  (`ddev exec bash -s <<'EOF'` … `cd /var/www/html` …) — Canvas's integrity check over every
+  Canvas config entity (`--checks` also takes content and auto-save checks). It is a command
+  for core's console runner, not drush. See
+  [dependency-updates.md](dependency-updates.md) for what it caught and which findings are known.
 - `node scripts/calendar-compare.mjs [--month YYYY-MM …]` — renders the `calendar_design.zip` reference and the live `/calendar` and `/calendar/print` pages in headless Chromium and diffs them side by side. It also asserts the print sheet is one Letter page with nothing clipped, and exits non-zero when it isn't. Run it after any change to the calendar components, `CalendarMonth`, or the print CSS — and after an import that adds events, against the months that gained them, since a busier month is as able to break the one-page fit as a CSS change. Months are `--month` flags, repeatable; a bare `2026-11` throws `Unknown argument` (this line and the README both used to show the bare form). Runs on the Codespace host (no ddev); output lands in the gitignored `.calendar-compare/`.
 - **A month's print sheet as a PDF** is a by-product of that same check: run it for the month
   and copy `.calendar-compare/drupal-print-YYYY-MM.pdf` to `exports/mcc-calendar-YYYY-MM.pdf`.
