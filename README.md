@@ -118,11 +118,11 @@ After the installer is complete, you will land on the dashboard.
 
 ### Google Drive sync
 
-Every codespace rebuild syncs a shared Google Drive folder — design handoffs, feedback recordings, anything that doesn't belong in git — down to `~/gdrive`, read-only. It's set up automatically via `.devcontainer/setup.sh`; see [AGENTS.md](file:///workspaces/mcc-v3/AGENTS.md) for how it works and what to check if `~/gdrive` comes up empty after a rebuild.
+Every codespace rebuild syncs a shared Google Drive folder — design handoffs, feedback recordings, anything that doesn't belong in git — down to `~/gdrive`, read-only. It's set up automatically via `.devcontainer/setup.sh`; see [docs/agents/environment.md](docs/agents/environment.md#google-drive-sync-gdrive) for how it works and what to check if `~/gdrive` comes up empty after a rebuild.
 
 ## Environments
 
-Terminus gives access to Pantheon's `dev`, `test`, and `live` environments via `ddev terminus`. See [AGENTS.md](file:///workspaces/mcc-v3/AGENTS.md) for rules on when/how those commands should be used.
+Terminus gives access to Pantheon's `dev`, `test`, and `live` environments via `ddev terminus`. See [docs/agents/tooling.md](docs/agents/tooling.md) for rules on when/how those commands should be used.
 
 ## The calendar
 
@@ -267,7 +267,7 @@ ddev drush php:script scripts/ministries-cleanup.php   # Word residue, the time-
 ddev drush php:script scripts/ministries-page.php      # the /ministries Canvas page tree
 ```
 
-`node scripts/ministries-review.mjs --login "$(ddev drush uli --uri=http://127.0.0.1)"` screenshots both pages at three widths, anonymously and logged in, and fails on horizontal overflow or a collapsed icon tile. The logged-in pass is not optional — see the `.contextual-region` trap in [AGENTS.md](file:///workspaces/mcc-v3/AGENTS.md).
+`node scripts/ministries-review.mjs --login "$(ddev drush uli --uri=http://127.0.0.1)"` screenshots both pages at three widths, anonymously and logged in, and fails on horizontal overflow or a collapsed icon tile. The logged-in pass is not optional — see the `.contextual-region` trap in [docs/agents/leadership.md](docs/agents/leadership.md).
 
 ## Announcements
 
