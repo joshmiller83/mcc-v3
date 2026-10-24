@@ -1,0 +1,19 @@
+# Upgrades the web image's PHP to the newest packaged patch release.
+#
+# Each DDEV release ships a webserver image with whatever PHP was current when it
+# was built — v1.25.4's has PHP 8.5.9, built 2026-07-30 — and PHP's security
+# releases land between DDEV releases (8.5.12 on 2026-10-21). deb.sury.org, the
+# repository the image already installs PHP from, carries them within a day, so
+# this upgrades the active version's installed packages at build time.
+#
+# Docker caches this layer. After a PHP security release, `ddev utility rebuild`
+# (which skips the cache by default) is what picks the new build up. `apt-get
+# update` is allowed to fail because the image's Blackfire repository often does,
+# and that has nothing to do with PHP.
+ARG DDEV_PHP_VERSION
+RUN (apt-get update || true) \
+ && dpkg-query -W -f='${db:Status-Abbrev}${Package}\n' "php${DDEV_PHP_VERSION}-*" \
+    | awk '/^ii/ { print $2 }' \
+    | xargs -r env DEBIAN_FRONTEND=noninteractive apt-get install -y --only-upgrade \
+        -o Dpkg::Options::="--force-confold" \
+ && rm -rf /var/lib/apt/lists/*

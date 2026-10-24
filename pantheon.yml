@@ -1,8 +1,9 @@
 api_version: 1
 
-# Override the Drupal CMS upstream's default (8.3) to match local ddev (8.4.22),
-# since composer.lock resolves packages (e.g. symfony/css-selector) that require PHP >=8.4.1.
-php_version: 8.4
+# Override the Drupal CMS upstream's default (8.3) to match local ddev's php_version, since
+# composer.lock is resolved there and locks packages (e.g. symfony/css-selector) that require
+# PHP >=8.4.1. Pantheon picks the patch release itself and applies security releases on its own.
+php_version: 8.5
 
 # Bring every environment's database up to date with the code that just landed, without a
 # manual drush step: the hook runs `drush deploy` (updatedb, config:import, deploy:hook,

@@ -840,11 +840,19 @@ dependency tree. Check step 1 first since it fails fast; only move to step 2 onc
 - **`pantheon.upstream.yml` is upstream-owned — don't edit it.** It ships with the Drupal CMS
   core upstream scaffold and defaults `php_version` to whatever that upstream's maintainers
   pinned (8.3 as of this writing). Site-level overrides belong in `pantheon.yml` instead (see
-  the one at the repo root, which pins `php_version: 8.4` to match `.ddev/config.yaml`'s
+  the one at the repo root, which pins `php_version: 8.5` to match `.ddev/config.yaml`'s
   `php_version`). If you ever bump ddev's PHP version, check whether `pantheon.yml` needs to
   follow — a mismatch fails the Pantheon build with an unsatisfiable-platform-requirement error
   from Composer (composer.lock resolved under one PHP version can lock packages that require a
   newer minimum than the other environment provides).
+- **PHP security releases: Pantheon applies them itself; locally they need a rebuild.**
+  `pantheon.yml` names only the minor version, and Pantheon rolls out each patch release on its
+  own. DDEV's webserver image carries whatever PHP was current when that DDEV release was built
+  (v1.25.4: 8.5.9 from 2026-07-30, when 8.5.12 shipped on 10-21), so
+  `.ddev/web-build/Dockerfile.php-security` upgrades the active version's packages from
+  deb.sury.org at image build time. Docker caches that layer: after a PHP security release, run
+  `ddev utility rebuild` (no cache by default) and check `ddev exec php -v` against
+  `curl -s "https://www.php.net/releases/index.php?json&version=8.5" | jq -r .version`.
 - **After any deploy that adds/removes modules or plugins, rebuild cache on the remote
   environment** (see step 3 above). A build can succeed while the site still 500s with
   `PluginNotFoundException` because Drupal's plugin discovery cache in the database is stale
