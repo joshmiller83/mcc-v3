@@ -69,6 +69,14 @@ dependency tree. Check step 1 first since it fails fast; only move to step 2 onc
   `PluginNotFoundException` because Drupal's plugin discovery cache in the database is stale
   from before the new code landed — this isn't a build failure, just a cache that needs an
   explicit kick.
+- **After a burst of pushes, check that the *newest* "Sync code" succeeded, not just one of
+  them.** On 2026-10-24 four commits went up a few minutes apart. The sync for the last one
+  started at 15:00:45 while the previous one was still building (it finished at 15:01:27), and
+  failed 23 seconds in at a platform step, before any build. Overlap is the likely cause;
+  that is inferred from the timing, not confirmed. The commit was still in Pantheon's git
+  log, but the deployed build was the one before it. It was docs only, so nothing was lost;
+  a code commit would have stayed undeployed until the next push. If the newest sync failed,
+  wait until none is running and push again.
 - **A green "Sync code" does not mean the config import ran — check `config:status` on the
   remote.** Seen 2026-09-21: every web request to mcc2026, a static PNG included, returned
   Pantheon's edge page `504 - Target in maintenance`, with a `lock_trial_site` workflow in
