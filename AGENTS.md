@@ -200,6 +200,8 @@ re-import re-applies the flat `/[node:title]` pattern and undoes the slugs:
   redirects should land on, for a node retired in favour of another one.
 - `scripts/calendar-dedupe-womens-bible-study.php` — unpublishes the tip-created
   duplicate of the Women's Bible Study series in favour of the D7 import.
+- `scripts/retire-d7-deleted.php` — unpublishes the nodes whose D7 source the office
+  deleted, each declared with where its old URL should 301 to.
 
 **Content lives in the database; only code is deployed by git.** A push to `main`
 deploys code to mcc2026, and does *nothing* to that environment's Canvas trees, media
@@ -441,6 +443,24 @@ still edits it, so this is a recurring sync, not a one-off.
   for a three-way compare (`node_revision__field_*` by `revision_id`). An `--update` does not mint
   a revision, so that first revision really is the imported state. Date conflicts on a real
   congregation's calendar are the church's call, not an agent's.
+- **Do that compare field by field; "edited on both sides" is not yet a conflict.** On
+  2026-10-24 four of the eight both-sides nodes came apart cleanly: the tip's 09-05 body edits on
+  526, 1154 and 1177 were each the removal of one `<span style="font-size: large;">` wrapper
+  (exactly 39 characters shorter), and `content_format` strips `<span>` and `style` at render
+  time anyway, so D7's body and the tip's render identically. Where the tip touched only such
+  a body and D7 only the dates, `--update` loses nothing visible. Compare per field (title,
+  status, body hash and length, picture, category, and the occurrence set — count, first,
+  last, times) between base, tip and D7 before calling anything the church's choice, and
+  check the format's `allowed_html` before treating a body diff as content.
+- **D7 deletions never reach this site on their own.** A migration only creates and updates,
+  so a node the office deletes in D7 stays published here. Find them through the maps —
+  `migrate_map_<migration>` rows whose `sourceid1` has no `legacy.node` row — after every
+  pull; a D7 node count that rose by less than the number of new nids is the tell (1,022 →
+  1,023 with four added, on 2026-10-24). Retire the ones to follow with
+  `scripts/retire-d7-deleted.php`, which declares each node and where its URL should land.
+- **The D7-side cutoff is the newest `changed` in the copy the last import read**, not the
+  import's own start time: anything the office saved between the dump and the import is in
+  neither. The two cutoffs differ, and `CONTENT_LOG.md` records both from 2026-10-24 on.
 - **Two scripts make that list noisy.** `mcc_split_bio_name_role.php` re-saves Jon Culbertson (346)
   and `ia-page-slugs.php` re-saves the nine retired pages on every run. No value changes, but
   `changed` moves, so they show up as "edited on the tip" on the day the scripts last ran.
@@ -497,8 +517,10 @@ still edits it, so this is a recurring sync, not a one-off.
   copy is current. Done for October 2026 on 2026-10-03: 41 of 42 local occurrences identical
   to live, and every difference was one of the 2026-09-05 tip edits already in
   `CONTENT_LOG.md` — the 1553/1554 and 1325/1523 merges, the 1500 Sundays removed on the tip,
-  and the 1177 time (7:00 PM on the tip, 6:00 PM in D7). A mismatch on that list is the
-  church's unresolved choice, not a migration bug; anything *off* that list is.
+  and the 1177 time. A mismatch on that list is the church's unresolved choice, not a
+  migration bug; anything *off* that list is. (The 1177 hour turned out to be a D7 edit the
+  tip never made — the tip still had the imported 7 PM — and was taken from D7 on 2026-10-24.
+  The choices still standing are in that day's `CONTENT_LOG.md` entry.)
 - **`homepage_teaser` is migrated, as the `announcement` type** (`mcc_announcement`, since
   2026-10-01). It was skipped before on the theory that the Canvas front page had no place for the
   teasers; it does now, the `home-announcements` band — see [Announcements](#announcements). A new
@@ -742,6 +764,10 @@ repeat next time:
 - The key has to live on the *Codespace host* (`~/.ssh/id_rsa`) and then be loaded into ddev's ssh-agent with `ddev auth ssh` — the web container doesn't mount the host's `~/.ssh`. `Permission denied (publickey)` from `terminus drush` almost always means the agent is empty, not that the key is unregistered. **`ddev auth ssh` recreates the containers**, so run it on its own and let them settle; a `ddev exec` issued in the same breath gets killed mid-flight (exit 143). The agent also empties whenever the containers restart, so re-run it after any `ddev restart` — and after the Codespace itself is stopped and resumed, which leaves the containers `exited` for `ddev start` to bring back. Seen 2026-09-21: after a stop/resume, uncommitted edits, Terminus's login and Playwright's Chromium (plus its apt libraries) all survived; the ssh-agent did not, so the first `terminus drush` failed with `Permission denied (publickey)`, and the session scratchpad under `/tmp` was gone.
 - Importing a DB dump into a remote environment without uploading it first: `zcat dump.sql.gz | ssh -p 2222 <env>.<site-id>@appserver.<env>.<site-id>.drush.in drush sql-cli` (get the exact host/user from `terminus connection:info <site>.<env>`). Syncing `web/sites/default/files`: `rsync -rltz --ipv4 -e 'ssh -p 2222' web/sites/default/files/ <env>.<site-id>@appserver.<env>.<site-id>.drush.in:files/`. **Keep the `-t`.** Without it rsync doesn't preserve mtimes, its size-plus-mtime quick check never matches, and every run re-transfers every file — a pull with `-rlz` moved all 351 MB of the legacy site's files onto a directory that already held nearly all of them.
 - **Anything with nested quotes goes to `ddev exec` over stdin, not as `bash -c '…'`.** `ddev exec` re-wraps its arguments in a double-quoted `bash -c "…"`, so a single-quoted `sed 's,a,b,'` inside your command arrives unquoted and `sed` parses the replacement as its own options. Use `ddev exec bash -s <<'EOF' … EOF` — the quoted heredoc reaches the container byte for byte, and as a bonus the script body never appears in the command line `ddev exec` prints on failure.
+- **Inside such a heredoc, give every `terminus drush` (and anything else over SSH) `< /dev/null`.**
+  The SSH session inherits the heredoc as its stdin and reads the rest of the script, so the
+  first remote command runs and every line after it silently never does — exit 0, no error, just
+  missing output. Seen 2026-10-24 on a three-query check of the tip.
 - **Terminus's login does not survive the containers being recreated on a fresh Codespace** — `terminus auth:whoami` reporting "You are not logged in" after a rebuild is normal, not a revoked token. Log back in over stdin (see [Secrets & tokens](#secrets--tokens)). It *does* survive `ddev auth ssh`.
 
 ## Secrets & tokens
