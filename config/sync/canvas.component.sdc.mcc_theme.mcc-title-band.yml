@@ -60,8 +60,7 @@ versioned_properties:
           description: 'The site breadcrumb block.'
         meta:
           title: 'Meta row'
-          description: |
-            Small facts under the lede — schedule, cadence, who leads it. A slot rather than a prop because Canvas can only represent props it can build a field widget for, and a list of icon/text pairs is not one of those; making it a prop would have kept this component out of Canvas entirely.
+          description: 'Small facts under the lede — schedule, cadence, who leads it. A slot rather than a prop because Canvas can only represent props it can build a field widget for, and a list of icon/text pairs is not one of those; making it a prop would have kept this component out of Canvas entirely.'
         actions:
           title: Actions
           description: 'Buttons or links, pinned right on wide viewports.'

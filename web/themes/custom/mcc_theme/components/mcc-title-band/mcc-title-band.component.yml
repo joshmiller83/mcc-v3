@@ -49,7 +49,7 @@ slots:
     description: 'The site breadcrumb block.'
   meta:
     title: Meta row
-    description: >
+    description: >-
       Small facts under the lede — schedule, cadence, who leads it. A slot
       rather than a prop because Canvas can only represent props it can build
       a field widget for, and a list of icon/text pairs is not one of those;

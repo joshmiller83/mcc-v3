@@ -23,8 +23,6 @@ content_entity_type_bundle: page
 content_entity_type_view_mode: full
 component_tree:
   '0:7c9a0a10-0000-4000-8000-000000000001':
-    parent_uuid: null
-    slot: null
     uuid: 7c9a0a10-0000-4000-8000-000000000001
     component_id: sdc.mcc_theme.mcc-page-body
     component_version: 3af7ccd8c67cc197
@@ -69,3 +67,4 @@ component_tree:
       label: 'Section related links'
       label_display: '0'
 exposed_slots: {  }
+page_variant: null
