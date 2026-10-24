@@ -3,7 +3,6 @@ langcode: en
 status: true
 dependencies:
   config:
-    - canvas.component.sdc.caresphere_theme.section
     - canvas.component.sdc.mercury.accordion
     - canvas.component.sdc.mercury.accordion-container
     - canvas.component.sdc.mercury.footer
@@ -17,7 +16,6 @@ name: Layout
 configEntityTypeId: component
 weight: 0
 items:
-  - sdc.caresphere_theme.section
   - sdc.mercury.accordion
   - sdc.mercury.accordion-container
   - sdc.mercury.footer
