@@ -13,6 +13,122 @@ Newest entries at the top. Each entry: what changed, why, and what a re-import w
 
 ---
 
+## 2026-10-24 — D7 calendar re-synced into `db`; youth entries retired; two teasers in
+
+**Cutoffs.** Read from `db`: every migration last ran 2026-10-01 14:43:50 UTC, as the entry
+below says. D7 edits were taken against the newest `changed` in the copy that import read,
+2026-09-26 16:25:49 UTC — not the import time, which would miss an office edit made between
+the dump and the import. **Next sync's cutoffs: D7 edits after 2026-10-23 19:44:45 UTC** (the
+newest change in today's copy; dump completed 13:49:05), **edits here after 2026-10-24
+14:03:12 UTC** (this import's first start, `10:03:12` in `migrate:status`).
+
+**Refresh.** Snapshot `pre-sync-2026-10-24`. The tip was *not* pulled: it still answers 504,
+and its database has not changed since 2026-09-05 (953 nodes, newest 1623, migrations last run
+08-21), so the local `db` — the tip plus the 10-01 sync, the announcements and the 10-03 dedupe
+— is a strict superset of it. `mcc-church.live` dumped (2.0 MB, "Dump completed on 2026-10-24
+13:49:05") into `legacy`: 1,023 nodes, newest edit 10-23 19:44:45. The 10-01 copy is kept as
+`.ddev/.downloads/legacy-2026-10-01.sql.gz` and was loaded as the scratch database
+`legacy_1001` to diff against. Files: the source site rsynced `-rltz`, which re-sent 1,770 of
+its 1,782 files (350 MB; the local copies' mtimes no longer matched). Afterwards every
+`file_managed` row in `db` is on disk except eleven old D7 files the live site is missing too
+(fids 9, 306, 728, 1053, 1121, 1123, 1124, 1127, 1182, 1216, 1283). The tip's files were not
+pulled; its media last changed 08-28.
+
+**Edited in D7 since the last import** — all by `pat`, 10-06 → 10-23. New: 1632 Congregational
+Meeting, 1633 Congregational Meal (calendar); 1634 Ministry Fair, 1635 Light the Night
+(homepage teasers). Edited: 526, 1325, 1549, 1553, 1600, 1625, 1626. **Deleted:** 1500 Youth
+Church Services and 1554 Youth Sunday School (calendar), 1156 Highway 52 Youth Group (teaser —
+the front page's card 1673). D7's node count went 1,022 → 1,023 with four added, which is how
+the deletions showed; a migration never deletes, so they are found through the maps (recipe in
+`scripts/retire-d7-deleted.php`). No bio, page, ministry, term or user changed in D7.
+
+**Edited here since the last import:** nothing on the tip; locally only the 10-01 announcement
+rebuild and the 10-03 dedupe, neither on a node D7 edited.
+
+**Three-way compare** of every node edited on both sides, the three left open on 10-01
+included. Base is each node's first revision here — an `--update` mints no revision, so that is
+the imported state. The tip's 09-05 body edits on 526, 1154 and 1177 are each exactly the
+removal of a `<span style="font-size: large;">` wrapper (39 characters), which `content_format`
+strips at render time anyway, so on their own they are not conflicts. The Sunday rows and 1154
+were decided by the user today; the tip's version stands for each of them.
+
+| nid  | Title                                   | Tip (`mcc-admin`, 09-05)                              | D7 (`pat`)                                         | Done                         |
+| ---- | --------------------------------------- | ----------------------------------------------------- | -------------------------------------------------- | ---------------------------- |
+| 526  | Finance Ministry Meeting                | span removed                                          | last Monday, 100 dates to 2035-02-26 (10-23)       | `--update`                   |
+| 1177 | Ministry Heads Servant Leaders Meetings | span removed; the hour was **not** changed            | 6 PM, first Monday, to 2030-11-04 (09-16)          | `--update`                   |
+| 1325 | Adult … Church Services                 | "Adult (on Facebook Live) & Youth Church Services"    | "Adult and Youth Church Services" (10-06)          | tip kept                     |
+| 1553 | Adult … Sunday School                   | "Adult & Youth Sunday School"                         | "Adult and Youth Sunday School" (10-06)            | tip kept                     |
+| 1523 | FaceBookLive Church Service             | 33 Sundays removed, 08-30 → 2027-04-11                | not edited since 2025                              | tip kept                     |
+| 1500 | Youth Church Services                   | 4 Sundays removed, 51 still to come                   | deleted                                            | unpublished, 301 → 1325      |
+| 1554 | Youth Sunday School                     | series ended 08-23                                    | deleted                                            | unpublished, 301 → 1553      |
+| 1154 | Highway 52 Youth Groups - All Ages      | series ended 2026-08-09                               | 2nd Sunday of Feb–Apr and Jun–Aug, to 2032 (09-16) | tip kept — still a conflict  |
+
+So the Sundays here read "Adult & Youth Sunday School" and "Adult (on Facebook Live) & Youth
+Church Services"; the live site says "and", and lists FaceBookLive Church Service as its own
+10:30 entry every Sunday. The 10-01 note that 1177's hour was a tip choice was wrong: 7 PM is
+the imported value, and the 6 PM came from D7.
+
+**Import.** `migrate:import --group=mcc` (no `--update`), then
+`migrate:import mcc_calendar_event --update --idlist=526,1177,1549,1600,1625,1626`. Zero error
+lines (30 `File.php:105` warnings), zero messages.
+
+| Migration            | Created | Updated | Ignored |
+| -------------------- | ------- | ------- | ------- |
+| mcc_files            | 5       | 0       | 0       |
+| mcc_media_image      | 5       | 0       | 0       |
+| mcc_media_document   | 5       | 0       | 0       |
+| mcc_announcement     | 2       | 0       | 0       |
+| mcc_calendar_event   | 2       | 6       | 0       |
+| mcc_redirect         | 2       | 0       | 2       |
+| all others           | 0       | 0       | 0       |
+
+New: 1681 Congregational Meeting [D7 1632] and 1682 Congregational Meal [1633], both Sunday
+2026-11-01, 12:30 and 1:00 PM; announcements 1679 Ministry Fair [1634] and 1680 Light the Night
+[1635], published. Updated, every occurrence now identical to D7: 526 moved to the last Monday;
+1177 to 6 PM on the first Monday; 1549 Light The Night got a new picture; 1600 Young Adults
+Bible Study a new body (its old one was D7's own earlier text, not an edit here); 1625 Women's
+Bible Study is now 25 dates from 2026-10-06 to 2027-03-24 (it was twelve Wednesdays 09-09 →
+11-25); 1626 Missions Ministry Meeting moved from 10-08 to 10-15.
+
+**For the office — in D7's own data, so the live site shows the same:**
+
+- 526 Finance Ministry Meeting has **no date on Monday 10-26**. After a one-off 2025-09-08 the
+  series starts 11-30, though its description says "the last Monday of each month".
+- 1625 Women's Bible Study opens with a single **Tuesday**, 10-06, then 24 Wednesdays. It also
+  lost its September dates, and 1621 — the tip's copy of September — was retired on 10-03 in
+  1625's favour, so September 2026 shows the study on neither site.
+- The two new teasers are 1275×1650 Word-page flyers with no body or link, unreadable at card
+  size — the same as the five rebuilt on 10-01. Not rebuilt; Ministry Fair is the first card.
+
+**Retired** by `scripts/retire-d7-deleted.php` (new): 1500 unpublished, redirect 2846
+`/calendar/youth/youth-church-services` → `/node/1325`; 1554, redirect 2847
+`/calendar/worship/youth-sunday-school` → `/node/1553`; 1673, redirect 2848
+`/announcements/highway-52-youth-group` → `/node/8` (`/ministries/youth`). Revisions 5034–5036
+carry the reason; republishing is the undo.
+
+**Side effects**, not edits: Manual Crop → Focal Point ran over the five new images and
+`mcc_media_document` minted a `document` media for each new file, as before. 346 was not
+re-saved this time.
+
+**Duplicates.** None new; Christmas Day 1330/1331 is the only pair still visible.
+
+**Calendar check.** Months that gained an occurrence (node × month): 61 — 526 through
+2033-03 → 2035-02, 1177 through 2028-04 → 2030-11, 1625 2026-12 → 2027-03, 1681/1682 2026-11.
+Lost: 1500 (2026-02 → 2027-10), 1554 (2026-02 → 2026-08), 1625 (2026-09), and the history D7
+itself dropped when the office rewrote 526 (2024-08 → 2026-10) and 1177 (2024-02 → 2026-09).
+`scripts/calendar-compare.mjs` over all 61 plus 2026-09 and 2026-10, after a cache rebuild:
+exit 0, all 63 print sheets "1pp fit ok", `PASS: print sheet is one Letter page with nothing
+clipped`. `scripts/homepage-review.mjs` passes in both sessions at both widths with six
+cards; the first anonymous 390 pass reported one collapsed image while the two new pictures'
+AVIF derivatives were still being generated on first request, and passed on the rerun.
+
+**Seen, not from this sync:** Canvas throws `RuntimeException: It is impossible for an item to
+exist in multiple Folders.` during cron, three times since 10-03.
+
+**What a re-import does to this.** A plain `--group=mcc` import changes nothing. `--update` of
+1325, 1553, 1523 or 1154 reverts the tip edits kept above. 1500, 1554 and D7's 1156 no longer
+exist in D7, so no import can reach them.
+
 ## 2026-10-03 — Women's Bible Study duplicate: 1621 unpublished, 1625 kept
 
 **Retired in D11.** Node 1621 Women's Bible Study — created on the tip on 2026-08-28, four
