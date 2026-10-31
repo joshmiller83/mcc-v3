@@ -13,6 +13,24 @@ Newest entries at the top. Each entry: what changed, why, and what a re-import w
 
 ---
 
+## 2026-10-31 — Tip hand-off landed; mcc2026 test and live created
+
+**Database replaced on `mcc2026.dev`** with `db-post-flyers-2026-10-24.sql.gz`, so the tip now
+holds both the 10-01 and 10-24 syncs, all seven flyer rebuilds and the 23 Canvas folders. Before:
+953 nodes, newest 1623, last change 2026-09-05 (unchanged since the hand-off was written, so
+nothing was lost). After: 1012, 1682, 2026-10-24 14:45:58. The undo is the backup
+`mcc2026_dev_2026-10-31T20-39-15_UTC_database.sql.gz`. Local files were rsynced up first, without
+`--delete`.
+
+**`mcc2026.test` and `mcc2026.live` created** from dev at 20:49 and 20:52 UTC, with copies of its
+database and files. Live serves `new.mechanicsburgchristian.com` once DNS is in. Nothing has been
+edited on either. Which environment content is edited on from now on is not decided yet (see the
+[2026-10-31 update](docs/agents/updates/2026-10-31-new-subdomain-live.md)).
+
+A re-import changes nothing here that the 10-24 entries don't already cover.
+
+---
+
 ## 2026-10-24 — Ministry Fair and Light the Night rebuilt from their flyers
 
 **Edited in D11** (`scripts/announcements-content.php`, at the user's request, the same

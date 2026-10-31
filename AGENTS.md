@@ -75,7 +75,8 @@ changing anything in it.
 | the Codespace, ddev, Google Drive, pulling both sites                         | [environment.md](docs/agents/environment.md)                  |
 | `composer update`, update hooks, patches, the PHP version                     | [dependency-updates.md](docs/agents/dependency-updates.md)    |
 | Terminus, drush on Pantheon, SSH, the Playwright scripts                      | [tooling.md](docs/agents/tooling.md)                          |
-| a push to `main`, Pantheon builds, the Quicksilver hook                       | [deploys.md](docs/agents/deploys.md)                          |
+| a push to `main`, Pantheon builds, the Quicksilver hook, promoting to live    | [deploys.md](docs/agents/deploys.md)                          |
+| DNS, the eNom account, custom domains, `new.mechanicsburgchristian.com`       | [domains.md](docs/agents/domains.md)                          |
 | config drift between the tip and `main`                                       | [config-sync.md](docs/agents/config-sync.md)                  |
 
 `CONTENT_LOG.md` records every content and structure change made outside code, and is the
@@ -83,17 +84,24 @@ first thing to read before re-running a migration.
 
 ## Open items
 
-- **The tip (mcc2026.dev) has not had the 2026-10-01 or 2026-10-24 syncs.** Its web tier has
-  answered `504 Target in maintenance` since about 2026-09-08; code still deploys to it, and it
-  runs PHP 8.5.12. One dump carries both syncs — the steps are under "Tip hand-off" in
-  [the 2026-10-24 update](docs/agents/updates/2026-10-24-calendar-sync-php-85-docs-split.md#tip-hand-off).
-- **Calendar choices left to the church** are listed in that day's `CONTENT_LOG.md` entry.
+- **mcc2026 still answers `504 Target in maintenance` everywhere.** The user moved it to Basic
+  on 2026-10-31, but the sandbox trial lock was still on nearly an hour later. Drush, SSH and
+  code deploys work regardless. The tip hand-off has landed on dev.
+- **`new.mechanicsburgchristian.com` waits on four DNS records at eNom**, then
+  `terminus domain:verify`. The records are in
+  [the 2026-10-31 update](docs/agents/updates/2026-10-31-new-subdomain-live.md#left-open).
+- **Dev or live as the tip is undecided.** Docs and scripts still mean `mcc2026.dev`. Live is a
+  copy as of 2026-10-31.
+- **Calendar choices left to the church** are listed in the 2026-10-24 `CONTENT_LOG.md` entry.
 
 ## Updates
 
 Newest first. Each is what one session changed and learned, with links to the rules it added.
 Read the latest one or two at the start of a session; older ones only when their topic comes up.
 
+- [2026-10-31](docs/agents/updates/2026-10-31-new-subdomain-live.md) — DNS found at eNom;
+  mcc2026 on Basic with test and live; `new.mechanicsburgchristian.com` on live; the tip
+  hand-off landed on dev; drush moved to `require` so test and live have it.
 - [2026-10-24](docs/agents/updates/2026-10-24-calendar-sync-php-85-docs-split.md) — D7
   calendar sync (field-level conflict compare, D7 deletions); PHP 8.5.12 and that month's
   security advisories; this file split into topics; two more flyer announcements rebuilt;

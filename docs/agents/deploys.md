@@ -2,7 +2,7 @@
 
 _Part of the agent guidance indexed in [AGENTS.md](../../AGENTS.md). Read it before working on this area._
 
-Every push to `main` on GitHub deploys to the **mcc2026** Pantheon sandbox automatically, in two
+Every push to `main` on GitHub deploys to **mcc2026**'s `dev` environment automatically, in two
 stages:
 
 1. **GitHub Actions** (`.github/workflows/deploy-pantheon.yml`) pushes that commit — source
@@ -11,8 +11,26 @@ stages:
 2. **Pantheon's Integrated Composer** (`build_step: true` in `pantheon.upstream.yml`) then runs
    `composer install` server-side and deploys the result to the `dev` environment.
 
-There's no manual deploy step — pushing to `main` *is* the deploy. mcc2026 is a sandbox for
-testing this migration/rebuild; it is not the church's production site.
+For `dev` there's no manual deploy step — pushing to `main` *is* the deploy. mcc2026 has been on
+Pantheon's Basic plan since 2026-10-31, when its `test` and `live` were created so that
+`new.mechanicsburgchristian.com` could point at live (see [Domains and DNS](domains.md)). It is
+still not the church's production site; the apex stays on the D7 site until launch.
+
+**Getting code to live is manual, and live's database is not dev's.** Promote with
+`ddev exec terminus env:deploy mcc2026.test --note="…"`, then the same for `mcc2026.live`. The
+`deploy` Quicksilver hook runs `drush deploy` after each promotion. While the web tier is locked
+it cannot run, so run `terminus drush mcc2026.live -- deploy -y` by hand, as for dev below.
+Promoting moves code only: content reaches live by `env:clone-content`, which overwrites live's
+database. Creating test and live on 2026-10-31 copied dev's database and files, and they have not
+been synced since.
+
+- **`drush/drush` belongs in `require`, not `require-dev`.** Integrated Composer builds test and
+  live without dev packages. Drupal CMS ships drush in `require-dev`, so the first test and live
+  (2026-10-31) had no `vendor/bin/drush`. `terminus drush mcc2026.test` then fell back to
+  Pantheon's global drush and died with `Declaration of Drush\Symfony\DrushArgvInput::setTokens(array
+  $tokens) must be compatible with Symfony\Component\Console\Input\ArgvInput::setTokens(…): void`.
+  On live it exited 255 with no output at all. The Quicksilver hook would have failed the same
+  way on every promotion. Fixed in `9bcf04e`. Don't move it back on a Drupal CMS update.
 
 **Tracking a deploy after pushing:**
 
