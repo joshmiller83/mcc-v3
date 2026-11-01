@@ -1,0 +1,13 @@
+diff --git a/Cva.php b/Cva.php
+index 5d5bd50..f0791c0 100644
+--- a/Cva.php
++++ b/Cva.php
+@@ -95,7 +95,7 @@ public function apply(array $recipes, ?string ...$additionalClasses): string
+             if (\is_bool($recipeValue)) {
+                 $recipeValue = $recipeValue ? 'true' : 'false';
+             }
+-            $recipeClasses = $this->variants[$recipeName][$recipeValue] ?? [];
++            $recipeClasses = $this->variants[$recipeName][$recipeValue ?? ''] ?? [];
+             $classes = [...$classes, ...(array) $recipeClasses];
+         }
+ 

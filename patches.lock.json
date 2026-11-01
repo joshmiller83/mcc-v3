@@ -1,5 +1,5 @@
 {
-    "_hash": "e658d2079eae75e38524c64ca541acbe6dccbe28cd970c99abecc4f8b6806582",
+    "_hash": "a48148a9466775a003f28b06040faf7ee80dd664c36faf2adb1941711f744659",
     "patches": {
         "drupal/caresphere_theme": [
             {
@@ -7,6 +7,18 @@
                 "description": "Restore subtitle/side_media on hero-card",
                 "url": "patches/local/caresphere_theme-hero-card-subtitle.patch",
                 "sha256": "9039f6420f8919662053e84c3d9ad8a4d4a4c327c5b072f7bfa83b99b0baa8ea",
+                "depth": 1,
+                "extra": {
+                    "provenance": "root"
+                }
+            }
+        ],
+        "twig/html-extra": [
+            {
+                "package": "twig/html-extra",
+                "description": "PHP 8.5 null array offset in Cva::apply() (upstream 2c3f36a, drop once released past 3.29.0)",
+                "url": "patches/local/twig-html-extra-cva-null-offset.patch",
+                "sha256": "f43d4b45f7538990f83bac8f141d233826f19a07169ba775621c7be390f1068e",
                 "depth": 1,
                 "extra": {
                     "provenance": "root"

@@ -197,6 +197,9 @@
         "patches": {
             "drupal/caresphere_theme": {
                 "Restore subtitle/side_media on hero-card": "patches/local/caresphere_theme-hero-card-subtitle.patch"
+            },
+            "twig/html-extra": {
+                "PHP 8.5 null array offset in Cva::apply() (upstream 2c3f36a, drop once released past 3.29.0)": "patches/local/twig-html-extra-cva-null-offset.patch"
             }
         },
         "composer-exit-on-patch-failure": true
