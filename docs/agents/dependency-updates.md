@@ -56,7 +56,13 @@ repeat next time:
   adding, removing or editing a patch run `composer patches-relock`, then `composer install`,
   and commit the lock, or Pantheon's build applies the old set. 2.x writes no `PATCHES.txt`;
   check the patched file itself (the hero-card component YAML has `subtitle:` and
-  `side_media:`). The four majors first left for a human — composer-patches 2, editoria11y 3,
+  `side_media:`). **Relock after every `composer update` too, and use `composer
+  patches-repatch` to apply a patch to a package that is already installed.** A dependency can
+  declare patches for itself: project_browser 2.1.5, from the 2026-10-24 update, added a
+  second one (#3631657), and since nobody relocked, Pantheon skipped it until 2026-11-01. A
+  plain `composer install` does not re-patch an installed package. Adding a root patch also
+  changes `composer.lock`'s content-hash, because the hash covers `extra`; `composer update
+  --lock` refreshes it without moving any version. The four majors first left for a human — composer-patches 2, editoria11y 3,
   tagify 2, ui_icons 2 — went in the same day once allowed: one `ui_icons` update hook, no
   config change, `pack:name` icon values untouched, tagify's one form display (sermon) and
   the icon picker both still render. editoria11y is installed code only; it is not enabled.
@@ -79,14 +85,24 @@ repeat next time:
   `ddev exec bash -c 'cd /var/www/html && composer audit --format=json'` and read the JSON
   with `jq`. Note transitive majors in the log: `enshrined/svg-sanitize` went 0.22 → 1.1.1
   that day, allowed by its requirer, and it was the one carrying three of the CVEs.
-- **On PHP 8.5, three deprecation notices are someone else's and expected.** "Using null as an
+- **On PHP 8.5, two deprecation notices are someone else's and expected.** "Using null as an
   array offset is deprecated" from core's `ContentEntityBase::hasTranslation()` (~50 per load
   of `/admin/content`; core issue 3580668, the admin theme's status-field template passes a
-  langcode that isn't on the row), and the same notice from `twig/html-extra`'s
-  `Cva::apply()` and `gin_login`'s theme negotiator. Drupal logs `E_DEPRECATED` at debug
-  severity (7), so a `severity <= 4` watchdog filter hides them, while local development's
-  verbose error display prints them on the page — they look like errors in a page sweep and
-  aren't. Don't patch core for them; recheck after each update.
+  langcode that isn't on the row), and the same notice from `gin_login`'s theme negotiator.
+  Drupal logs `E_DEPRECATED` at debug severity (7), so a `severity <= 4` watchdog filter hides
+  them, while local development's verbose error display prints them on the page — they look
+  like errors in a page sweep and aren't. Don't patch core for them; recheck after each update.
+- **`twig/html-extra`'s copy of the notice, from `Cva::apply()`, is patched until Twig ships
+  the fix. Drop the patch when that release lands.** It printed three times at the top of the
+  front page, where the contrib theme components pass a null variant to `html_cva()`. Twig
+  fixed it upstream on 2026-10-24 (twigphp/html-extra `2c3f36a`), after 3.29.0, and as of
+  2026-11-01 no release had it. `patches/local/twig-html-extra-cva-null-offset.patch` is that
+  commit's one-line `Cva.php` hunk; the commit's test file isn't in the dist package. Once a
+  3.x release past 3.29.0 contains `?? ''` or `toVariantName()` in `apply()`, remove the
+  patch from `extra.patches`, relock, and delete the file, in the same commit as the update.
+  Upstream has already rewritten that line (`toVariantName()`), so on a release with the fix
+  the patch no longer applies, and with `composer-exit-on-patch-failure` on, that stops
+  `composer update` locally and the Pantheon build.
 - **Lint contrib and custom code with the new PHP before switching to it.** Every PHP version
   is installed in the ddev image, so `php8.5 -l` over `web/modules`, `web/themes` and
   `web/profiles` finds compile-time deprecations (non-canonical casts, implicit nullable

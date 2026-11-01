@@ -99,6 +99,9 @@ first thing to read before re-running a migration.
 Newest first. Each is what one session changed and learned, with links to the rules it added.
 Read the latest one or two at the start of a session; older ones only when their topic comes up.
 
+- [2026-11-01](docs/agents/updates/2026-11-01-cva-deprecation-patch.md) — the PHP 8.5
+  `Cva::apply()` notice patched from Twig's unreleased fix; `patches.lock.json` relocked for
+  project_browser 2.1.5's own patch.
 - [2026-10-31](docs/agents/updates/2026-10-31-new-subdomain-live.md) — DNS found at eNom;
   mcc2026 on Basic with test and live; `new.mechanicsburgchristian.com` on live; the tip
   hand-off landed on dev; drush moved to `require` so test and live have it.
